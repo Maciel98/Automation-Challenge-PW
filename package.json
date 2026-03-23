@@ -1,0 +1,35 @@
+{
+  "name": "automation-challenge-pw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report",
+    "test:install": "playwright install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maciel98/Automation-Challenge-PW.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Maciel98/Automation-Challenge-PW/issues"
+  },
+  "homepage": "https://github.com/Maciel98/Automation-Challenge-PW#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/dotenv": "^6.1.1",
+    "@types/node": "^25.5.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1"
+  }
+}
