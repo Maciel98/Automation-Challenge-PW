@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skills": {
+    "playwright-ci": {
+      "source": "testdino-hq/playwright-skill",
+      "sourceType": "github",
+      "computedHash": "a6a80648c81d645e8dbef81e6a6269f94eb34a5ea0d0d9a6929b864a49c5eb99"
+    },
+    "playwright-cli": {
+      "source": "testdino-hq/playwright-skill",
+      "sourceType": "github",
+      "computedHash": "3de9e480e25485028625bf021c67c8d7e1b345954a9088656cee87adf533c725"
+    },
+    "playwright-core": {
+      "source": "testdino-hq/playwright-skill",
+      "sourceType": "github",
+      "computedHash": "2406d6205a1f5c3777413b126676d5bf5089811cb8ed0e28a1f3eb347af0b0cb"
+    },
+    "playwright-pom": {
+      "source": "testdino-hq/playwright-skill",
+      "sourceType": "github",
+      "computedHash": "b7bf9f8cec29b3878cf503c6dbf19cafe181ac4eb0c63e94168d16942345707f"
+    }
+  }
+}
