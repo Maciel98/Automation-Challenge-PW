@@ -1,23 +1,29 @@
 import { type Page, type Locator } from '@playwright/test';
+import { NavbarPage } from './navbar.page';
 
 /**
  * CheckoutCompletePage - Page Object for Checkout Completion Page
  *
  * Encapsulates all interactions for the order confirmation page.
  * Follows POM best practices: intent-revealing methods, no assertions.
+ *
+ * Navbar functionality is provided by NavbarPage via composition.
  */
 export class CheckoutCompletePage {
   readonly page: Page;
+  readonly navbar: NavbarPage;  // Composition: has-a NavbarPage
   readonly pageTitle: Locator;
   readonly checkoutCompleteContainer: Locator;
   readonly ponyExpressImage: Locator;
   readonly completeHeader: Locator;
   readonly completeText: Locator;
   readonly backToProductsButton: Locator;
-  readonly shoppingCartBadge: Locator;
 
   constructor(page: Page) {
     this.page = page;
+    // Navbar composition
+    this.navbar = new NavbarPage(page);
+
     // Page elements
     this.pageTitle = page.locator('[data-test="title"]');
     this.checkoutCompleteContainer = page.locator('[data-test="checkout-complete-container"]');
@@ -27,7 +33,6 @@ export class CheckoutCompletePage {
 
     // Navigation
     this.backToProductsButton = page.locator('[data-test="back-to-products"]');
-    this.shoppingCartBadge = page.locator('[data-test="shopping-cart-badge"]');
   }
 
   /**
@@ -60,13 +65,6 @@ export class CheckoutCompletePage {
   async getCompleteText(): Promise<string> {
     const text = await this.completeText.textContent();
     return text?.trim() || '';
-  }
-
-  /**
-   * Check if the cart badge is hidden (indicating empty cart after order)
-   */
-  async isCartBadgeHidden(): Promise<boolean> {
-    return !(await this.shoppingCartBadge.isVisible().catch(() => false));
   }
 
   /**

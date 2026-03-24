@@ -1,0 +1,84 @@
+# SauceDemo Navigation Bar Snapshot
+# Generated: 2025-03-24
+# Component: Primary Header Navigation Bar
+
+navbar:
+  description: "Primary navigation bar appearing on all authenticated pages"
+  container:
+    selector: '[data-test="primary-header"]'
+    type: div
+    purpose: "Main navigation container"
+    visible: true
+
+  elements:
+    hamburger_menu_button:
+      selector: '#react-burger-menu-btn'
+      description: "Button to open sidebar menu (three horizontal lines icon)"
+      type: button
+      visible: true
+      position: "top-left corner"
+      note: "Uses ID selector as data-test attribute not available"
+
+    shopping_cart_link:
+      selector: '[data-test="shopping-cart-link"]'
+      description: "Link to navigate to shopping cart page"
+      type: a
+      visible: true
+      position: "top-right corner"
+      action: "Navigates to /cart.html"
+
+    shopping_cart_badge:
+      selector: '[data-test="shopping-cart-badge"]'
+      description: "Displays number of items in cart"
+      type: span
+      visible: conditional
+      condition: "Only visible when cart has items"
+      position: "overlay on cart icon"
+
+  interactions:
+    open_menu:
+      action: "click"
+      selector: '#react-burger-menu-btn'
+      expected_result: "Sidebar slides in from left"
+
+    navigate_to_cart:
+      action: "click"
+      selector: '[data-test="shopping-cart-link"]'
+      expected_result: "Navigates to /cart.html"
+      url_after: "https://www.saucedemo.com/cart.html"
+
+    check_cart_count:
+      action: "get text content"
+      selector: '[data-test="shopping-cart-badge"]'
+      expected_result: "Returns number of items in cart, 0 if not visible"
+
+  pages_appears_on:
+    - inventory.html
+    - cart.html
+    - checkout-step-one.html
+    - checkout-step-two.html
+    - checkout-complete.html
+
+  accessibility:
+    hamburger_button_role: "button"
+    cart_link_role: "link"
+    keyboard_navigation:
+      open_menu: "Tab to hamburger button, press Enter"
+      navigate_cart: "Tab to cart link, press Enter"
+
+  visual_state:
+    authenticated:
+      navbar_visible: true
+      hamburger_button_visible: true
+      cart_link_visible: true
+    cart_empty:
+      badge_visible: false
+    cart_with_items:
+      badge_visible: true
+      badge_text: "number of items"
+
+  notes:
+    - "Navbar appears on all pages after authentication"
+    - "Cart badge is conditionally rendered (only when cart has items)"
+    - "Hamburger button uses ID selector (#react-burger-menu-btn) not data-test"
+    - "All navbar interactions are encapsulated in NavbarPage class"

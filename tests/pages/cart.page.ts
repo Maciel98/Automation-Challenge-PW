@@ -1,4 +1,5 @@
 import { type Page, type Locator } from '@playwright/test';
+import { NavbarPage } from './navbar.page';
 
 /**
  * CartPage - Page Object for SauceDemo.com Cart Page
@@ -6,22 +7,24 @@ import { type Page, type Locator } from '@playwright/test';
  * Encapsulates all cart interactions including viewing items,
  * removing products, and proceeding to checkout.
  * Follows POM best practices: intent-revealing methods, no assertions.
+ *
+ * Navbar functionality (cart badge) is provided by NavbarPage via composition.
  */
 export class CartPage {
   readonly page: Page;
+  readonly navbar: NavbarPage;  // Composition: has-a NavbarPage
   readonly pageTitle: Locator;
-  readonly shoppingCartLink: Locator;
-  readonly shoppingCartBadge: Locator;
   readonly cartList: Locator;
   readonly continueShoppingButton: Locator;
   readonly checkoutButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
+    // Navbar composition
+    this.navbar = new NavbarPage(page);
+
     // Header elements
     this.pageTitle = page.locator('[data-test="title"]');
-    this.shoppingCartLink = page.locator('[data-test="shopping-cart-link"]');
-    this.shoppingCartBadge = page.locator('[data-test="shopping-cart-badge"]');
 
     // Cart contents
     this.cartList = page.locator('[data-test="cart-list"]');
@@ -63,17 +66,6 @@ export class CartPage {
   async proceedToCheckout() {
     await this.checkoutButton.click();
     await this.page.waitForURL(/\/checkout-step-one\.html/, { timeout: 5000 });
-  }
-
-  /**
-   * Get the cart badge count
-   */
-  async getCartBadgeCount(): Promise<number> {
-    if (!(await this.shoppingCartBadge.isVisible().catch(() => false))) {
-      return 0;
-    }
-    const text = await this.shoppingCartBadge.textContent();
-    return parseInt(text || '0', 10);
   }
 
   /**

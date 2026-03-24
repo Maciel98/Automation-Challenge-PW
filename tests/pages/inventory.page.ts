@@ -1,4 +1,5 @@
 import { type Page, type Locator } from '@playwright/test';
+import { NavbarPage } from './navbar.page';
 
 /**
  * InventoryPage - Page Object for SauceDemo.com Inventory Page
@@ -14,21 +15,19 @@ import { type Page, type Locator } from '@playwright/test';
  * - Sauce Labs Fleece Jacket ($49.99)
  * - Sauce Labs Onesie ($7.99)
  * - Test.allTheThings() T-Shirt (Red) ($15.99)
+ *
+ * Navbar functionality (menu, cart) is provided by NavbarPage via composition.
  */
 export class InventoryPage {
   readonly page: Page;
-  readonly shoppingCartLink: Locator;
-  readonly shoppingCartBadge: Locator;
+  readonly navbar: NavbarPage;  // Composition: has-a NavbarPage
   readonly sortDropdown: Locator;
   readonly inventoryList: Locator;
-  readonly menuButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    // Navigation elements
-    this.shoppingCartLink = page.locator('[data-test="shopping-cart-link"]');
-    this.shoppingCartBadge = page.locator('[data-test="shopping-cart-badge"]');
-    this.menuButton = page.locator('#react-burger-menu-btn'); // Hamburger menu button
+    // Navbar composition for cart and menu access
+    this.navbar = new NavbarPage(page);
 
     // Sorting
     this.sortDropdown = page.locator('[data-test="product-sort-container"]');
@@ -66,30 +65,11 @@ export class InventoryPage {
   }
 
   /**
-   * Navigate to the cart page
-   */
-  async navigateToCart() {
-    await this.shoppingCartLink.click();
-    await this.page.waitForURL(/\/cart\.html/, { timeout: 5000 });
-  }
-
-  /**
    * Sort products by the specified option
    * @param sortOption - The sort option to select
    */
   async sortProducts(sortOption: 'az' | 'za' | 'lohi' | 'hilo') {
     await this.sortDropdown.selectOption(sortOption);
-  }
-
-  /**
-   * Get the cart badge count
-   */
-  async getCartBadgeCount(): Promise<number> {
-    if (!(await this.shoppingCartBadge.isVisible().catch(() => false))) {
-      return 0;
-    }
-    const text = await this.shoppingCartBadge.textContent();
-    return parseInt(text || '0', 10);
   }
 
   /**
@@ -106,25 +86,5 @@ export class InventoryPage {
   async getProductPrices(): Promise<string[]> {
     const productPrices = await this.page.locator('[data-test="inventory-item-price"]').allTextContents();
     return productPrices;
-  }
-
-  /**
-   * Open the sidebar menu
-   * @deprecated Use SidebarPage.open() instead
-   */
-  async openMenu() {
-    await this.menuButton.click();
-    await this.page.locator('.bm-menu').waitFor({ state: 'visible', timeout: 1000 });
-    await this.page.waitForTimeout(500); // Wait for animation
-  }
-
-  /**
-   * Logout via the sidebar menu
-   * @deprecated Use SidebarPage.openAndLogout() instead
-   */
-  async logout() {
-    await this.openMenu();
-    await this.page.locator('[data-test="logout-sidebar-link"]').click();
-    await this.page.waitForURL(/\/(index\.html)?$/, { timeout: 5000 });
   }
 }
