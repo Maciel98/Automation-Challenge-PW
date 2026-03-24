@@ -1,0 +1,54 @@
+url: https://www.saucedemo.com/checkout-complete.html
+title: Swag Labs
+auth_required: true
+elements:
+  # Header
+  - selector: '[data-test="title"]'
+    type: span
+    visible: true
+    text_content: "Checkout: Complete!"
+
+  # Completion Container
+  - selector: '[data-test="checkout-complete-container"]'
+    type: div
+    visible: true
+    purpose: Order confirmation wrapper
+
+  # Success Message
+  - selector: '[data-test="pony-express"]'
+    type: img
+    visible: true
+    purpose: Success/confirmation image
+
+  - selector: '[data-test="complete-header"]'
+    type: h2
+    visible: true
+    text_content: "Thank you for your order!"
+
+  - selector: '[data-test="complete-text"]'
+    type: div
+    visible: true
+    text_content: "Your order has been dispatched, and will arrive just as fast as the pony can get there!"
+
+  # Action Button
+  - selector: '[data-test="back-to-products"]'
+    type: button
+    visible: true
+    text_content: "Back Home"
+    purpose: Return to inventory page
+
+  # Cart State
+  - selector: '[data-test="shopping-cart-link"]'
+    type: a
+    visible: true
+    note: Cart badge should be hidden/empty after order completion
+
+interactions:
+  - action: click back home
+    selector: '[data-test="back-to-products"]'
+    trigger: Navigates to /inventory.html, cart is cleared
+
+post_order_state:
+  cart: Empty
+  cart_badge: Hidden or shows "0"
+  navigation: Returns user to inventory to continue shopping

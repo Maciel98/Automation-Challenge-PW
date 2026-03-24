@@ -1,0 +1,77 @@
+url: https://www.saucedemo.com/checkout-step-one.html
+title: Swag Labs
+auth_required: true
+elements:
+  # Header
+  - selector: '[data-test="title"]'
+    type: span
+    visible: true
+    text_content: "Checkout: Your Information"
+
+  # Form Container
+  - selector: '[data-test="checkout-info-container"]'
+    type: div
+    visible: true
+    purpose: Checkout form wrapper
+
+  # Form Fields
+  - selector: '[data-test="firstName"]'
+    type: input
+    visible: true
+    required: true
+    purpose: First name input
+
+  - selector: '[data-test="lastName"]'
+    type: input
+    visible: true
+    required: true
+    purpose: Last name input
+
+  - selector: '[data-test="postalCode"]'
+    type: input
+    visible: true
+    required: true
+    purpose: Postal code input
+
+  # Action Buttons
+  - selector: '[data-test="cancel"]'
+    type: button
+    visible: true
+    purpose: Cancel checkout, return to cart
+
+  - selector: '[data-test="continue"]'
+    type: input
+    visible: true
+    purpose: Submit form and proceed to overview
+
+interactions:
+  - action: fill first name
+    selector: '[data-test="firstName"]'
+    trigger: No immediate effect, field validation on submit
+
+  - action: fill last name
+    selector: '[data-test="lastName"]'
+    trigger: No immediate effect, field validation on submit
+
+  - action: fill postal code
+    selector: '[data-test="postalCode"]'
+    trigger: No immediate effect, field validation on submit
+
+  - action: click continue
+    selector: '[data-test="continue"]'
+    trigger: Validates form, navigates to /checkout-step-two.html
+
+  - action: click continue with empty fields
+    selector: '[data-test="continue"]'
+    trigger: Shows error message, stays on page
+
+  - action: click cancel
+    selector: '[data-test="cancel"]'
+    trigger: Navigates back to /cart.html
+
+validation:
+  required_fields:
+    - firstName
+    - lastName
+    - postalCode
+  error_display: Error message shown above form when required fields are empty

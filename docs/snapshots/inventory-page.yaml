@@ -1,0 +1,132 @@
+url: https://www.saucedemo.com/inventory.html
+title: Swag Labs
+auth_required: true
+elements:
+  # Header/Navigation
+  - selector: '[data-test="primary-header"]'
+    type: div
+    visible: true
+    purpose: Main navigation container
+
+  - selector: '[data-test="open-menu"]'
+    type: img
+    visible: true
+    purpose: Opens sidebar menu
+
+  - selector: '[data-test="shopping-cart-link"]'
+    type: a
+    visible: true
+    purpose: Navigate to cart page
+
+  - selector: '[data-test="shopping-cart-badge"]'
+    type: span
+    visible: conditional
+    purpose: Displays cart item count
+
+  # Sorting
+  - selector: '[data-test="product-sort-container"]'
+    type: select
+    visible: true
+    options:
+      - "Name (A to Z)"
+      - "Name (Z to A)"
+      - "Price (low to high)"
+      - "Price (high to low)"
+    purpose: Sort product display
+
+  # Product Items (6 products)
+  - selector: '[data-test="inventory-item"]'
+    type: div
+    visible: true
+    count: 6
+    purpose: Product container
+
+  - selector: '[data-test="inventory-item-name"]'
+    type: div
+    visible: true
+    purpose: Product name display
+
+  - selector: '[data-test="inventory-item-desc"]'
+    type: div
+    visible: true
+    purpose: Product description
+
+  - selector: '[data-test="inventory-item-price"]'
+    type: div
+    visible: true
+    purpose: Product price
+
+  # Add to cart buttons (one per product)
+  - selector: '[data-test="add-to-cart-sauce-labs-backpack"]'
+    type: button
+    visible: true
+    purpose: Add backpack to cart
+
+  - selector: '[data-test="add-to-cart-sauce-labs-bike-light"]'
+    type: button
+    visible: true
+    purpose: Add bike light to cart
+
+  - selector: '[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]'
+    type: button
+    visible: true
+    purpose: Add bolt t-shirt to cart
+
+  - selector: '[data-test="add-to-cart-sauce-labs-fleece-jacket"]'
+    type: button
+    visible: true
+    purpose: Add fleece jacket to cart
+
+  - selector: '[data-test="add-to-cart-sauce-labs-onesie"]'
+    type: button
+    visible: true
+    purpose: Add onesie to cart
+
+  - selector: '[data-test="add-to-cart-test.allthethings()-t-shirt-(red)"]'
+    type: button
+    visible: true
+    purpose: Add red t-shirt to cart
+
+products:
+  - id: "4"
+    name: "Sauce Labs Backpack"
+    price: "$29.99"
+    add_button: '[data-test="add-to-cart-sauce-labs-backpack"]'
+
+  - id: "0"
+    name: "Sauce Labs Bike Light"
+    price: "$9.99"
+    add_button: '[data-test="add-to-cart-sauce-labs-bike-light"]'
+
+  - id: "1"
+    name: "Sauce Labs Bolt T-Shirt"
+    price: "$15.99"
+    add_button: '[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]'
+
+  - id: "5"
+    name: "Sauce Labs Fleece Jacket"
+    price: "$49.99"
+    add_button: '[data-test="add-to-cart-sauce-labs-fleece-jacket"]'
+
+  - id: "2"
+    name: "Sauce Labs Onesie"
+    price: "$7.99"
+    add_button: '[data-test="add-to-cart-sauce-labs-onesie"]'
+
+  - id: "3"
+    name: "Test.allTheThings() T-Shirt (Red)"
+    price: "$15.99"
+    add_button: '[data-test="add-to-cart-test.allthethings()-t-shirt-(red)"]'
+
+interactions:
+  - action: click add to cart
+    selector: '[data-test="add-to-cart-*"]'
+    trigger: Updates cart badge count, button changes to "Remove"
+
+  - action: click cart icon
+    selector: '[data-test="shopping-cart-link"]'
+    trigger: Navigates to /cart.html
+
+  - action: change sort
+    selector: '[data-test="product-sort-container"]'
+    trigger: Reorders product display

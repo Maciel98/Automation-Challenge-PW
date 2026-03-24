@@ -1,0 +1,94 @@
+url: https://www.saucedemo.com/cart.html
+title: Swag Labs
+auth_required: true
+elements:
+  # Header
+  - selector: '[data-test="shopping-cart-link"]'
+    type: a
+    visible: true
+    purpose: Navigate to cart (current page)
+
+  - selector: '[data-test="shopping-cart-badge"]'
+    type: span
+    visible: conditional
+    purpose: Displays cart item count
+
+  # Page Title
+  - selector: '[data-test="title"]'
+    type: span
+    visible: true
+    text_content: "Your Cart"
+
+  # Cart Contents
+  - selector: '[data-test="cart-list"]'
+    type: div
+    visible: true
+    purpose: Container for cart items
+
+  - selector: '[data-test="cart-contents-container"]'
+    type: div
+    visible: true
+    purpose: Cart contents wrapper
+
+  # Cart Item (dynamic, one per product)
+  - selector: '[data-test="inventory-item"]'
+    type: div
+    visible: true
+    count: dynamic
+    purpose: Individual cart item
+
+  - selector: '[data-test="item-quantity"]'
+    type: div
+    visible: true
+    purpose: Item quantity display
+
+  - selector: '[data-test="inventory-item-name"]'
+    type: div
+    visible: true
+    purpose: Product name
+
+  - selector: '[data-test="inventory-item-desc"]'
+    type: div
+    visible: true
+    purpose: Product description
+
+  - selector: '[data-test="inventory-item-price"]'
+    type: div
+    visible: true
+    purpose: Item price
+
+  # Remove buttons (one per product)
+  - selector: '[data-test="remove-sauce-labs-backpack"]'
+    type: button
+    visible: conditional
+    purpose: Remove backpack from cart
+
+  # Action Buttons
+  - selector: '[data-test="continue-shopping"]'
+    type: button
+    visible: true
+    purpose: Return to inventory page
+
+  - selector: '[data-test="checkout"]'
+    type: button
+    visible: true
+    purpose: Proceed to checkout
+
+interactions:
+  - action: click remove
+    selector: '[data-test="remove-*"]'
+    trigger: Removes item from cart, updates badge count
+
+  - action: click continue shopping
+    selector: '[data-test="continue-shopping"]'
+    trigger: Navigates to /inventory.html
+
+  - action: click checkout
+    selector: '[data-test="checkout"]'
+    trigger: Navigates to /checkout-step-one.html
+
+empty_state:
+  condition: No items in cart
+  elements_hidden:
+    - '[data-test="cart-list"]'
+    - '[data-test="checkout"]'

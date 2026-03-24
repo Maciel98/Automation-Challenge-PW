@@ -1,0 +1,108 @@
+url: https://www.saucedemo.com/checkout-step-two.html
+title: Swag Labs
+auth_required: true
+elements:
+  # Header
+  - selector: '[data-test="title"]'
+    type: span
+    visible: true
+    text_content: "Checkout: Overview"
+
+  # Summary Container
+  - selector: '[data-test="checkout-summary-container"]'
+    type: div
+    visible: true
+    purpose: Checkout summary wrapper
+
+  - selector: '[data-test="cart-list"]'
+    type: div
+    visible: true
+    purpose: List of items in order
+
+  # Cart Item Info
+  - selector: '[data-test="inventory-item"]'
+    type: div
+    visible: true
+    count: dynamic
+    purpose: Order item details
+
+  - selector: '[data-test="item-quantity"]'
+    type: div
+    visible: true
+    purpose: Item quantity
+
+  - selector: '[data-test="inventory-item-name"]'
+    type: div
+    visible: true
+    purpose: Product name
+
+  - selector: '[data-test="inventory-item-price"]'
+    type: div
+    visible: true
+    purpose: Item price
+
+  # Payment Information
+  - selector: '[data-test="payment-info-label"]'
+    type: div
+    visible: true
+    text_content: "Payment Information:"
+
+  - selector: '[data-test="payment-info-value"]'
+    type: div
+    visible: true
+    text_content: "SauceCard #31337"
+
+  # Shipping Information
+  - selector: '[data-test="shipping-info-label"]'
+    type: div
+    visible: true
+    text_content: "Shipping Information:"
+
+  - selector: '[data-test="shipping-info-value"]'
+    type: div
+    visible: true
+    text_content: "Free Pony Express Delivery!"
+
+  # Price Totals
+  - selector: '[data-test="subtotal-label"]'
+    type: div
+    visible: true
+    purpose: Item subtotal (e.g., "Item total: $29.99")
+
+  - selector: '[data-test="tax-label"]'
+    type: div
+    visible: true
+    purpose: Tax amount (e.g., "Tax: $2.40")
+
+  - selector: '[data-test="total-label"]'
+    type: div
+    visible: true
+    purpose: Grand total (e.g., "Total: $32.39")
+
+  # Action Buttons
+  - selector: '[data-test="cancel"]'
+    type: button
+    visible: true
+    purpose: Cancel checkout, return to cart
+
+  - selector: '[data-test="finish"]'
+    type: button
+    visible: true
+    purpose: Complete order
+
+interactions:
+  - action: click cancel
+    selector: '[data-test="cancel"]'
+    trigger: Navigates back to /cart.html
+
+  - action: click finish
+    selector: '[data-test="finish"]'
+    trigger: Submits order, navigates to /checkout-complete.html
+
+calculations:
+  tax_rate: ~8% (calculated from subtotal)
+  total: subtotal + tax
+  example:
+    subtotal: "$29.99"
+    tax: "$2.40"
+    total: "$32.39"

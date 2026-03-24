@@ -1,0 +1,45 @@
+url: https://www.saucedemo.com/
+title: Swag Labs
+elements:
+  - selector: '[data-test="login-container"]'
+    type: div
+    visible: true
+    text_content: Login form container with credentials info
+
+  - selector: '[data-test="username"]'
+    type: input
+    visible: true
+    purpose: Username input field
+
+  - selector: '[data-test="password"]'
+    type: input
+    visible: true
+    purpose: Password input field
+
+  - selector: '[data-test="login-button"]'
+    type: input
+    visible: true
+    purpose: Submit login form
+
+  - selector: '[data-test="login-credentials"]'
+    type: div
+    visible: true
+    text_content: "Accepted usernames are: standard_user, locked_out_user, problem_user, performance_glitch_user, error_user, visual_user"
+
+  - selector: '[data-test="login-password"]'
+    type: div
+    visible: true
+    text_content: "Password for all users: secret_sauce"
+
+interactions:
+  - action: fill username
+    selector: '[data-test="username"]'
+    trigger: Enables password field
+
+  - action: fill password
+    selector: '[data-test="password"]'
+    trigger: Enables login button
+
+  - action: click login button
+    selector: '[data-test="login-button"]'
+    trigger: POST request to /login, redirects to /inventory.html on success
