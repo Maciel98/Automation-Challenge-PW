@@ -1,0 +1,8 @@
+{
+  "labels": {
+    "title": "Checkout: Complete!",
+    "thankYouMessage": "Thank you for your order!",
+    "dispatchMessage": "Your order has been dispatched, and will arrive just as fast as the pony can get there!",
+    "backHomeButton": "Back Home"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "labels": {
+    "title": "Checkout: Overview",
+    "paymentInfo": "Payment Information",
+    "shippingInfo": "Shipping Information",
+    "total": "Total"
+  },
+  "taxRate": 0.08
+}

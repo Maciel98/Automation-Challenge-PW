@@ -1,0 +1,46 @@
+{
+  "products": [
+    {
+      "id": "sauce-labs-backpack",
+      "name": "Sauce Labs Backpack",
+      "price": 29.99,
+      "description": "Carry all the things with the sleek, streamlined Sauce Labs back pack.",
+      "image": "sauce-backpack-1200x1500.jpg"
+    },
+    {
+      "id": "sauce-labs-bike-light",
+      "name": "Sauce Labs Bike Light",
+      "price": 9.99,
+      "description": "A red light isn't the worst thing, but it's also not the best thing.",
+      "image": "bike-light-1200x1500.jpg"
+    },
+    {
+      "id": "sauce-labs-bolt-t-shirt",
+      "name": "Sauce Labs Bolt T-Shirt",
+      "price": 15.99,
+      "description": "Get your testing superhero on with the Sauce Labs bolt T-shirt.",
+      "image": "bolt-shirt-1200x1500.jpg"
+    },
+    {
+      "id": "sauce-labs-fleece-jacket",
+      "name": "Sauce Labs Fleece Jacket",
+      "price": 49.99,
+      "description": "It's not every day that you come across a midweight quarter-zip fleece jacket.",
+      "image": "fleece-jacket-1200x1500.jpg"
+    },
+    {
+      "id": "sauce-labs-onesie",
+      "name": "Sauce Labs Onesie",
+      "price": 7.99,
+      "description": "Rib snap infant onesie for the junior in your life",
+      "image": "onesie-1200x1500.jpg"
+    },
+    {
+      "id": "test.allthethings()-t-shirt-(red)",
+      "name": "Test.allTheThings() T-Shirt (Red)",
+      "price": 15.99,
+      "description": "This classic, straightforward t-shirt is a wardrobe staple.",
+      "image": "red-tatt-1200x1500.jpg"
+    }
+  ]
+}

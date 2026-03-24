@@ -188,6 +188,13 @@ tests/
 ├── helpers/                # Helper functions
 │   ├── credentials.ts
 │   └── assertions.ts
+├── test-data/              # Test data JSON files (no hardcoded values)
+│   ├── login.json
+│   ├── inventory.json
+│   ├── cart.json
+│   ├── checkout-step-one.json
+│   ├── checkout-step-two.json
+│   └── checkout-complete.json
 └── base/                   # Base test configuration
 
 docs/                       # Knowledge base (READ BEFORE CREATING TESTS)
@@ -199,7 +206,83 @@ docs/                       # Knowledge base (READ BEFORE CREATING TESTS)
 
 ## Test Data
 
-**Credentials:** Stored in `.env` file
+**CRITICAL:** All test data (except credentials) must be stored in `tests/test-data/` JSON files. **No hardcoded values in tests.**
+
+### Test Data Location
+
+**Directory:** `tests/test-data/`
+
+**Available Test Data Files:**
+
+| Page | Test Data File | Contains |
+|------|----------------|----------|
+| Login | `login.json` | Error messages, form labels |
+| Inventory | `inventory.json` | Product list with IDs, names, prices, descriptions |
+| Cart | `cart.json` | Cart labels, button text |
+| Checkout Step 1 | `checkout-step-one.json` | Form labels, error messages |
+| Checkout Step 2 | `checkout-step-two.json` | Summary labels, tax rate |
+| Checkout Complete | `checkout-complete.json` | Success messages, labels |
+
+### Using Test Data in Tests
+
+**✅ CORRECT:**
+```typescript
+// Load test data from JSON
+import inventoryData from '../../test-data/inventory.json';
+
+test('verify product prices', async ({ inventoryPage }) => {
+  await inventoryPage.goto();
+
+  for (const product of inventoryData.products) {
+    const price = await inventoryPage.getProductPrice(product.id);
+    expect(price).toBe(product.price);
+  }
+});
+```
+
+**❌ WRONG:**
+```typescript
+// Don't hardcode values in tests
+test('verify product prices', async ({ inventoryPage }) => {
+  await inventoryPage.goto();
+  const price = await inventoryPage.getProductPrice('sauce-labs-backpack');
+  expect(price).toBe(29.99); // ❌ Hardcoded value
+});
+```
+
+### Available Product Data
+
+**File:** `tests/test-data/inventory.json`
+
+```json
+{
+  "products": [
+    { "id": "sauce-labs-backpack", "name": "Sauce Labs Backpack", "price": 29.99 },
+    { "id": "sauce-labs-bike-light", "name": "Sauce Labs Bike Light", "price": 9.99 },
+    { "id": "sauce-labs-bolt-t-shirt", "name": "Sauce Labs Bolt T-Shirt", "price": 15.99 },
+    { "id": "sauce-labs-fleece-jacket", "name": "Sauce Labs Fleece Jacket", "price": 49.99 },
+    { "id": "sauce-labs-onesie", "name": "Sauce Labs Onesie", "price": 7.99 },
+    { "id": "test.allthethings()-t-shirt-(red)", "name": "Test.allTheThings() T-Shirt (Red)", "price": 15.99 }
+  ]
+}
+```
+
+### Adding New Test Data
+
+When creating new tests:
+
+1. **Check if test data exists:**
+   ```bash
+   ls tests/test-data/
+   ```
+
+2. **If file exists:** Add data to appropriate section
+3. **If file doesn't exist:** Create new JSON file with meaningful structure
+4. **Update CLAUDE.md:** Document the new test data file
+
+### Credentials (Exception)
+
+**Credentials are the ONLY exception** - stored in `.env` file:
 - `STANDARD_USER=standard_user`
 - `LOCKED_OUT_USER=locked_out_user`
 - `TEST_PASSWORD=secret_sauce`
@@ -376,12 +459,13 @@ test('scenario name', async ({ pageObject }) => {
 |------|--------|--------|
 | 1 | Read `docs/app-knowledge/<page>.md` | ✅ Understand page interactions |
 | 2 | Read `docs/snapshots/<page>.yaml` | ✅ Get confirmed selectors |
-| 3 | Use `playwright-pom` skill | ✅ Follow POM structure |
-| 4 | Create page object | ✅ No assertions inside |
-| 5 | Use `data-test` selectors | ✅ From knowledge base |
-| 6 | Write test spec | ✅ AAA pattern |
-| 7 | Use fixtures | ✅ Dependency injection |
-| 8 | Run tests | ✅ `npm test` passes |
+| 3 | Check `tests/test-data/<page>.json` | ✅ Use test data, no hardcoding |
+| 4 | Use `playwright-pom` skill | ✅ Follow POM structure |
+| 5 | Create page object | ✅ No assertions inside |
+| 6 | Use `data-test` selectors | ✅ From knowledge base |
+| 7 | Write test spec | ✅ AAA pattern, use test data |
+| 8 | Use fixtures | ✅ Dependency injection |
+| 9 | Run tests | ✅ `npm test` passes |
 
 ### Common Patterns
 
@@ -480,11 +564,13 @@ npx playwright test tests/e2e/login/login.spec.ts
 ✅ **Always read `docs/app-knowledge/` before creating tests**
 ✅ **Use `playwright-pom` skill for test structure**
 ✅ **Use documented `data-test` selectors from `docs/snapshots/`**
+✅ **Use test data from `tests/test-data/` - no hardcoded values**
 ✅ **Follow POM best practices: no assertions in page objects**
 ✅ **Use fixtures for clean test code**
 
 ❌ **Don't skip reading the knowledge base**
 ❌ **Don't guess selectors - use documented ones**
+❌ **Don't hardcode test data - use JSON files**
 ❌ **Don't put assertions in page objects**
 ❌ **Don't use text-based selectors when `data-test` available**
 
