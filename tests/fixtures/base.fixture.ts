@@ -1,11 +1,13 @@
 import { test as base } from '@playwright/test';
 import { LoginPage } from '../pages/login.page';
+import { SidebarPage } from '../pages/sidebar.page';
 
 /**
  * Type definition for our custom fixtures
  */
 type MyFixtures = {
   loginPage: LoginPage;
+  sidebarPage: SidebarPage;
 };
 
 /**
@@ -20,6 +22,15 @@ export const test = base.extend<MyFixtures>({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await use(loginPage);
+  },
+
+  /**
+   * SidebarPage fixture
+   * Automatically creates a new SidebarPage instance for each test
+   */
+  sidebarPage: async ({ page }, use) => {
+    const sidebarPage = new SidebarPage(page);
+    await use(sidebarPage);
   },
 });
 

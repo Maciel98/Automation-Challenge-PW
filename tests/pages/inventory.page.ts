@@ -28,7 +28,7 @@ export class InventoryPage {
     // Navigation elements
     this.shoppingCartLink = page.locator('[data-test="shopping-cart-link"]');
     this.shoppingCartBadge = page.locator('[data-test="shopping-cart-badge"]');
-    this.menuButton = page.locator('[data-test="open-menu"]');
+    this.menuButton = page.locator('#react-burger-menu-btn'); // Hamburger menu button
 
     // Sorting
     this.sortDropdown = page.locator('[data-test="product-sort-container"]');
@@ -110,18 +110,21 @@ export class InventoryPage {
 
   /**
    * Open the sidebar menu
+   * @deprecated Use SidebarPage.open() instead
    */
   async openMenu() {
     await this.menuButton.click();
-    await this.page.locator('[data-test="logout-sidebar-link"]').waitFor({ state: 'visible', timeout: 3000 });
+    await this.page.locator('.bm-menu').waitFor({ state: 'visible', timeout: 1000 });
+    await this.page.waitForTimeout(500); // Wait for animation
   }
 
   /**
    * Logout via the sidebar menu
+   * @deprecated Use SidebarPage.openAndLogout() instead
    */
   async logout() {
     await this.openMenu();
     await this.page.locator('[data-test="logout-sidebar-link"]').click();
-    await this.page.waitForURL(/\/index\.html/, { timeout: 5000 });
+    await this.page.waitForURL(/\/(index\.html)?$/, { timeout: 5000 });
   }
 }

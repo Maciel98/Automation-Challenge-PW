@@ -1,0 +1,123 @@
+# SauceDemo Sidebar Menu Snapshot
+# Generated: 2025-03-24
+# Page: Left Sidebar Menu (Hamburger Menu)
+
+sidebar_menu:
+  description: "Left sidebar navigation menu accessed via hamburger button"
+  container:
+    selector: ".bm-menu"
+    description: "Main sidebar menu container that slides in from left"
+
+  hamburger_button:
+    selector: "#react-burger-menu-btn"
+    description: "Button to open the sidebar menu (three horizontal lines icon)"
+    type: "button"
+    position:
+      x: 20
+      y: 20
+    size:
+      width: 20
+      height: 20
+
+  close_button:
+    selector: "#react-burger-cross-btn"
+    description: "X button to close the sidebar menu"
+    type: "button"
+    location: "top-right corner of sidebar"
+
+  menu_items:
+    - text: "All Items"
+      id: "inventory_sidebar_link"
+      data_test: "inventory-sidebar-link"
+      href: "#"
+      selector: "nav.bm-item-list a#inventory_sidebar_link"
+      alt_selector: '[data-test="inventory-sidebar-link"]'
+      action: "Navigates to inventory page (refreshes current inventory view)"
+
+    - text: "About"
+      id: "about_sidebar_link"
+      data_test: "about-sidebar-link"
+      href: "https://saucelabs.com/"
+      selector: "nav.bm-item-list a#about_sidebar_link"
+      alt_selector: '[data-test="about-sidebar-link"]'
+      action: "Opens external Sauce Labs website in new tab/window"
+      is_external: true
+
+    - text: "Logout"
+      id: "logout_sidebar_link"
+      data_test: "logout-sidebar-link"
+      href: "#"
+      selector: "nav.bm-item-list a#logout_sidebar_link"
+      alt_selector: '[data-test="logout-sidebar-link"]'
+      action: "Logs out current user and redirects to login page"
+
+    - text: "Reset App State"
+      id: "reset_sidebar_link"
+      data_test: "reset-sidebar-link"
+      href: "#"
+      selector: "nav.bm-item-list a#reset_sidebar_link"
+      alt_selector: '[data-test="reset-sidebar-link"]'
+      action: "Resets application state (clears cart, filters, etc.)"
+
+  interactions:
+    open_menu:
+      action: "click"
+      selector: "#react-burger-menu-btn"
+      expected_result: "Sidebar slides in from left, menu items visible"
+
+    close_menu:
+      action: "click"
+      selector: "#react-burger-cross-btn"
+      expected_result: "Sidebar slides out to left and disappears"
+
+    navigate_all_items:
+      action: "click"
+      selector: '[data-test="inventory-sidebar-link"]'
+      expected_result: "Stays on inventory page, refreshes view"
+      url_after: "https://www.saucedemo.com/inventory.html"
+
+    navigate_about:
+      action: "click"
+      selector: '[data-test="about-sidebar-link"]'
+      expected_result: "Opens external saucelabs.com"
+      is_navigation: true
+
+    navigate_logout:
+      action: "click"
+      selector: '[data-test="logout-sidebar-link"]'
+      expected_result: "Logs out, redirects to login page"
+      url_after: "https://www.saucedemo.com/"
+
+    reset_app_state:
+      action: "click"
+      selector: '[data-test="reset-sidebar-link"]'
+      expected_result: "Clears cart and resets filters, stays on current page"
+
+  visual_state:
+    open:
+      sidebar_visible: true
+      overlay_opacity: 0.5
+      menu_animation: "slide-in from left"
+    closed:
+      sidebar_hidden: true
+      no_overlay: true
+
+  accessibility:
+    hamburger_button_role: "button"
+    menu_item_role: "link"
+    keyboard_navigation:
+      open_menu: "Tab to hamburger button, press Enter"
+      close_menu: "Tab to X button, press Enter or press Escape"
+      navigate_items: "Tab through menu items, press Enter to select"
+
+  screenshots:
+    initial_state: "docs/screenshots/sidebar-initial-inventory.png"
+    menu_open: "docs/screenshots/sidebar-menu-open.png"
+    nav_all_items: "docs/screenshots/sidebar-nav-all-items.png"
+    nav_about: "docs/screenshots/sidebar-nav-about.png"
+    nav_logout: "docs/screenshots/sidebar-nav-logout.png"
+
+    # Reset App State detailed flow
+    reset_step1_cart_with_item: "docs/screenshots/sidebar-reset-01-cart-with-item.png"
+    reset_step2_menu_open: "docs/screenshots/sidebar-reset-02-menu-open.png"
+    reset_step3_after_reset: "docs/screenshots/sidebar-reset-03-after-reset.png"
