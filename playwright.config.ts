@@ -51,7 +51,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         // DEV environment URL
         // Update this to your development environment URL
-        baseURL: 'https://dev.saucedemo.com',
+        baseURL: 'https://www.saucedemo.com', // example 'https://dev.saucedemo.com'
       },
     },
 
@@ -61,7 +61,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         // TEST/STAGING environment URL
         // Update this to your test/staging environment URL
-        baseURL: 'https://test.saucedemo.com',
+        baseURL: 'https://www.saucedemo.com', // example 'https://test.saucedemo.com'
       },
     },
 
