@@ -112,13 +112,18 @@ In other contexts the approach changes: seeding via API or database scripts is p
 
 #### What are the risks around brittle or environment-dependent data?
 
-The obvious risks are cart state leaking between tests if logout is not properly handled. The less obvious risk is test assumptions becoming stale. If a test always adds the same product by name and the application changes that product name, the test fails.
+  Two key risks to watch for:       
+
+  1. Test contamination - If tests don't properly log out, cart items from one test can leak into the 
+  next, causing false failures or passes.
+  2. Brittle tests - When tests hardcode values like product names ("Sauce Labs Backpack"), any change
+   to the application breaks the test. Better to reference products by ID or use test data files. 
 
 The mitigation is to:
-- Always start tests from a clean state (logged out, empty cart)
-- Use data-test attributes for selectors rather than text-based selectors
-- Avoid hardcoding product names when possible
-- Always log out or close browser context after each test
+ - **Leverage Playwright's built-in isolation** - Each test automatically gets a new browser context,preventing cookie/session leakage between tests
+  - **Use test data files** - Centralize values in tests/test-data/*.json rather than hardcoding across tests
+  - **Use data-test attributes** - Select by stable test attributes rather than text-based selectors
+  - **Explicitly log out when needed** - Browser contexts are isolated by default, but log out explicitly when testing logout flows or when sharing contexts 
 
 ---
 
@@ -138,7 +143,6 @@ The flows have natural dependencies that dictate the order. Login must work befo
 
 1. **First:** Login happy path and failure path (every other test depends on this)
    - standard_user login success
-   - locked_out_user login failure
    - Wrong password / empty fields validation
 
 2. **Second:** Inventory and add to cart (confirms the core shopping action works)
@@ -148,9 +152,6 @@ The flows have natural dependencies that dictate the order. Login must work befo
    - Navigate to cart page
 
 3. **Third:** Full checkout flow (the highest business value scenario and the most complex to automate)
-   - Checkout step one (information form)
-   - Checkout step two (overview with calculations)
-   - Checkout complete (confirmation)
 
 4. **Last:** Edge cases and failure paths within each flow
    - Sort products functionality
@@ -161,4 +162,4 @@ The flows have natural dependencies that dictate the order. Login must work befo
 
 #### What gets deprioritized early on?
 
-Edge cases and failure paths wait until the happy paths are stable. There is no value in testing what happens when checkout fails if you have not yet confirmed that checkout succeeds. Sorting functionality and user-type-specific bugs (problem_user images, performance_glitch_user delays) are lower priority than the core purchase flow.
+Edge cases and failure paths wait until the happy paths are stable. There is no value in testing what happens when checkout fails if you have not yet confirmed that checkout succeeds.

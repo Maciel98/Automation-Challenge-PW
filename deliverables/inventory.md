@@ -153,22 +153,7 @@ This inventory categorizes test scenarios for the Swag Labs e-commerce applicati
 
 | Test ID | Automation | Test Case |
 |---------|------------|-----------|
-| CRT-008 | Later | Navigate to cart via direct URL after login - Cart page loads and displays contents |
 | CO1-006 | Later | Refresh browser during checkout step one - Form data is NOT preserved (no state persistence) |
-
-### Inventory Edge Cases
-
-| Test ID | Automation | Test Case |
-|---------|------------|-----------|
-| INV-008 | Later | Add same product twice to cart - Cart shows quantity of 2 or two separate entries |
-
-### Sidebar Edge Cases
-
-| Test ID | Automation | Test Case |
-|---------|------------|-----------|
-| SID-004 | Later | Click "All Items" menu item - Sidebar expands and shows all menu options |
-| SID-005 | Later | Click "About" menu item - External link to Sauce Labs website opens |
-| SID-006 | Later | Click "Reset App State" menu item - Application resets to initial state |
 
 ### Navbar Edge Cases
 
