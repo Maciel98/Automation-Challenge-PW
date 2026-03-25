@@ -98,6 +98,13 @@ export class InventoryPage {
   }
 
   /**
+   * Get the count of products displayed on the page
+   */
+  async getProductCount(): Promise<number> {
+    return await this.page.locator('[data-test="inventory-item"]').count();
+  }
+
+  /**
    * Get the first available product ID from the inventory page
    * Uses the first "add to cart" button to determine product availability
    * @returns The product ID (e.g., 'sauce-labs-backpack')

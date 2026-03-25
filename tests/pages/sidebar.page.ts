@@ -1,4 +1,5 @@
 import { type Page, type Locator } from '@playwright/test';
+import { NavbarPage } from './navbar.page';
 
 /**
  * SidebarPage - Page Object for SauceDemo.com Sidebar Menu
@@ -15,7 +16,7 @@ import { type Page, type Locator } from '@playwright/test';
  */
 export class SidebarPage {
   readonly page: Page;
-  readonly hamburgerButton: Locator;
+  readonly navbar: NavbarPage;
   readonly closeButton: Locator;
   readonly sidebarContainer: Locator;
   readonly allItemsLink: Locator;
@@ -23,11 +24,11 @@ export class SidebarPage {
   readonly logoutLink: Locator;
   readonly resetAppStateLink: Locator;
 
-  constructor(page: Page) {
+  constructor(page: Page, navbar: NavbarPage) {
     this.page = page;
+    this.navbar = navbar;
 
     // Sidebar controls (use IDs as data-test not available for buttons)
-    this.hamburgerButton = page.locator('#react-burger-menu-btn');
     this.closeButton = page.locator('#react-burger-cross-btn');
 
     // Sidebar container
@@ -42,12 +43,11 @@ export class SidebarPage {
 
   /**
    * Open the sidebar menu
+   * Delegates to navbar.openMenu() since hamburger button is on navbar
    * Waits for menu to become visible after animation
    */
   async open() {
-    await this.hamburgerButton.click();
-    // Wait for sidebar slide-in animation to complete
-    await this.sidebarContainer.waitFor({ state: 'visible' });
+    await this.navbar.openMenu();
   }
 
   /**
@@ -77,14 +77,14 @@ export class SidebarPage {
 
   /**
    * Navigate to "About" (opens external saucelabs.com)
-   * Returns the new page object
+   * Navigates in the same tab (not a new page as documented)
+   * Returns the current page after navigation
    */
   async navigateToAbout(): Promise<Page> {
-    const [newPage] = await Promise.all([
-      this.page.context().waitForEvent('page'),
-      this.aboutLink.click()
-    ]);
-    return newPage;
+    await this.aboutLink.click();
+    // Wait for navigation to saucelabs.com to complete
+    await this.page.waitForURL(/saucelabs\.com/, { timeout: 10000 });
+    return this.page;
   }
 
   /**
@@ -133,6 +133,16 @@ export class SidebarPage {
   }
 
   /**
+   * Open sidebar and navigate to About
+   * Convenience method for common workflow
+   * Returns the new page object
+   */
+  async openAndNavigateToAbout(): Promise<Page> {
+    await this.open();
+    return await this.navigateToAbout();
+  }
+
+  /**
    * Get the text content of all menu items
    * Useful for verification in tests
    */
@@ -155,13 +165,6 @@ export class SidebarPage {
    */
   async isMenuItemVisible(menuItem: Locator): Promise<boolean> {
     return await menuItem.isVisible().catch(() => false);
-  }
-
-  /**
-   * Check if hamburger button is visible
-   */
-  async isHamburgerButtonVisible(): Promise<boolean> {
-    return await this.hamburgerButton.isVisible().catch(() => false);
   }
 
   /**

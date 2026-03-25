@@ -56,9 +56,10 @@ export const test = base.extend<MyFixtures>({
   /**
    * SidebarPage fixture
    * Automatically creates a new SidebarPage instance for each test
+   * Requires navbarPage as dependency since hamburger button is on navbar
    */
-  sidebarPage: async ({ page }, use) => {
-    await use(new SidebarPage(page));
+  sidebarPage: async ({ page, navbarPage }, use) => {
+    await use(new SidebarPage(page, navbarPage));
   },
 
   /**

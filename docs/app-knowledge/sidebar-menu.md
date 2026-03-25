@@ -61,7 +61,7 @@ Opens the Sauce Labs website (external link).
 - **Alt Selector:** `[data-test="about-sidebar-link"]`
 - **HREF:** `https://saucelabs.com/`
 - **Action:** Opens external website
-- **Navigation:** Opens `https://saucelabs.com/` in new tab/window
+- **Navigation:** Opens `https://saucelabs.com/` in the same tab (navigates away from app)
 - **Is External:** Yes
 
 ### 3. Logout
@@ -135,11 +135,9 @@ Opens Sauce Labs website.
 
 ```typescript
 await page.click('#react-burger-menu-btn'); // Open menu
-const [newPage] = await Promise.all([
-  page.context().waitForEvent('page'),
-  page.click('[data-test="about-sidebar-link"]')
-]);
-// New page opens with saucelabs.com
+await page.click('[data-test="about-sidebar-link"]');
+await page.waitForURL(/saucelabs\.com/);
+// Page navigates to saucelabs.com in the same tab
 ```
 
 ### Logout
@@ -330,7 +328,7 @@ test('reset app state clears cart', async ({ page }) => {
 
 ## Tips & Gotchas
 
-⚠️ **External Link:** The "About" menu item opens an external website (saucelabs.com). Use `Promise.all` with `waitForEvent('page')` to handle the new tab.
+⚠️ **External Link:** The "About" menu item opens an external website (saucelabs.com) in the same tab, navigating away from the app. Use `waitForURL()` to wait for navigation to complete.
 
 ⚠️ **Reset State:** The "Reset App State" doesn't provide visual feedback. Verify state changes by checking cart badge or product buttons.
 

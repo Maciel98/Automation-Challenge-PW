@@ -1,5 +1,7 @@
 import { test, expect } from '../../fixtures/base.fixture';
-import { InventoryPage } from '../../pages/inventory.page';
+import inventoryData from '../../test-data/inventory.json';
+
+const products = inventoryData.products;
 
 test.describe('Navbar Component @navigation', () => {
   test.describe('Visibility', () => {
@@ -35,7 +37,7 @@ test.describe('Navbar Component @navigation', () => {
     });
 
     test('should show badge count when items added @smoke @regression', async ({ authenticatedInventoryPage }) => {
-      await authenticatedInventoryPage.addToCart('sauce-labs-backpack');
+      await authenticatedInventoryPage.addToCart(products[0].id);
 
       const count = await authenticatedInventoryPage.navbar.getCartBadgeCount();
       expect(count).toBe(1);
@@ -45,33 +47,33 @@ test.describe('Navbar Component @navigation', () => {
     });
 
     test('should increment badge with multiple items @smoke @regression', async ({ authenticatedInventoryPage }) => {
-      await authenticatedInventoryPage.addToCart('sauce-labs-backpack');
+      await authenticatedInventoryPage.addToCart(products[0].id);
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(1);
 
-      await authenticatedInventoryPage.addToCart('sauce-labs-bike-light');
+      await authenticatedInventoryPage.addToCart(products[1].id);
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(2);
 
-      await authenticatedInventoryPage.addToCart('sauce-labs-bolt-t-shirt');
+      await authenticatedInventoryPage.addToCart(products[2].id);
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(3);
     });
 
     test('should decrement badge when items removed @regression', async ({ authenticatedInventoryPage }) => {
-      await authenticatedInventoryPage.addToCart('sauce-labs-backpack');
-      await authenticatedInventoryPage.addToCart('sauce-labs-bike-light');
+      await authenticatedInventoryPage.addToCart(products[0].id);
+      await authenticatedInventoryPage.addToCart(products[1].id);
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(2);
 
-      await authenticatedInventoryPage.removeFromCart('sauce-labs-backpack');
+      await authenticatedInventoryPage.removeFromCart(products[0].id);
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(1);
 
-      await authenticatedInventoryPage.removeFromCart('sauce-labs-bike-light');
+      await authenticatedInventoryPage.removeFromCart(products[1].id);
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(0);
     });
   });
 
   test.describe('Navigation', () => {
-    test('should navigate to cart page @smoke @regression', async ({ authenticatedInventoryPage, page }) => {
+    test('should navigate to cart page @smoke @regression', async ({ authenticatedInventoryPage, cartPage }) => {
       await authenticatedInventoryPage.navbar.navigateToCart();
-      await expect(page).toHaveURL(/\/cart\.html/);
+      await cartPage.isLoaded();
     });
 
     test('should open sidebar menu @regression', async ({ authenticatedInventoryPage }) => {
@@ -79,17 +81,5 @@ test.describe('Navbar Component @navigation', () => {
       const isVisible = await authenticatedInventoryPage.navbar.isSidebarVisible();
       expect(isVisible).toBeTruthy();
     });
-  });
-});
-
-test.describe('Navbar Integration', () => {
-  test('InventoryPage should use composed navbar @regression', async ({ authenticatedInventoryPage, page }) => {
-    await authenticatedInventoryPage.addToCart('sauce-labs-backpack');
-
-    const count = await authenticatedInventoryPage.navbar.getCartBadgeCount();
-    expect(count).toBe(1);
-
-    await authenticatedInventoryPage.navbar.navigateToCart();
-    await expect(page).toHaveURL(/\/cart\.html/);
   });
 });

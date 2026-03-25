@@ -40,7 +40,7 @@ sidebar_menu:
       href: "https://saucelabs.com/"
       selector: "nav.bm-item-list a#about_sidebar_link"
       alt_selector: '[data-test="about-sidebar-link"]'
-      action: "Opens external Sauce Labs website in new tab/window"
+      action: "Opens external Sauce Labs website in the same tab (navigates away)"
       is_external: true
 
     - text: "Logout"

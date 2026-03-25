@@ -1,19 +1,10 @@
 import { test, expect } from '../../../fixtures/base.fixture';
-import inventoryData from '../../../test-data/inventory.json';
 import checkoutStepOneData from '../../../test-data/checkout-step-one.json';
 
 // Get test customer data from JSON
 const TEST_CUSTOMER = checkoutStepOneData.testCustomer;
 
 test.describe('Checkout Step One - Information @checkout', () => {
-  test('should navigate to checkout step one @regression', async ({ authenticatedInventoryPage, cartPage, checkoutStepOnePage, page }) => {
-    await authenticatedInventoryPage.navbar.navigateToCart();
-    await cartPage.proceedToCheckout();
-
-    await expect(page).toHaveURL(/\/checkout-step-one\.html/);
-    await expect(checkoutStepOnePage.pageTitle).toHaveText(checkoutStepOneData.formLabels.title);
-  });
-
   test('should require first name @smoke', async ({
     authenticatedInventoryPage,
     cartPage,
@@ -58,7 +49,7 @@ test.describe('Checkout Step One - Information @checkout', () => {
     authenticatedInventoryPage,
     cartPage,
     checkoutStepOnePage,
-    page,
+    checkoutStepTwoPage,
   }) => {
     await authenticatedInventoryPage.navbar.navigateToCart();
     await cartPage.proceedToCheckout();
@@ -69,15 +60,15 @@ test.describe('Checkout Step One - Information @checkout', () => {
       TEST_CUSTOMER.postalCode
     );
 
-    await expect(page).toHaveURL(/\/checkout-step-two\.html/);
+    await checkoutStepTwoPage.isLoaded();
   });
 
-  test('should cancel and return to cart @regression', async ({ authenticatedInventoryPage, cartPage, checkoutStepOnePage, page }) => {
+  test('should cancel and return to cart @regression', async ({ authenticatedInventoryPage, cartPage, checkoutStepOnePage }) => {
     await authenticatedInventoryPage.navbar.navigateToCart();
     await cartPage.proceedToCheckout();
 
     await checkoutStepOnePage.cancel();
 
-    await expect(page).toHaveURL(/\/cart\.html/);
+    await cartPage.isLoaded();
   });
 });

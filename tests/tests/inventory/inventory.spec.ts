@@ -4,13 +4,12 @@ import inventoryData from '../../test-data/inventory.json';
 test.describe('Inventory @inventory', () => {
   test.describe('Page Display', () => {
     test('should display all available products @smoke @regression', async ({ authenticatedInventoryPage }) => {
-      // INV-001: View inventory page - Page displays 6 available products
-      const productCount = await authenticatedInventoryPage.page
-        .locator('[data-test="inventory-item"]')
-        .count();
+      const productCount = await authenticatedInventoryPage.getProductCount();
+      const actualProductNames = await authenticatedInventoryPage.getProductNames();
+      const expectedProductNames = inventoryData.products.map(p => p.name);
 
       expect(productCount).toBe(inventoryData.products.length);
-      expect(productCount).toBe(6);
+      expect(actualProductNames.sort()).toEqual(expectedProductNames.sort());
     });
   });
 

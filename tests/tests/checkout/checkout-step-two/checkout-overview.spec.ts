@@ -1,21 +1,42 @@
 import { test, expect } from '../../../fixtures/base.fixture';
 import inventoryData from '../../../test-data/inventory.json';
 import checkoutCompleteData from '../../../test-data/checkout-complete.json';
+import checkoutStepTwoData from '../../../test-data/checkout-step-two.json';
 
 test.describe('Checkout Step Two - Overview @checkout', () => {
   test.describe('Price Calculations', () => {
     test('should verify subtotal, tax, and total calculations are correct @smoke @regression', async ({
       checkoutStepTwoPageReady,
     }) => {
-      // CO2-002: Verify subtotal, tax, and total on overview - Calculations are correct
-      const subtotal = await checkoutStepTwoPageReady.getSubtotal();
-      const tax = await checkoutStepTwoPageReady.getTax();
-      const total = await checkoutStepTwoPageReady.getTotal();
 
-      // Verify: Total = Subtotal + Tax
-      expect(total).toBeCloseTo(subtotal + tax, 2);
-      expect(total).toBeGreaterThan(subtotal);
-      expect(tax).toBeGreaterThan(0);
+      // Get displayed values
+      const actualSubtotal = await checkoutStepTwoPageReady.getSubtotal();
+      const actualTax = await checkoutStepTwoPageReady.getTax();
+      const actualTotal = await checkoutStepTwoPageReady.getTotal();
+
+      // Get product names and calculate expected values
+      const productNames = await checkoutStepTwoPageReady.getProductNames();
+
+      let expectedSubtotal = 0;
+      for (const name of productNames) {
+        const product = inventoryData.products.find(p => p.name === name);
+        expect(product).toBeDefined(); // Verify product exists in test data
+        expectedSubtotal += product!.price;
+      }
+
+      // Calculate expected tax using tax rate from test data
+      const expectedTax = expectedSubtotal * checkoutStepTwoData.taxRate;
+
+      // Calculate expected total
+      const expectedTotal = expectedSubtotal + expectedTax;
+
+      // Verify exact calculations (not just greater than)
+      expect(actualSubtotal).toBeCloseTo(expectedSubtotal, 2);
+      expect(actualTax).toBeCloseTo(expectedTax, 2);
+      expect(actualTotal).toBeCloseTo(expectedTotal, 2);
+
+      // Verify relationship: Total = Subtotal + Tax
+      expect(actualTotal).toBeCloseTo(actualSubtotal + actualTax, 2);
     });
   });
 
@@ -39,19 +60,6 @@ test.describe('Checkout Step Two - Overview @checkout', () => {
       expect(productQuantities[index]).toBe('1');
       expect(productPrices[index]).toBe(`$${expectedProduct!.price.toFixed(2)}`);
     });
-  });
-
-  test('should calculate subtotal correctly @regression', async ({ checkoutStepTwoPageReady }) => {
-    const subtotal = await checkoutStepTwoPageReady.getSubtotal();
-    expect(subtotal).toBe(inventoryData.products[0].price);
-  });
-
-  test('should calculate tax @regression', async ({ checkoutStepTwoPageReady }) => {
-    const subtotal = await checkoutStepTwoPageReady.getSubtotal();
-    const tax = await checkoutStepTwoPageReady.getTax();
-    const total = await checkoutStepTwoPageReady.getTotal();
-
-    expect(total).toBeCloseTo(subtotal + tax, 2);
   });
 
   test('should cancel and return to inventory @regression', async ({ checkoutStepTwoPageReady, inventoryPage }) => {
