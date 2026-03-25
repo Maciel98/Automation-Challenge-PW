@@ -62,11 +62,11 @@ export class CheckoutStepTwoPage {
   }
 
   /**
-   * Cancel checkout and return to cart
+   * Cancel checkout and return to inventory
    */
   async cancel() {
     await this.cancelButton.click();
-    await this.page.waitForURL(/\/cart\.html/, { timeout: 5000 });
+    await this.page.waitForURL(/\/inventory\.html/, { timeout: 5000 });
   }
 
   /**

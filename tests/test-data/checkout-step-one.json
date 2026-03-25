@@ -9,5 +9,10 @@
     "missingFirstName": "Error: First Name is required",
     "missingLastName": "Error: Last Name is required",
     "missingZipCode": "Error: Postal Code is required"
+  },
+  "testCustomer": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "postalCode": "12345"
   }
 }

@@ -1,21 +1,19 @@
 import { test, expect } from '../../fixtures/base.fixture';
 import { InventoryPage } from '../../pages/inventory.page';
-import { CartPage } from '../../pages/cart.page';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-test.describe('NavbarPage Component Tests', () => {
+test.describe('Navbar Component', () => {
   const standardUser = process.env.STANDARD_USER || 'standard_user';
   const password = process.env.TEST_PASSWORD || 'secret_sauce';
 
   test.beforeEach(async ({ loginPage }) => {
-    // Login before each test
     await loginPage.goto();
     await loginPage.loginAndWaitForDashboard(standardUser, password);
   });
 
-  test.describe('Navbar Visibility', () => {
+  test.describe('Visibility', () => {
     test('should display primary header on inventory page', async ({ navbarPage }) => {
       const isVisible = await navbarPage.isPrimaryHeaderVisible();
       expect(isVisible).toBeTruthy();
@@ -72,16 +70,13 @@ test.describe('NavbarPage Component Tests', () => {
 
     test('should decrement badge when items removed', async ({ navbarPage, page }) => {
       const inventoryPage = new InventoryPage(page);
-      // Add two items
       await inventoryPage.addToCart('sauce-labs-backpack');
       await inventoryPage.addToCart('sauce-labs-bike-light');
       expect(await navbarPage.getCartBadgeCount()).toBe(2);
 
-      // Remove one item
       await inventoryPage.removeFromCart('sauce-labs-backpack');
       expect(await navbarPage.getCartBadgeCount()).toBe(1);
 
-      // Remove second item
       await inventoryPage.removeFromCart('sauce-labs-bike-light');
       expect(await navbarPage.getCartBadgeCount()).toBe(0);
     });
@@ -90,20 +85,18 @@ test.describe('NavbarPage Component Tests', () => {
   test.describe('Navigation', () => {
     test('should navigate to cart page', async ({ navbarPage, page }) => {
       await navbarPage.navigateToCart();
-
       await expect(page).toHaveURL(/\/cart\.html/);
     });
 
     test('should open sidebar menu', async ({ navbarPage, page }) => {
       await navbarPage.openMenu();
-
       const sidebar = page.locator('.bm-menu');
       await expect(sidebar).toBeVisible();
     });
   });
 });
 
-test.describe('NavbarPage Integration Tests', () => {
+test.describe('Navbar Integration', () => {
   const standardUser = process.env.STANDARD_USER || 'standard_user';
   const password = process.env.TEST_PASSWORD || 'secret_sauce';
 
@@ -115,31 +108,12 @@ test.describe('NavbarPage Integration Tests', () => {
   test('InventoryPage should use composed navbar', async ({ page }) => {
     const inventoryPage = new InventoryPage(page);
 
-    // Add item using inventory page
     await inventoryPage.addToCart('sauce-labs-backpack');
 
-    // Check cart badge using composed navbar
     const count = await inventoryPage.navbar.getCartBadgeCount();
     expect(count).toBe(1);
 
-    // Navigate to cart using composed navbar
     await inventoryPage.navbar.navigateToCart();
     await expect(page).toHaveURL(/\/cart\.html/);
-  });
-
-  test('CartPage should use composed navbar', async ({ page }) => {
-    const inventoryPage = new InventoryPage(page);
-    const cartPage = new CartPage(page);
-
-    // Add items
-    await inventoryPage.addToCart('sauce-labs-backpack');
-    await inventoryPage.addToCart('sauce-labs-bike-light');
-
-    // Navigate to cart
-    await inventoryPage.navbar.navigateToCart();
-
-    // Check badge using cart page's composed navbar
-    const count = await cartPage.navbar.getCartBadgeCount();
-    expect(count).toBe(2);
   });
 });

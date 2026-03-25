@@ -51,6 +51,20 @@ Follow POM best practices: intent-revealing methods, no assertions in page objec
 5. Use `data-test` attribute selectors
 6. Fixture integration for dependency injection
 
+**Component Composition:**
+- Extract reusable UI components (navbar, modals, sidebars) into `pages/components/`
+- Compose components inside page objects
+- Example: `inventoryPage.navbar.navigateToCart()`
+
+**Organization Rule:**
+- `pages/` mirrors UI structure
+- `tests/` mirrors user behavior/feature domains (auth/, checkout/, smoke/)
+- They don't need to match 1:1
+
+**Fixture Usage:**
+- Use Playwright fixtures to instantiate page objects
+- Avoid `beforeEach` for fixture setup
+
 ### Foundation: **playwright-core**
 
 Use for:
@@ -169,33 +183,102 @@ export const test = base.extend<MyFixtures>({
 
 ---
 
+## Test Tags
+
+Playwright supports test tagging using `@` syntax in test titles. Tags enable filtering tests for different scenarios (smoke tests, regression, etc.).
+
+### Tag Standards
+
+```typescript
+// Smoke tests - critical paths that must pass
+test('should login @smoke @critical @P0', async ({ page }) => { });
+
+// Feature-specific tags
+test('should add to cart @smoke @cart @P0', async ({ page }) => { });
+test('should complete checkout @smoke @checkout @P0', async ({ page }) => { });
+
+// Priority levels
+test('critical feature @P0', async ({ page }) => { });
+test('important feature @P1', async ({ page }) => { });
+test('nice to have @P2', async ({ page }) => { });
+
+// Test types
+test('full user journey @E2E @regression', async ({ page }) => { });
+test('form validation @validation @negative', async ({ page }) => { });
+```
+
+### Running Tests by Tag
+
+```bash
+# Run only smoke tests
+npx playwright test --grep @smoke
+
+# Run critical P0 tests
+npx playwright test --grep @P0
+
+# Run smoke tests for authentication only
+npx playwright test --grep "@smoke and @auth"
+
+# Run all E2E tests
+npx playwright test --grep @E2E
+
+# Exclude specific tags
+npx playwright test --grep-invert @slow
+```
+
+### Tag Definitions
+
+| Tag | Usage | Examples |
+|-----|-------|----------|
+| `@smoke` | Critical path tests that run on every commit | Login, add to cart, checkout |
+| `@critical` | High-priority business-critical features | Payment flow, authentication |
+| `@P0`, `@P1`, `@P2` | Priority levels (0=highest) | P0: blocking issues, P1: important, P2: nice-to-have |
+| `@E2E` | End-to-end journey tests spanning multiple features | Complete purchase flow |
+| `@regression` | Tests for regression prevention | Previously fixed bugs |
+| `@auth`, `@cart`, `@checkout` | Feature-specific tags | Feature area categorization |
+| `@validation` | Form validation and error handling | Required field validation |
+| `@negative` | Negative test scenarios | Invalid inputs, error cases |
+
+---
+
 ## Project Structure
 
 ```
 tests/
-├── e2e/                    # Test specs
-│   ├── login/              # Login tests
-│   ├── inventory/          # Inventory tests
-│   ├── cart/               # Cart tests
-│   └── checkout/           # Checkout tests
-├── pages/                  # Page objects (POM)
+├── tests/                  # Test specs organized by feature/domain
+│   ├── auth/               # Authentication tests
+│   │   └── login.spec.ts
+│   ├── product/            # Product catalog tests
+│   │   └── (product listing, filtering, sorting)
+│   ├── cart/               # Shopping cart tests
+│   │   └── (cart operations, calculations)
+│   ├── checkout/           # Checkout flow tests
+│   │   └── checkout-flow.spec.ts
+│   ├── navigation/         # Navigation component tests
+│   │   ├── navbar.spec.ts
+│   │   └── sidebar.spec.ts
+│   └── E2E/                # End-to-end critical path tests
+│       └── critical-paths.spec.ts (tagged with @smoke)
+├── pages/                  # Page objects (POM) - mirrors UI structure
+│   ├── components/         # Reusable UI components
+│   │   ├── navbar.page.ts
+│   │   └── sidebar.page.ts
 │   ├── login.page.ts
 │   ├── inventory.page.ts
 │   ├── cart.page.ts
-│   └── checkout.page.ts
+│   └── checkout*.page.ts
 ├── fixtures/               # Custom fixtures
 │   └── base.fixture.ts
 ├── helpers/                # Helper functions
 │   ├── credentials.ts
 │   └── assertions.ts
-├── test-data/              # Test data JSON files (no hardcoded values)
-│   ├── login.json
-│   ├── inventory.json
-│   ├── cart.json
-│   ├── checkout-step-one.json
-│   ├── checkout-step-two.json
-│   └── checkout-complete.json
-└── base/                   # Base test configuration
+└── test-data/              # Test data JSON files (no hardcoded values)
+    ├── login.json
+    ├── inventory.json
+    ├── cart.json
+    ├── checkout-step-one.json
+    ├── checkout-step-two.json
+    └── checkout-complete.json
 
 docs/                       # Knowledge base (READ BEFORE CREATING TESTS)
 ├── app-knowledge/          # Page documentation
