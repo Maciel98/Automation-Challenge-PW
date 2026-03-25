@@ -32,22 +32,62 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    // -------------------------------------------------------------------------
+    // ENVIRONMENT PROJECTS
+    // -------------------------------------------------------------------------
+    // Each environment has its own baseURL configured below.
+    // This allows the same test suite to run against different environments
+    // by specifying the project name: --project=dev, --project=test, --project=prd
+    //
+    // Usage in CI pipeline:
+    // • DEV:  npx playwright test --project=dev --grep @smoke
+    // • TEST: npx playwright test --project=test --grep @smoke (then full regression)
+    // • PRD:  npx playwright test --project=prd --grep @smoke (NEVER regression in PRD)
+    // -------------------------------------------------------------------------
+
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'dev',
+      use: {
+        ...devices['Desktop Chrome'],
+        // DEV environment URL
+        // Update this to your development environment URL
+        baseURL: 'https://dev.saucedemo.com',
+      },
     },
 
+    {
+      name: 'test',
+      use: {
+        ...devices['Desktop Chrome'],
+        // TEST/STAGING environment URL
+        // Update this to your test/staging environment URL
+        baseURL: 'https://test.saucedemo.com',
+      },
+    },
+
+    {
+      name: 'prd',
+      use: {
+        ...devices['Desktop Chrome'],
+        // PRODUCTION environment URL
+        // This is the live production URL - use with caution
+        baseURL: 'https://www.saucedemo.com',
+      },
+    },
+
+    // -------------------------------------------------------------------------
+    // LEGACY BROWSER PROJECTS (Optional - commented out)
+    // -------------------------------------------------------------------------
+    // Uncomment if you need to test on additional browsers
+    // -------------------------------------------------------------------------
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },
     // },
-
     // {
     //   name: 'webkit',
     //   use: { ...devices['Desktop Safari'] },
     // },
-
-    /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
     //   use: { ...devices['Pixel 5'] },
@@ -55,16 +95,6 @@ export default defineConfig({
     // {
     //   name: 'Mobile Safari',
     //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
 

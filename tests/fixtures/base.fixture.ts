@@ -6,6 +6,14 @@ import { CartPage } from '../pages/cart.page';
 import { CheckoutStepOnePage } from '../pages/checkout-step-one.page';
 import { CheckoutStepTwoPage } from '../pages/checkout-step-two.page';
 import { CheckoutCompletePage } from '../pages/checkout-complete.page';
+import checkoutStepOneData from '../test-data/checkout-step-one.json';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const STANDARD_USER = process.env.STANDARD_USER || 'standard_user';
+const TEST_PASSWORD = process.env.TEST_PASSWORD || 'secret_sauce';
+const TEST_CUSTOMER = checkoutStepOneData.testCustomer;
 
 /**
  * Type definition for our custom fixtures
@@ -18,6 +26,11 @@ type MyFixtures = {
   checkoutStepOnePage: CheckoutStepOnePage;
   checkoutStepTwoPage: CheckoutStepTwoPage;
   checkoutCompletePage: CheckoutCompletePage;
+  authenticatedInventoryPage: InventoryPage;
+  cartWithItemPage: CartPage;
+  checkoutStepOnePageWithData: CheckoutStepOnePage;
+  checkoutStepTwoPageReady: CheckoutStepTwoPage;
+  checkoutCompletePageReady: CheckoutCompletePage;
 };
 
 /**
@@ -82,6 +95,111 @@ export const test = base.extend<MyFixtures>({
    */
   checkoutCompletePage: async ({ page }, use) => {
     await use(new CheckoutCompletePage(page));
+  },
+
+  /**
+   * Authenticated InventoryPage fixture
+   * Automatically logs in and navigates to inventory page
+   * Use this for tests that require an authenticated session
+   */
+  authenticatedInventoryPage: async ({ page }, use) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
+    const inventoryPage = new InventoryPage(page);
+    await use(inventoryPage);
+  },
+
+  /**
+   * CartPage with item fixture
+   * Automatically logs in, adds product to cart, and navigates to cart
+   * Use this for tests that operate on a cart with items
+   */
+  cartWithItemPage: async ({ page }, use) => {
+    const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
+    const cartPage = new CartPage(page);
+
+    await loginPage.goto();
+    await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
+    await inventoryPage.addToCart('sauce-labs-backpack');
+    await inventoryPage.navbar.navigateToCart();
+
+    await use(cartPage);
+  },
+
+  /**
+   * CheckoutStepOnePage with data fixture
+   * Automatically logs in, adds product, and navigates to checkout step one
+   * Use this for tests that operate on the checkout information form
+   */
+  checkoutStepOnePageWithData: async ({ page }, use) => {
+    const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
+    const cartPage = new CartPage(page);
+    const checkoutStepOnePage = new CheckoutStepOnePage(page);
+
+    await loginPage.goto();
+    await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
+    await inventoryPage.addToCart('sauce-labs-backpack');
+    await inventoryPage.navbar.navigateToCart();
+    await cartPage.proceedToCheckout();
+
+    await use(checkoutStepOnePage);
+  },
+
+  /**
+   * CheckoutStepTwoPage ready fixture
+   * Automatically logs in, adds product, fills checkout info, and navigates to checkout step two
+   * Use this for tests that operate on the checkout overview page
+   */
+  checkoutStepTwoPageReady: async ({ page }, use) => {
+    const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
+    const cartPage = new CartPage(page);
+    const checkoutStepOnePage = new CheckoutStepOnePage(page);
+    const checkoutStepTwoPage = new CheckoutStepTwoPage(page);
+
+    await loginPage.goto();
+    await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
+    await inventoryPage.addToCart('sauce-labs-backpack');
+    await inventoryPage.navbar.navigateToCart();
+    await cartPage.proceedToCheckout();
+    await checkoutStepOnePage.fillInformationAndContinue(
+      TEST_CUSTOMER.firstName,
+      TEST_CUSTOMER.lastName,
+      TEST_CUSTOMER.postalCode
+    );
+
+    await use(checkoutStepTwoPage);
+  },
+
+  /**
+   * CheckoutCompletePage ready fixture
+   * Automatically completes full checkout flow and navigates to confirmation page
+   * Use this for tests that operate on the order confirmation page
+   */
+  checkoutCompletePageReady: async ({ page }, use) => {
+    const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
+    const cartPage = new CartPage(page);
+    const checkoutStepOnePage = new CheckoutStepOnePage(page);
+    const checkoutStepTwoPage = new CheckoutStepTwoPage(page);
+    const checkoutCompletePage = new CheckoutCompletePage(page);
+
+    await loginPage.goto();
+    await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
+    await inventoryPage.addToCart('sauce-labs-backpack');
+    await inventoryPage.navbar.navigateToCart();
+    await cartPage.proceedToCheckout();
+    await checkoutStepOnePage.fillInformationAndContinue(
+      TEST_CUSTOMER.firstName,
+      TEST_CUSTOMER.lastName,
+      TEST_CUSTOMER.postalCode
+    );
+    await checkoutStepTwoPage.finishOrder();
+
+    await use(checkoutCompletePage);
   },
 });
 

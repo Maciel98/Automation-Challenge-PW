@@ -18,6 +18,7 @@ export class NavbarPage {
   readonly page: Page;
   readonly primaryHeader: Locator;
   readonly hamburgerButton: Locator;
+  readonly sidebarMenu: Locator;
   readonly shoppingCartLink: Locator;
   readonly shoppingCartBadge: Locator;
 
@@ -29,6 +30,9 @@ export class NavbarPage {
 
     // Hamburger menu button (uses ID as data-test not available)
     this.hamburgerButton = page.locator('#react-burger-menu-btn');
+
+    // Sidebar menu
+    this.sidebarMenu = page.locator('.bm-menu');
 
     // Shopping cart
     this.shoppingCartLink = page.locator('[data-test="shopping-cart-link"]');
@@ -96,6 +100,13 @@ export class NavbarPage {
    */
   async isShoppingCartLinkVisible(): Promise<boolean> {
     return await this.shoppingCartLink.isVisible().catch(() => false);
+  }
+
+  /**
+   * Check if sidebar menu is visible
+   */
+  async isSidebarVisible(): Promise<boolean> {
+    return await this.sidebarMenu.isVisible().catch(() => false);
   }
 
   /**

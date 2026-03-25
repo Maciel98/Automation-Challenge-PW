@@ -107,6 +107,6 @@ test.describe('E2E Critical Paths @smoke @E2E @P0', () => {
     // Verify cart is cleared after order
     const finalCartCount = await checkoutCompletePage.navbar.getCartBadgeCount();
     expect(finalCartCount).toBe(0);
-    await expect(checkoutCompletePage.page.locator('[data-test="shopping-cart-badge"]')).not.toBeVisible();
+    await expect(checkoutCompletePage.navbar.shoppingCartBadge).not.toBeVisible();
   });
 });
