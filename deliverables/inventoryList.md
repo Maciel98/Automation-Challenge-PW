@@ -323,7 +323,7 @@
 ### Tag Usage
 | Tag | Count |
 |-----|-------|
-| @smoke | 9 |
+| @smoke | 8 |
 | @regression | 17 |
 
 ### Automation Timeline

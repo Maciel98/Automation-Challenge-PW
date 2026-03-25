@@ -3,9 +3,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const STANDARD_USER = process.env.STANDARD_USER || 'standard_user';
-const TEST_PASSWORD = process.env.TEST_PASSWORD || 'secret_sauce';
-
 test.describe('Sidebar Menu @navigation', () => {
   test.describe('Logout', () => {
     test('should logout and redirect to login page @smoke @regression', async ({
@@ -16,7 +13,7 @@ test.describe('Sidebar Menu @navigation', () => {
       // SID-001: Click logout - User is redirected to login page
       // First login
       await loginPage.goto();
-      await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
+      await loginPage.loginAndWaitForInventoryWithDefaults();
 
       // Open sidebar and logout
       await sidebarPage.openAndLogout();

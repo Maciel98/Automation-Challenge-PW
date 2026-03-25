@@ -1,4 +1,7 @@
 import { type Page, type Locator, expect } from '@playwright/test';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 /**
  * LoginPage - Page Object for SauceDemo.com
@@ -24,6 +27,10 @@ export class LoginPage {
   readonly errorMessage: Locator;
   readonly errorIcon: Locator;
   readonly inventoryList: Locator;
+
+  // Default credentials loaded from environment
+  private readonly defaultUsername = process.env.STANDARD_USER || 'standard_user';
+  private readonly defaultPassword = process.env.TEST_PASSWORD || 'secret_sauce';
 
   constructor(page: Page) {
     this.page = page;
@@ -72,8 +79,18 @@ export class LoginPage {
    * @param username - Username
    * @param password - Password
    */
-  async loginAndWaitForDashboard(username: string, password: string) {
+  async loginAndWaitForInventory(username: string, password: string) {
     await this.login(username, password);
+    // Wait for navigation to inventory page (successful login)
+    await this.page.waitForURL(/\/inventory\.html/, { timeout: 10000 });
+  }
+
+  /**
+   * Login using default credentials and wait for navigation to inventory page
+   * Convenience method that uses the default standard_user credentials
+   */
+  async loginAndWaitForInventoryWithDefaults() {
+    await this.login(this.defaultUsername, this.defaultPassword);
     // Wait for navigation to inventory page (successful login)
     await this.page.waitForURL(/\/inventory\.html/, { timeout: 10000 });
   }

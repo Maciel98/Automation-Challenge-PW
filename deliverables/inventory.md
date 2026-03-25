@@ -29,6 +29,8 @@ This inventory categorizes test scenarios for the Swag Labs e-commerce applicati
 | CRT-005 | Auto | Click checkout button from cart - User navigates to checkout step one page |
 | CO2-002 | Auto | Verify subtotal, tax, and total on overview - Calculations are correct (subtotal + tax = total) |
 | CO2-003 | Auto | Click finish button - Order is submitted and navigates to checkout complete page |
+| SID-001 | Auto | Click logout - User is redirected to login page |
+
 
 ---
 
@@ -95,7 +97,6 @@ This inventory categorizes test scenarios for the Swag Labs e-commerce applicati
 | NAV-004 | Later | Cart badge decrements when items removed - Badge count decreases when items are removed |
 | NAV-005 | Later | Cart badge not visible when cart is empty - Badge is hidden when no items in cart |
 | NAV-006 | Later | Click cart icon to navigate to cart page - Cart page loads |
-| SID-001 | Auto | Click logout - User is redirected to login page |
 | SID-002 | Later | Verify all menu items are visible - All navigation options are displayed |
 | SID-003 | Auto | Click close button - Sidebar collapses and returns to previous page |
 | NAV-001 | Later | Verify primary header is visible - Header displays correctly on page load |

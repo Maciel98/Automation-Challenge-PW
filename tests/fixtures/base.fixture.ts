@@ -7,15 +7,7 @@ import { CartPage } from '../pages/cart.page';
 import { CheckoutStepOnePage } from '../pages/checkout-step-one.page';
 import { CheckoutStepTwoPage } from '../pages/checkout-step-two.page';
 import { CheckoutCompletePage } from '../pages/checkout-complete.page';
-import checkoutStepOneData from '../test-data/checkout-step-one.json';
 import { setupCheckoutWithItems } from '../helpers/checkout-setup';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const STANDARD_USER = process.env.STANDARD_USER || 'standard_user';
-const TEST_PASSWORD = process.env.TEST_PASSWORD || 'secret_sauce';
-const TEST_CUSTOMER = checkoutStepOneData.testCustomer;
 
 /**
  * Type definition for our custom fixtures
@@ -117,7 +109,7 @@ export const test = base.extend<MyFixtures>({
   authenticatedInventoryPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
-    await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
+    await loginPage.loginAndWaitForInventoryWithDefaults();
     const inventoryPage = new InventoryPage(page);
     await use(inventoryPage);
   },
@@ -133,7 +125,7 @@ export const test = base.extend<MyFixtures>({
     const cartPage = new CartPage(page);
 
     await loginPage.goto();
-    await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
+    await loginPage.loginAndWaitForInventoryWithDefaults();
     const firstProductId = await inventoryPage.getFirstProductId();
     await inventoryPage.addToCart(firstProductId);
     await inventoryPage.navbar.navigateToCart();
@@ -153,7 +145,7 @@ export const test = base.extend<MyFixtures>({
     const checkoutStepOnePage = new CheckoutStepOnePage(page);
 
     await loginPage.goto();
-    await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
+    await loginPage.loginAndWaitForInventoryWithDefaults();
     const firstProductId = await inventoryPage.getFirstProductId();
     await inventoryPage.addToCart(firstProductId);
     await inventoryPage.navbar.navigateToCart();

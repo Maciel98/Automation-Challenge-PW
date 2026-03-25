@@ -1,14 +1,8 @@
 import { test, expect } from '../../fixtures/base.fixture';
 import loginData from '../../test-data/login.json';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { getStandardUserCredentials, getLockedOutUserCredentials } from '../../helpers/credentials';
 
 test.describe('Authentication @auth', () => {
-  const standardUser = process.env.STANDARD_USER || 'standard_user';
-  const lockedOutUser = process.env.LOCKED_OUT_USER || 'locked_out_user';
-  const password = process.env.TEST_PASSWORD || 'secret_sauce';
-
   test.describe('Standard User (Valid Login)', () => {
     test('should navigate to login page @smoke', async ({ loginPage }) => {
       await loginPage.goto();
@@ -20,7 +14,7 @@ test.describe('Authentication @auth', () => {
 
     test('should login with valid credentials @smoke', async ({ loginPage, inventoryPage, page }) => {
       await loginPage.goto();
-      await loginPage.loginAndWaitForDashboard(standardUser, password);
+      await loginPage.loginAndWaitForInventoryWithDefaults();
 
       await inventoryPage.isLoaded();
       await expect(loginPage.usernameInput).not.toBeVisible();
@@ -29,7 +23,7 @@ test.describe('Authentication @auth', () => {
 
     test('should maintain session after login @regression', async ({ loginPage, inventoryPage, page }) => {
       await loginPage.goto();
-      await loginPage.loginAndWaitForDashboard(standardUser, password);
+      await loginPage.loginAndWaitForInventoryWithDefaults();
 
       await inventoryPage.goto();
       await page.waitForTimeout(1000);
@@ -41,8 +35,10 @@ test.describe('Authentication @auth', () => {
 
   test.describe('Locked Out User', () => {
     test('should show error for locked_out_user @regression', async ({ loginPage }) => {
+      const { username, password } = getLockedOutUserCredentials();
+
       await loginPage.goto();
-      await loginPage.loginExpectingError(lockedOutUser, password);
+      await loginPage.loginExpectingError(username, password);
 
       const hasError = await loginPage.hasErrorMessage();
       expect(hasError).toBeTruthy();
@@ -55,8 +51,10 @@ test.describe('Authentication @auth', () => {
     });
 
     test('should not navigate to dashboard when locked @regression', async ({ loginPage }) => {
+      const { username, password } = getLockedOutUserCredentials();
+
       await loginPage.goto();
-      await loginPage.loginExpectingError(lockedOutUser, password);
+      await loginPage.loginExpectingError(username, password);
 
       const isOnDashboard = await loginPage.isOnDashboardPage();
       expect(isOnDashboard).toBeFalsy();
@@ -67,6 +65,8 @@ test.describe('Authentication @auth', () => {
 
   test.describe('Invalid Credentials', () => {
     test('should show error with wrong username @regression', async ({ loginPage }) => {
+      const { password } = getStandardUserCredentials();
+
       await loginPage.goto();
       await loginPage.loginExpectingError('invalid_user', password);
 
@@ -78,8 +78,10 @@ test.describe('Authentication @auth', () => {
     });
 
     test('should show error with wrong password @regression', async ({ loginPage }) => {
+      const { username } = getStandardUserCredentials();
+
       await loginPage.goto();
-      await loginPage.loginExpectingError(standardUser, 'wrong_password');
+      await loginPage.loginExpectingError(username, 'wrong_password');
 
       const hasError = await loginPage.hasErrorMessage();
       expect(hasError).toBeTruthy();
@@ -99,8 +101,10 @@ test.describe('Authentication @auth', () => {
 
   test.describe('Error Banner Interactions', () => {
     test('should dismiss error banner @regression', async ({ loginPage }) => {
+      const { username, password } = getLockedOutUserCredentials();
+
       await loginPage.goto();
-      await loginPage.loginExpectingError(lockedOutUser, password);
+      await loginPage.loginExpectingError(username, password);
 
       await expect(loginPage.errorMessage).toBeVisible();
 

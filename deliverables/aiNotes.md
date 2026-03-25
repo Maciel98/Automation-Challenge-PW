@@ -24,7 +24,7 @@ The key was providing documentation references and existing code examples so the
 
 Most of the repetitive stuff:
 - **Page Objects:** InventoryPage, CartPage, all 3 Checkout pages
-- **Test Specs:** 56 tests across 9 spec files (checkout flows, product catalog, navigation)
+- **Test Specs:** 57 tests across 9 spec files (checkout flows, product catalog, navigation)
 - **Test Data:** JSON files with product data, error messages, form labels
 - **Components:** Navbar and Sidebar page objects
 

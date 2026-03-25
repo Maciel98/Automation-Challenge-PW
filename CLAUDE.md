@@ -447,7 +447,7 @@ When creating new tests:
 
 ### Credentials (Exception)
 
-**Credentials are the ONLY exception** - stored in `.env` file:
+**Credentials are the ONLY exception** - stored in `.env` file and accessed through helpers:
 - `STANDARD_USER=standard_user`
 - `LOCKED_OUT_USER=locked_out_user`
 - `TEST_PASSWORD=secret_sauce`
@@ -459,6 +459,126 @@ When creating new tests:
 - `performance_glitch_user` - Intentional delays
 - `error_user` - Errors during cart/checkout
 - `visual_user` - For visual testing
+
+### Credential Management Pattern
+
+**CRITICAL:** Tests MUST NOT import `dotenv` or define credential constants. All credential access is centralized in:
+
+1. **`tests/pages/login.page.ts`** - Default credentials via `loginAndWaitForInventoryWithDefaults()`
+2. **`tests/helpers/credentials.ts`** - Helper functions for specific user types
+
+**✅ CORRECT: Using standard user (default)**
+```typescript
+import { test, expect } from '../../fixtures/base.fixture';
+
+test('should login with standard user', async ({ loginPage, inventoryPage }) => {
+  await loginPage.goto();
+  await loginPage.loginAndWaitForInventoryWithDefaults(); // ✅ Uses default credentials from .env
+
+  await inventoryPage.isLoaded();
+});
+```
+
+**✅ CORRECT: Using other user types**
+```typescript
+import { test, expect } from '../../fixtures/base.fixture';
+import { getLockedOutUserCredentials, getStandardUserCredentials } from '../../helpers/credentials';
+
+test('should show error for locked user', async ({ loginPage }) => {
+  const { username, password } = getLockedOutUserCredentials(); // ✅ Helper function
+
+  await loginPage.goto();
+  await loginPage.loginExpectingError(username, password);
+});
+
+test('should test invalid password', async ({ loginPage }) => {
+  const { username } = getStandardUserCredentials(); // ✅ Helper for partial credentials
+
+  await loginPage.goto();
+  await loginPage.loginExpectingError(username, 'wrong_password');
+});
+```
+
+**❌ WRONG: Hardcoded or duplicated credentials**
+```typescript
+import dotenv from 'dotenv'; // ❌ DON'T: Tests should not load dotenv
+dotenv.config();
+
+const STANDARD_USER = process.env.STANDARD_USER || 'standard_user'; // ❌ DON'T: Duplicated in tests
+const TEST_PASSWORD = process.env.TEST_PASSWORD || 'secret_sauce'; // ❌ DON'T: Fallback hardcoding
+
+test('should login', async ({ loginPage }) => {
+  await loginPage.login(STANDARD_USER, TEST_PASSWORD); // ❌ DON'T: Pass credentials manually
+});
+```
+
+### Adding New User Login Methods
+
+When you need to test with a different user type (e.g., `problem_user`, `visual_user`):
+
+**1. Create a new login helper in `tests/pages/login.page.ts`:**
+```typescript
+/**
+ * Login using problem_user credentials and wait for navigation
+ * Use this for testing problematic user scenarios
+ */
+async loginAndWaitForInventoryWithProblemUser() {
+  const username = process.env.PROBLEM_USER || 'problem_user';
+  const password = process.env.TEST_PASSWORD || 'secret_sauce';
+
+  await this.login(username, password);
+  await this.page.waitForURL(/\/inventory\.html/, { timeout: 10000 });
+}
+
+/**
+ * Login using visual_user credentials and wait for navigation
+ * Use this for visual testing scenarios
+ */
+async loginAndWaitForInventoryWithVisualUser() {
+  const username = process.env.VISUAL_USER || 'visual_user';
+  const password = process.env.TEST_PASSWORD || 'secret_sauce';
+
+  await this.login(username, password);
+  await this.page.waitForURL(/\/inventory\.html/, { timeout: 10000 });
+}
+```
+
+**2. Add credential helper in `tests/helpers/credentials.ts` (if needed):**
+```typescript
+/**
+ * Get problem user credentials from environment variables
+ */
+export function getProblemUserCredentials(): SauceDemoCredentials {
+  const username = process.env.PROBLEM_USER;
+  const password = process.env.TEST_PASSWORD;
+
+  if (!username || !password) {
+    throw new Error(
+      'Missing credentials! Please set PROBLEM_USER and TEST_PASSWORD in .env file'
+    );
+  }
+
+  return { username, password };
+}
+```
+
+**3. Use the new method in tests:**
+```typescript
+test('should handle problem user', async ({ loginPage, inventoryPage }) => {
+  await loginPage.goto();
+  await loginPage.loginAndWaitForInventoryWithProblemUser(); // ✅ New helper method
+
+  await inventoryPage.isLoaded();
+});
+```
+
+### Summary
+
+- ✅ **Standard user**: Use `loginAndWaitForInventoryWithDefaults()`
+- ✅ **Locked user**: Use `getLockedOutUserCredentials()` from helpers
+- ✅ **New user types**: Create new login helper in `LoginPage` class
+- ❌ **Never**: Import `dotenv` in tests or define credential constants
+- ❌ **Never**: Hardcode fallback credentials like `|| 'standard_user'`
 
 ---
 

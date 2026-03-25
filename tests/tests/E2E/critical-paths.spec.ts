@@ -20,18 +20,13 @@ import inventoryData from '../../test-data/inventory.json';
 import checkoutStepOneData from '../../test-data/checkout-step-one.json';
 import checkoutStepTwoData from '../../test-data/checkout-step-two.json';
 import checkoutCompleteData from '../../test-data/checkout-complete.json';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 /**
  * Test Data Configuration
  *
  * Using product and customer data from test data JSON files for maintainability.
- * Environment variables for credentials keep sensitive data out of code.
+ * Credentials are centralized in the LoginPage class.
  */
-const STANDARD_USER = process.env.STANDARD_USER || 'standard_user';
-const TEST_PASSWORD = process.env.TEST_PASSWORD || 'secret_sauce';
 
 // Get first product from test data
 const TEST_PRODUCT = inventoryData.products[0];
@@ -66,7 +61,7 @@ test.describe('E2E Critical Paths @E2E', () => {
   }) => {
     // Act: Login and add product to cart
     await loginPage.goto();
-    await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
+    await loginPage.loginAndWaitForInventoryWithDefaults();
     await inventoryPage.addToCart(TEST_PRODUCT.id);
 
     // Navigate to checkout
@@ -146,7 +141,7 @@ test.describe('E2E Critical Paths @E2E', () => {
 
     // Act: Login and add multiple products to cart
     await loginPage.goto();
-    await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
+    await loginPage.loginAndWaitForInventoryWithDefaults();
 
     // Add each product to cart
     for (const product of TEST_PRODUCTS) {

@@ -4,12 +4,7 @@ import { InventoryPage } from '../pages/inventory.page';
 import { CartPage } from '../pages/cart.page';
 import { CheckoutStepOnePage } from '../pages/checkout-step-one.page';
 import { CheckoutStepTwoPage } from '../pages/checkout-step-two.page';
-import dotenv from 'dotenv';
 
-dotenv.config();
-
-const STANDARD_USER = process.env.STANDARD_USER || 'standard_user';
-const TEST_PASSWORD = process.env.TEST_PASSWORD || 'secret_sauce';
 const TEST_CUSTOMER = {
   firstName: 'Test',
   lastName: 'User',
@@ -44,7 +39,7 @@ export async function setupCheckoutWithItems(
 
   // Login
   await loginPage.goto();
-  await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
+  await loginPage.loginAndWaitForInventoryWithDefaults();
 
   // Add specified number of items
   const productIds = await inventoryPage.getFirstProductIds(itemCount);
