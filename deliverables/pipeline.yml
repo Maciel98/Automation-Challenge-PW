@@ -10,7 +10,6 @@
 # • Smoke tests are deployment health checks (run in all environments)
 # • Regression tests are quality gates (TEST environment only)
 # • PRD failure triggers rollback, not debugging
-# • All tests use data-test selectors from documented knowledge base
 # =============================================================================
 
 name: E2E Test Pipeline
@@ -21,7 +20,7 @@ name: E2E Test Pipeline
 # Pipeline runs on:
 # - Push to any branch (triggers smoke-dev)
 # - Pull requests to main/develop (triggers smoke-dev)
-# - Push to staging branch (triggers test-stage)
+# - Push to test branch (triggers test-stage) (smoke and full regression on test)
 # - Push to main branch (triggers smoke-prd)
 # - Nightly schedule at 2 AM (triggers nightly-regression)
 # =============================================================================
@@ -129,7 +128,7 @@ jobs:
   # JOB 2: TEST STAGE
   # ===========================================================================
   # PURPOSE: Comprehensive validation in TEST environment before production
-  # TRIGGER: Merge/push to staging branch
+  # TRIGGER: Merge/push to test branch
   # SCOPE: Smoke first (gate), then full regression suite
   # GATE: BLOCKING - both smoke and regression must pass to promote to PRD
   # ===========================================================================
@@ -138,8 +137,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60  # Allow time for full regression
 
-    # Only run on staging branch
-    if: github.ref == 'refs/heads/staging'
+    # Only run on test branch
+    if: github.ref == 'refs/heads/test'
 
     steps:
       # -------------------------------------------------------------------------
@@ -198,7 +197,7 @@ jobs:
       # - Not a health check, it's a comprehensive validation
       # -------------------------------------------------------------------------
       - name: 🔄 Full Regression Suite
-        run: npx playwright test --project=test
+        run: npx playwright test --grep @regression --project=test
         env:
           CI: true
 
@@ -401,6 +400,7 @@ jobs:
       # but don't block ongoing development work
       # -------------------------------------------------------------------------
       - name: 🌙 Nightly Regression Suite
+        id: nightly-run
         run: npx playwright test --grep @regression --project=test
         continue-on-error: true  # Don't fail the workflow, just log bugs
         env:
@@ -435,7 +435,7 @@ jobs:
       # This is non-blocking - just tracking, not gating
       # -------------------------------------------------------------------------
       - name: 🐛 Create Issue on Failure
-        if: failure() || cancelled()
+        if: steps.nightly-run.outcome == 'failure'
         uses: actions/github-script@v7
         with:
           script: |
@@ -456,9 +456,9 @@ jobs:
 # JOB                  TRIGGER           ENV    SCOPE                     GATE        ACTION ON FAILURE
 # -------------------------------------------------------------------------------------------------------
 # smoke-dev            PR/push           DEV    @smoke only             Blocking      Block PR promotion
-# test-stage           staging branch    TEST   @smoke + @regression    Blocking      Log bug, block PRD
+# test-stage           test branch       TEST   @smoke + @regression    Blocking      Log bug, block PRD
 # smoke-prd            main branch       PRD    @smoke only             Blocking      Rollback PRD
-# nightly-regression   Daily 2 AM        TEST   @smoke + @regression    Non-block     Log bug for triage
+# nightly-regression   Daily 2 AM        TEST   @regression             Non-block     Log bug for triage
 # =======================================================================================================
 #
 # SMOKE TESTS (@smoke tag):
