@@ -203,7 +203,7 @@ Each page object should:
 - `CLAUDE.md` - AI usage guidelines and project patterns
 - `deliverables/inventory.md` - Test scenario inventory
 - `deliverables/testStrategy.md` - Test strategy document
-- `deliverables/pipeline.yml` - Example project pipeline
+- `.github/workflows/pipeline.yml` - CI/CD pipeline configuration
 
 **Test Results:**
 - HTML report - Comprehensive test execution report
@@ -239,7 +239,7 @@ SauceDemo doesn't have a real database, but in a real app I'd want to verify:
 
 ## CI/CD Pipeline
 
-See the pipeline configuration in `deliverables/pipeline.yml`
+See the pipeline configuration in [`.github/workflows/pipeline.yml`](../.github/workflows/pipeline.yml)
 
 ---
 

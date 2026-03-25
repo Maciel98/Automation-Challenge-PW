@@ -31,7 +31,8 @@ on:
     branches: [main, develop]  # Triggers smoke-dev
   schedule:
     # Run nightly regression at 2 AM UTC
-    - cron: '0 2 * * *'  # Triggers nightly-regression
+    - cron: '0 4 * * *'  # Triggers nightly-regression (UTC-3 is at 1am)
+  workflow_dispatch:  # Allows manual triggering of the workflow from GitHub UI
 
 # =============================================================================
 # ENVIRONMENT CONFIGURATION

@@ -15,7 +15,6 @@ All challenge deliverables are located in the [`deliverables/`](deliverables/) f
 | [`testStrategy.md`](deliverables/testStrategy.md) | Overall test strategy, scope, and coverage model |
 | [`inventory.md`](deliverables/inventory.md) | Complete test scenario inventory (all identified test cases) |
 | [`aiNotes.md`](deliverables/aiNotes.md) | AI-assisted development notes and learnings |
-| [`pipeline.yml`](deliverables/pipeline.yml) | CI/CD pipeline configuration for automated test execution |
 
 ---
 
@@ -23,11 +22,14 @@ All challenge deliverables are located in the [`deliverables/`](deliverables/) f
 
 ```
 automation-challenge-pw/
+├── .github/                         # GitHub configuration
+│   └── workflows/                   # CI/CD workflows
+│       └── pipeline.yml             # Automated test execution pipeline
+│
 ├── deliverables/                    # Challenge deliverables (see above)
 │   ├── testStrategy.md
 │   ├── inventory.md
-│   ├── aiNotes.md
-│   └── pipeline.yml
+│   └── aiNotes.md
 │
 ├── docs/                            # AI-generated application knowledge
 │   ├── app-knowledge/               # Detailed page documentation with selectors & interactions
