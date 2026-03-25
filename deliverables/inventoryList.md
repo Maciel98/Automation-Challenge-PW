@@ -1,7 +1,7 @@
 # Test Inventory - Organized by Page
 **Swag Labs (SauceDemo)**
 
-**Total Test Cases: 59**
+**Total Test Cases: 56**
 
 ## Login Page
 **Tests: 7**
@@ -61,7 +61,7 @@
 ---
 
 ## Cart Page
-**Tests: 8**
+**Tests: 7**
 
 ### Cart Contents
 | Test ID | Priority | Path | Test Case | Tags |
@@ -73,7 +73,7 @@
 | Test ID | Priority | Path | Test Case | Tags |
 |---------|----------|------|-----------|------|
 | CRT-004 | P1 | P | Click remove button on item - Item disappears from cart list and badge decreases | @regression |
-| CRT-005 | P2 | P | Click checkout button from cart - User navigates to checkout step one page |  |
+| CRT-005 | P0 | P | Click checkout button from cart - User navigates to checkout step one page | @smoke @regression |
 | CRT-006 | P1 | P | Click continue shopping button - User navigates back to inventory page | @regression |
 
 ### State Persistence
@@ -122,12 +122,12 @@
 ### Price Calculations
 | Test ID | Priority | Path | Test Case | Tags |
 |---------|----------|------|-----------|------|
-| CO2-002 | P2 | P | Verify subtotal, tax, and total on overview - Calculations are correct (subtotal + tax = total) | |
+| CO2-002 | P0 | P | Verify subtotal, tax, and total on overview - Calculations are correct (subtotal + tax = total) | @smoke @regression|
 
 ### Complete Order
 | Test ID | Priority | Path | Test Case | Tags |
 |---------|----------|------|-----------|------|
-| CO2-003 | P2 | P | Click finish button - Order is submitted and navigates to checkout complete page |  |
+| CO2-003 | P0 | P | Click finish button - Order is submitted and navigates to checkout complete page | @smoke @regression |
 
 ---
 
@@ -147,13 +147,13 @@
 ---
 
 ## E2E Workflows
-**Tests: 5**
+**Tests: 3**
 
 ### Full Purchase Flow
 | Test ID | Priority | Path | Test Case | Tags |
 |---------|----------|------|-----------|------|
-| E2E-001 | P0 | P | Complete full purchase flow - User logs in, adds item to cart, completes checkout, and receives order confirmation | @smoke @regression |
-| E2E-003 | P0 | P | Complete checkout with multiple items - Totals are calculated correctly and order completes | @smoke @regression |
+| E2E-001 | P1 | P | Complete full purchase flow - User logs in, adds item to cart, completes checkout, and receives order confirmation | @regression |
+| E2E-003 | P1 | P | Complete checkout with multiple items - Totals are calculated correctly and order completes | @regression |
 
 ### Edge Cases
 | Test ID | Priority | Path | Test Case | Tags |
@@ -291,45 +291,45 @@
 ### Priority Distribution
 | Priority | Count | Percentage |
 |----------|-------|------------|
-| **P0 (Critical)** | 5 | 8% |
-| **P1 (High)** | 10 | 17% |
-| **P2 (Medium)** | 42 | 71% |
+| **P0 (Critical)** | 8 | 14% |
+| **P1 (High)** | 13 | 23% |
+| **P2 (Medium)** | 33 | 59% |
 | **P3 (Low)** | 2 | 4% |
-| **Total** | **59** | **100%** |
+| **Total** | **56** | **100%** |
 
 ### Test Type Distribution
 | Type | Count | Percentage |
 |------|-------|------------|
-| **Positive (P)** | 50 | 85% |
-| **Negative (N)** | 9 | 15% |
-| **Total** | **59** | **100%** |
+| **Positive (P)** | 47 | 84% |
+| **Negative (N)** | 9 | 16% |
+| **Total** | **56** | **100%** |
 
 ### Tests by Page
 | Page | Count | Percentage |
 |------|-------|------------|
-| Login | 7 | 12% |
+| Login | 7 | 13% |
 | Inventory | 8 | 14% |
-| Cart | 8 | 14% |
-| Checkout Step One | 6 | 10% |
+| Cart | 7 | 13% |
+| Checkout Step One | 6 | 11% |
 | Checkout Step Two | 3 | 5% |
-| Checkout Complete | 2 | 3% |
+| Checkout Complete | 2 | 4% |
 | E2E Workflows | 3 | 5% |
 | Navbar | 8 | 14% |
-| Sidebar | 6 | 10% |
+| Sidebar | 6 | 11% |
 | Special Users | 4 | 7% |
 | Manual | 2 | 4% |
-| **Total** | **59** | **100%** |
+| **Total** | **56** | **100%** |
 
 ### Tag Usage
 | Tag | Count |
 |-----|-------|
-| @smoke | 5 |
-| @regression | 15 |
+| @smoke | 9 |
+| @regression | 17 |
 
 ### Automation Timeline
 | Category | Count | Percentage |
 |----------|-------|------------|
-| **Automate-now** | 15 | 26% |
-| **Automate-later** | 42 | 71% |
-| **Manual-for-now** | 2 | 4% |
-| **Total** | **59** | **100%** |
+| **Automate-now** | 21 | 38% |
+| **Automate-later** | 33 | 59% |
+| **Manual-for-now** | 2 | 3% |
+| **Total** | **56** | **100%** |
