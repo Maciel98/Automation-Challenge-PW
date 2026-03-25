@@ -5,8 +5,8 @@ import checkoutStepOneData from '../../../test-data/checkout-step-one.json';
 // Get test customer data from JSON
 const TEST_CUSTOMER = checkoutStepOneData.testCustomer;
 
-test.describe('Checkout Step One - Information', () => {
-  test('should navigate to checkout step one', async ({ authenticatedInventoryPage, cartPage, checkoutStepOnePage, page }) => {
+test.describe('Checkout Step One - Information @checkout', () => {
+  test('should navigate to checkout step one @regression', async ({ authenticatedInventoryPage, cartPage, checkoutStepOnePage, page }) => {
     await authenticatedInventoryPage.navbar.navigateToCart();
     await cartPage.proceedToCheckout();
 
@@ -14,7 +14,7 @@ test.describe('Checkout Step One - Information', () => {
     await expect(checkoutStepOnePage.pageTitle).toHaveText(checkoutStepOneData.formLabels.title);
   });
 
-  test('TC041: should require first name @smoke @checkout @validation @P0', async ({
+  test('TC041: should require first name @smoke', async ({
     authenticatedInventoryPage,
     cartPage,
     checkoutStepOnePage,
@@ -30,7 +30,7 @@ test.describe('Checkout Step One - Information', () => {
     expect(errorText).toBe(checkoutStepOneData.errors.missingFirstName);
   });
 
-  test('should require last name', async ({ authenticatedInventoryPage, cartPage, checkoutStepOnePage }) => {
+  test('TC041: should require last name @regression', async ({ authenticatedInventoryPage, cartPage, checkoutStepOnePage }) => {
     await authenticatedInventoryPage.navbar.navigateToCart();
     await cartPage.proceedToCheckout();
 
@@ -42,7 +42,7 @@ test.describe('Checkout Step One - Information', () => {
     expect(errorText).toBe(checkoutStepOneData.errors.missingLastName);
   });
 
-  test('should require postal code', async ({ authenticatedInventoryPage, cartPage, checkoutStepOnePage }) => {
+  test('TC041: should require postal code @regression', async ({ authenticatedInventoryPage, cartPage, checkoutStepOnePage }) => {
     await authenticatedInventoryPage.navbar.navigateToCart();
     await cartPage.proceedToCheckout();
 
@@ -54,7 +54,7 @@ test.describe('Checkout Step One - Information', () => {
     expect(errorText).toBe(checkoutStepOneData.errors.missingZipCode);
   });
 
-  test('TC027: should proceed to checkout overview with valid information @smoke @checkout @P0', async ({
+  test('TC027: should proceed to checkout overview with valid information @smoke', async ({
     authenticatedInventoryPage,
     cartPage,
     checkoutStepOnePage,
@@ -72,7 +72,7 @@ test.describe('Checkout Step One - Information', () => {
     await expect(page).toHaveURL(/\/checkout-step-two\.html/);
   });
 
-  test('should cancel and return to cart', async ({ authenticatedInventoryPage, cartPage, checkoutStepOnePage, page }) => {
+  test('should cancel and return to cart @regression', async ({ authenticatedInventoryPage, cartPage, checkoutStepOnePage, page }) => {
     await authenticatedInventoryPage.navbar.navigateToCart();
     await cartPage.proceedToCheckout();
 

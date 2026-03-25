@@ -38,7 +38,7 @@ const TEST_PRODUCT = inventoryData.products[0];
 // Get test customer data from JSON
 const TEST_CUSTOMER = checkoutStepOneData.testCustomer;
 
-test.describe('E2E Critical Paths @smoke @E2E @P0', () => {
+test.describe('E2E Critical Paths @E2E', () => {
   /**
    * TC033: E2E Complete Purchase Flow (Critical - P0)
    *
@@ -53,9 +53,9 @@ test.describe('E2E Critical Paths @smoke @E2E @P0', () => {
    * Other tests that focus on single features (login only, cart only, checkout only)
    * should be placed in their respective feature folders (auth/, product/, cart/, checkout/).
    *
-   * Tags: @smoke @E2E @checkout @P0 @regression
+   * Tags: @smoke @regression
    */
-  test('TC033: User can complete full purchase flow @smoke @E2E @checkout @P0 @regression', async ({
+  test('TC033: User can complete full purchase flow @smoke @regression', async ({
     loginPage,
     inventoryPage,
     cartPage,

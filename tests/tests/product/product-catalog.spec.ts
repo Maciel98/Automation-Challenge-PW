@@ -1,9 +1,9 @@
 import { test, expect } from '../../fixtures/base.fixture';
 import inventoryData from '../../test-data/inventory.json';
 
-test.describe('Product Catalog', () => {
+test.describe('Product Catalog @product', () => {
   test.describe('Add to Cart', () => {
-    test('TC004: User can add product to cart @smoke @cart @P0', async ({ authenticatedInventoryPage }) => {
+    test('TC004: User can add product to cart @smoke', async ({ authenticatedInventoryPage }) => {
       const product = inventoryData.products[0];
       await authenticatedInventoryPage.addToCart(product.id);
 
@@ -11,7 +11,7 @@ test.describe('Product Catalog', () => {
       expect(cartCount).toBe(1);
     });
 
-    test('should increment cart badge when adding multiple items', async ({ authenticatedInventoryPage }) => {
+    test('TC015: should increment cart badge when adding multiple items @smoke @regression', async ({ authenticatedInventoryPage }) => {
       await authenticatedInventoryPage.addToCart(inventoryData.products[0].id);
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(1);
 
@@ -22,7 +22,7 @@ test.describe('Product Catalog', () => {
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(3);
     });
 
-    test('should remove item from cart', async ({ authenticatedInventoryPage }) => {
+    test('TC016: should remove item from cart @regression', async ({ authenticatedInventoryPage }) => {
       await authenticatedInventoryPage.addToCart(inventoryData.products[0].id);
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(1);
 
