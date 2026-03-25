@@ -13,7 +13,8 @@ All challenge deliverables are located in the [`deliverables/`](deliverables/) f
 | File | Description |
 |------|-------------|
 | [`testStrategy.md`](deliverables/testStrategy.md) | Overall test strategy, scope, and coverage model |
-| [`inventory.md`](deliverables/inventory.md) | Complete test scenario inventory (all identified test cases) |
+| [`inventory.md`](deliverables/inventory.md) | Test scenarios organized by category (Smoke, Regression, E2E, Edge Cases) |
+| [`inventoryList.md`](deliverables/inventoryList.md) | Test scenarios organized by page with tags, priorities, and statistics |
 | [`aiNotes.md`](deliverables/aiNotes.md) | AI-assisted development notes and learnings |
 
 ---
@@ -186,7 +187,9 @@ Coverage spans the complete user journey:
 5. **Navigation** - Navbar and sidebar menu interactions
 6. **Critical Paths** - End-to-end smoke tests
 
-See [`deliverables/inventory.md`](deliverables/inventory.md) for the complete test scenario inventory.
+See the inventory deliverables for complete test details:
+- [`inventory.md`](deliverables/inventory.md) - Organized by test category (Smoke, Regression, E2E, Edge Cases)
+- [`inventoryList.md`](deliverables/inventoryList.md) - Organized by page with tags, priorities, and statistics
 
 ---
 
@@ -209,7 +212,6 @@ This project was built using **Claude Code** with the following approach:
 - [Playwright Documentation](https://playwright.dev)
 - [Page Object Model Guide](https://playwright.dev/docs/pom)
 - [SauceDemo Application](https://www.saucedemo.com/)
-- [Deliverables](deliverables/) - Challenge artifacts and documentation
 
 ---
 
