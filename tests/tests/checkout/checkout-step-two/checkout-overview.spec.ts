@@ -3,18 +3,18 @@ import inventoryData from '../../../test-data/inventory.json';
 import checkoutCompleteData from '../../../test-data/checkout-complete.json';
 
 test.describe('Checkout Step Two - Overview @checkout', () => {
-  test('TC028: should display product information @regression', async ({ checkoutStepTwoPageReady }) => {
+  test('should display product information @regression', async ({ checkoutStepTwoPageReady }) => {
     const productNames = await checkoutStepTwoPageReady.getProductNames();
     expect(productNames.length).toBeGreaterThan(0);
     expect(productNames[0]).toBe(inventoryData.products[0].name);
   });
 
-  test('TC029: should calculate subtotal correctly @regression', async ({ checkoutStepTwoPageReady }) => {
+  test('should calculate subtotal correctly @regression', async ({ checkoutStepTwoPageReady }) => {
     const subtotal = await checkoutStepTwoPageReady.getSubtotal();
     expect(subtotal).toBe(inventoryData.products[0].price);
   });
 
-  test('TC029: should calculate tax @regression', async ({ checkoutStepTwoPageReady }) => {
+  test('should calculate tax @regression', async ({ checkoutStepTwoPageReady }) => {
     const subtotal = await checkoutStepTwoPageReady.getSubtotal();
     const tax = await checkoutStepTwoPageReady.getTax();
     const total = await checkoutStepTwoPageReady.getTotal();
@@ -28,7 +28,7 @@ test.describe('Checkout Step Two - Overview @checkout', () => {
     await expect(page).toHaveURL(/\/inventory\.html/);
   });
 
-  test('TC030: should finish order and navigate to complete page @smoke @regression', async ({ checkoutStepTwoPageReady, checkoutCompletePage, page }) => {
+  test('should finish order and navigate to complete page @smoke @regression', async ({ checkoutStepTwoPageReady, checkoutCompletePage, page }) => {
     await checkoutStepTwoPageReady.finishOrder();
 
     await expect(page).toHaveURL(/\/checkout-complete\.html/);

@@ -3,7 +3,7 @@ import inventoryData from '../../test-data/inventory.json';
 
 test.describe('Inventory @inventory', () => {
   test.describe('Add to Cart', () => {
-    test('TC004: User can add product to cart @smoke', async ({ authenticatedInventoryPage }) => {
+    test('User can add product to cart @smoke', async ({ authenticatedInventoryPage }) => {
       const product = inventoryData.products[0];
       await authenticatedInventoryPage.addToCart(product.id);
 
@@ -11,7 +11,7 @@ test.describe('Inventory @inventory', () => {
       expect(cartCount).toBe(1);
     });
 
-    test('TC015: should increment cart badge when adding multiple items @smoke @regression', async ({ authenticatedInventoryPage }) => {
+    test('should increment cart badge when adding multiple items @smoke @regression', async ({ authenticatedInventoryPage }) => {
       await authenticatedInventoryPage.addToCart(inventoryData.products[0].id);
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(1);
 
@@ -22,7 +22,7 @@ test.describe('Inventory @inventory', () => {
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(3);
     });
 
-    test('TC016: should remove item from cart @regression', async ({ authenticatedInventoryPage }) => {
+    test('should remove item from cart @regression', async ({ authenticatedInventoryPage }) => {
       await authenticatedInventoryPage.addToCart(inventoryData.products[0].id);
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(1);
 
@@ -32,7 +32,7 @@ test.describe('Inventory @inventory', () => {
   });
 
   test.describe('Sorting @sorting', () => {
-    test('TC017: Select sort by name (A-Z) - Products are sorted alphabetically from A to Z @regression', async ({ authenticatedInventoryPage }) => {
+    test('Select sort by name (A-Z) - Products are sorted alphabetically from A to Z @regression', async ({ authenticatedInventoryPage }) => {
       await authenticatedInventoryPage.sortProducts('az');
 
       const productNames = await authenticatedInventoryPage.getProductNames();
@@ -41,7 +41,7 @@ test.describe('Inventory @inventory', () => {
       expect(productNames).toEqual(sortedNames);
     });
 
-    test('TC018: Select sort by name (Z-A) - Products are sorted alphabetically from Z to A @regression', async ({ authenticatedInventoryPage }) => {
+    test('Select sort by name (Z-A) - Products are sorted alphabetically from Z to A @regression', async ({ authenticatedInventoryPage }) => {
       await authenticatedInventoryPage.sortProducts('za');
 
       const productNames = await authenticatedInventoryPage.getProductNames();
@@ -50,7 +50,7 @@ test.describe('Inventory @inventory', () => {
       expect(productNames).toEqual(sortedNames);
     });
 
-    test('TC019: Select sort by price (low to high) - Products are sorted by price ascending @regression', async ({ authenticatedInventoryPage }) => {
+    test('Select sort by price (low to high) - Products are sorted by price ascending @regression', async ({ authenticatedInventoryPage }) => {
       await authenticatedInventoryPage.sortProducts('lohi');
 
       const productPrices = await authenticatedInventoryPage.getProductPrices();
@@ -60,7 +60,7 @@ test.describe('Inventory @inventory', () => {
       expect(numericPrices).toEqual(sortedPrices);
     });
 
-    test('TC020: Select sort by price (high to low) - Products are sorted by price descending @regression', async ({ authenticatedInventoryPage }) => {
+    test('Select sort by price (high to low) - Products are sorted by price descending @regression', async ({ authenticatedInventoryPage }) => {
       await authenticatedInventoryPage.sortProducts('hilo');
 
       const productPrices = await authenticatedInventoryPage.getProductPrices();

@@ -10,7 +10,7 @@ test.describe('Authentication @auth', () => {
   const password = process.env.TEST_PASSWORD || 'secret_sauce';
 
   test.describe('Standard User (Valid Login)', () => {
-    test('TC001: should navigate to login page @smoke', async ({ loginPage }) => {
+    test('should navigate to login page @smoke', async ({ loginPage }) => {
       await loginPage.goto();
       await loginPage.isLoaded();
       await expect(loginPage.usernameInput).toBeVisible();
@@ -27,7 +27,7 @@ test.describe('Authentication @auth', () => {
       await expect(loginPage.inventoryList).toBeVisible();
     });
 
-    test('TC012: should maintain session after login @regression', async ({ loginPage, inventoryPage, page }) => {
+    test('should maintain session after login @regression', async ({ loginPage, inventoryPage, page }) => {
       await loginPage.goto();
       await loginPage.loginAndWaitForDashboard(standardUser, password);
 
@@ -40,7 +40,7 @@ test.describe('Authentication @auth', () => {
   });
 
   test.describe('Locked Out User', () => {
-    test('TC037: should show error for locked_out_user @regression', async ({ loginPage }) => {
+    test('should show error for locked_out_user @regression', async ({ loginPage }) => {
       await loginPage.goto();
       await loginPage.loginExpectingError(lockedOutUser, password);
 
@@ -66,7 +66,7 @@ test.describe('Authentication @auth', () => {
   });
 
   test.describe('Invalid Credentials', () => {
-    test('TC039: should show error with wrong username @regression', async ({ loginPage }) => {
+    test('should show error with wrong username @regression', async ({ loginPage }) => {
       await loginPage.goto();
       await loginPage.loginExpectingError('invalid_user', password);
 
@@ -77,7 +77,7 @@ test.describe('Authentication @auth', () => {
       expect(errorMessage).toBe(loginData.errorMessages.invalidCredentials);
     });
 
-    test('TC039: should show error with wrong password @regression', async ({ loginPage }) => {
+    test('should show error with wrong password @regression', async ({ loginPage }) => {
       await loginPage.goto();
       await loginPage.loginExpectingError(standardUser, 'wrong_password');
 
@@ -88,7 +88,7 @@ test.describe('Authentication @auth', () => {
       expect(errorMessage).toBe(loginData.errorMessages.invalidCredentials);
     });
 
-    test('TC038: should show error with empty fields @regression', async ({ loginPage }) => {
+    test('should show error with empty fields @regression', async ({ loginPage }) => {
       await loginPage.goto();
       await loginPage.loginExpectingError('', '');
 

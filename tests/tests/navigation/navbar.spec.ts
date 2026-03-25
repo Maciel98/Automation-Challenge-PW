@@ -26,7 +26,7 @@ test.describe('Navbar Component @navigation', () => {
   });
 
   test.describe('Cart Badge', () => {
-    test('TC032: should not show badge when cart is empty @smoke @regression', async ({ authenticatedInventoryPage }) => {
+    test('should not show badge when cart is empty @smoke @regression', async ({ authenticatedInventoryPage }) => {
       const count = await authenticatedInventoryPage.navbar.getCartBadgeCount();
       expect(count).toBe(0);
 
@@ -34,7 +34,7 @@ test.describe('Navbar Component @navigation', () => {
       expect(isVisible).toBeFalsy();
     });
 
-    test('TC014: should show badge count when items added @smoke @regression', async ({ authenticatedInventoryPage }) => {
+    test('should show badge count when items added @smoke @regression', async ({ authenticatedInventoryPage }) => {
       await authenticatedInventoryPage.addToCart('sauce-labs-backpack');
 
       const count = await authenticatedInventoryPage.navbar.getCartBadgeCount();
@@ -44,7 +44,7 @@ test.describe('Navbar Component @navigation', () => {
       expect(isVisible).toBeTruthy();
     });
 
-    test('TC015: should increment badge with multiple items @smoke @regression', async ({ authenticatedInventoryPage }) => {
+    test('should increment badge with multiple items @smoke @regression', async ({ authenticatedInventoryPage }) => {
       await authenticatedInventoryPage.addToCart('sauce-labs-backpack');
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(1);
 
@@ -55,7 +55,7 @@ test.describe('Navbar Component @navigation', () => {
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(3);
     });
 
-    test('TC016: should decrement badge when items removed @regression', async ({ authenticatedInventoryPage }) => {
+    test('should decrement badge when items removed @regression', async ({ authenticatedInventoryPage }) => {
       await authenticatedInventoryPage.addToCart('sauce-labs-backpack');
       await authenticatedInventoryPage.addToCart('sauce-labs-bike-light');
       expect(await authenticatedInventoryPage.navbar.getCartBadgeCount()).toBe(2);
@@ -69,7 +69,7 @@ test.describe('Navbar Component @navigation', () => {
   });
 
   test.describe('Navigation', () => {
-    test('TC025: should navigate to cart page @smoke @regression', async ({ authenticatedInventoryPage, page }) => {
+    test('should navigate to cart page @smoke @regression', async ({ authenticatedInventoryPage, page }) => {
       await authenticatedInventoryPage.navbar.navigateToCart();
       await expect(page).toHaveURL(/\/cart\.html/);
     });

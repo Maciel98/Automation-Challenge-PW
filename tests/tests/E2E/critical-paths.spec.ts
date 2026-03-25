@@ -40,7 +40,7 @@ const TEST_CUSTOMER = checkoutStepOneData.testCustomer;
 
 test.describe('E2E Critical Paths @E2E', () => {
   /**
-   * TC033: E2E Complete Purchase Flow (Critical - P0)
+   * E2E Complete Purchase Flow (Critical - P0)
    *
    * Verify the complete end-to-end purchase journey from login to order confirmation.
    * This test spans multiple features: authentication, product catalog, cart, and checkout.
@@ -55,7 +55,7 @@ test.describe('E2E Critical Paths @E2E', () => {
    *
    * Tags: @smoke @regression
    */
-  test('TC033: User can complete full purchase flow @smoke @regression', async ({
+  test('User can complete full purchase flow @smoke @regression', async ({
     loginPage,
     inventoryPage,
     cartPage,

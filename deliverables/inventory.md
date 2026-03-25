@@ -212,7 +212,6 @@ The inventoryList.md file contains:
 
 ### Complete Purchase Flow - Detailed Step-by-Step
 
-**Test Case ID:** TC005
 **Priority:** P0 (Critical)
 **Path:** Positive
 
