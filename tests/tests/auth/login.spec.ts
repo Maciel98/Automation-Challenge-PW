@@ -12,7 +12,7 @@ test.describe('Authentication @auth', () => {
       await expect(loginPage.loginButton).toBeVisible();
     });
 
-    test('should login with valid credentials @smoke', async ({ loginPage, inventoryPage, page }) => {
+    test('should login with valid credentials @smoke', async ({ loginPage, inventoryPage }) => {
       await loginPage.goto();
       await loginPage.loginAndWaitForInventoryWithDefaults();
 
@@ -21,12 +21,11 @@ test.describe('Authentication @auth', () => {
       await expect(loginPage.inventoryList).toBeVisible();
     });
 
-    test('should maintain session after login @regression', async ({ loginPage, inventoryPage, page }) => {
+    test('should maintain session after login @regression', async ({ loginPage, inventoryPage }) => {
       await loginPage.goto();
       await loginPage.loginAndWaitForInventoryWithDefaults();
 
       await inventoryPage.goto();
-      await page.waitForTimeout(1000);
 
       await inventoryPage.isLoaded();
       await expect(loginPage.usernameInput).not.toBeVisible();
@@ -50,14 +49,18 @@ test.describe('Authentication @auth', () => {
       expect(isOnLoginPage).toBeTruthy();
     });
 
-    test('should not navigate to dashboard when locked @regression', async ({ loginPage }) => {
+    test('should not navigate to inventory when locked @regression', async ({ loginPage }) => {
       const { username, password } = getLockedOutUserCredentials();
 
       await loginPage.goto();
       await loginPage.loginExpectingError(username, password);
 
-      const isOnDashboard = await loginPage.isOnDashboardPage();
-      expect(isOnDashboard).toBeFalsy();
+      const isOnInventory = await loginPage.isOnInventoryPage();
+      expect(isOnInventory).toBeFalsy();
+
+      // Verify error message is displayed
+      const errorMessage = await loginPage.getErrorMessage();
+      expect(errorMessage).toBe(loginData.errorMessages.lockedOut);
 
       await expect(loginPage.usernameInput).toBeVisible();
     });
@@ -93,6 +96,10 @@ test.describe('Authentication @auth', () => {
     test('should show error with empty fields @regression', async ({ loginPage }) => {
       await loginPage.goto();
       await loginPage.loginExpectingError('', '');
+
+      // Verify error message is displayed
+      const errorMessage = await loginPage.getErrorMessage();
+      expect(errorMessage).toBe(loginData.errorMessages.missingUsername);
 
       const isOnLoginPage = await loginPage.isOnLoginPage();
       expect(isOnLoginPage).toBeTruthy();

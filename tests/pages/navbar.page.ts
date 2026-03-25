@@ -45,11 +45,9 @@ export class NavbarPage {
    * Note: Consider using SidebarPage.open() for full sidebar interactions
    */
   async openMenu() {
-    await this.hamburgerButton.waitFor({ state: 'visible', timeout: 5000 });
     await this.hamburgerButton.click();
-    // Wait for sidebar slide-in animation
-    await this.page.locator('.bm-menu').waitFor({ state: 'visible', timeout: 1000 });
-    await this.page.waitForTimeout(500); // Wait for animation
+    // Wait for sidebar slide-in animation to complete
+    await this.sidebarMenu.waitFor({ state: 'visible' });
   }
 
   /**
@@ -57,7 +55,7 @@ export class NavbarPage {
    */
   async navigateToCart() {
     await this.shoppingCartLink.click();
-    await this.page.waitForURL(/\/cart\.html/, { timeout: 5000 });
+    await this.page.waitForURL(/\/cart\.html/);
   }
 
   /**
@@ -113,6 +111,6 @@ export class NavbarPage {
    * Wait for navbar to be fully loaded
    */
   async waitForNavbar() {
-    await this.primaryHeader.waitFor({ state: 'visible', timeout: 5000 });
+    await this.primaryHeader.waitFor({ state: 'visible' });
   }
 }

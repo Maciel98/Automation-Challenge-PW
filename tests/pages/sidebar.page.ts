@@ -45,12 +45,9 @@ export class SidebarPage {
    * Waits for menu to become visible after animation
    */
   async open() {
-    await this.hamburgerButton.waitFor({ state: 'visible', timeout: 5000 });
     await this.hamburgerButton.click();
     // Wait for sidebar slide-in animation to complete
-    await this.sidebarContainer.waitFor({ state: 'visible', timeout: 1000 });
-    // Small delay for animation to finish
-    await this.page.waitForTimeout(500);
+    await this.sidebarContainer.waitFor({ state: 'visible' });
   }
 
   /**
@@ -58,7 +55,7 @@ export class SidebarPage {
    */
   async close() {
     await this.closeButton.click();
-    await this.sidebarContainer.waitFor({ state: 'hidden', timeout: 1000 });
+    await this.sidebarContainer.waitFor({ state: 'hidden' });
   }
 
   /**
@@ -96,7 +93,7 @@ export class SidebarPage {
    */
   async logout() {
     await this.logoutLink.click();
-    await this.page.waitForURL(/\/(index\.html)?$/, { timeout: 5000 });
+    await this.page.waitForURL(/\/(index\.html)?$/);
   }
 
   /**
@@ -105,8 +102,7 @@ export class SidebarPage {
    */
   async resetAppState() {
     await this.resetAppStateLink.click();
-    // Wait a moment for state to reset
-    await this.page.waitForTimeout(500);
+    // State reset is instant, no wait needed
   }
 
   /**
@@ -174,7 +170,7 @@ export class SidebarPage {
    */
   async closeByClickingOutside() {
     await this.page.locator('.bm-overlay').click();
-    await this.sidebarContainer.waitFor({ state: 'hidden', timeout: 1000 });
+    await this.sidebarContainer.waitFor({ state: 'hidden' });
   }
 
   /**
@@ -183,6 +179,6 @@ export class SidebarPage {
    */
   async closeByPressingEscape() {
     await this.page.keyboard.press('Escape');
-    await this.sidebarContainer.waitFor({ state: 'hidden', timeout: 1000 });
+    await this.sidebarContainer.waitFor({ state: 'hidden' });
   }
 }

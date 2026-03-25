@@ -44,12 +44,11 @@ export class LoginPage {
   }
 
   /**
-   * Navigate to the login page and wait for form to be ready
+   * Navigate to the login page
+   * Playwright will auto-wait for elements when we interact with them
    */
   async goto() {
     await this.page.goto(this.path);
-    // Wait for the form to be visible and ready for interaction
-    await this.usernameInput.waitFor({ state: 'visible', timeout: 5000 });
   }
 
   /**
@@ -67,9 +66,6 @@ export class LoginPage {
   async login(username: string, password: string) {
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);
-
-    // Wait for button to be attached and ready
-    await this.loginButton.waitFor({ state: 'attached', timeout: 5000 });
     await this.loginButton.click();
   }
 
@@ -82,7 +78,7 @@ export class LoginPage {
   async loginAndWaitForInventory(username: string, password: string) {
     await this.login(username, password);
     // Wait for navigation to inventory page (successful login)
-    await this.page.waitForURL(/\/inventory\.html/, { timeout: 10000 });
+    await this.page.waitForURL(/\/inventory\.html/);
   }
 
   /**
@@ -92,7 +88,7 @@ export class LoginPage {
   async loginAndWaitForInventoryWithDefaults() {
     await this.login(this.defaultUsername, this.defaultPassword);
     // Wait for navigation to inventory page (successful login)
-    await this.page.waitForURL(/\/inventory\.html/, { timeout: 10000 });
+    await this.page.waitForURL(/\/inventory\.html/);
   }
 
   /**
@@ -102,15 +98,14 @@ export class LoginPage {
    */
   async loginExpectingError(username: string, password: string) {
     await this.login(username, password);
-    // Wait a bit for error message to appear
-    await this.page.waitForTimeout(1000);
+    // Wait for error message to appear
+    await this.errorMessage.waitFor({ state: 'visible' });
   }
 
   /**
    * Check if error message is visible
    */
   async hasErrorMessage(): Promise<boolean> {
-    await this.page.waitForTimeout(500);
     return await this.errorMessage.isVisible().catch(() => false);
   }
 
@@ -127,7 +122,7 @@ export class LoginPage {
    */
   async dismissError() {
     await this.page.locator('[data-test="error-button"]').click();
-    await this.errorMessage.waitFor({ state: 'hidden', timeout: 3000 });
+    await this.errorMessage.waitFor({ state: 'hidden' });
   }
 
   /**
@@ -139,9 +134,9 @@ export class LoginPage {
   }
 
   /**
-   * Verify we're on the inventory/dashboard page (successful login)
+   * Verify we're on the inventory page (successful login)
    */
-  async isOnDashboardPage(): Promise<boolean> {
+  async isOnInventoryPage(): Promise<boolean> {
     const url = this.page.url();
     return url.includes('inventory.html');
   }
