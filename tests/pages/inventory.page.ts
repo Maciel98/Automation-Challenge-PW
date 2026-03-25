@@ -96,4 +96,17 @@ export class InventoryPage {
     const productPrices = await this.page.locator('[data-test="inventory-item-price"]').allTextContents();
     return productPrices;
   }
+
+  /**
+   * Get the first available product ID from the inventory page
+   * Uses the first "add to cart" button to determine product availability
+   * @returns The product ID (e.g., 'sauce-labs-backpack')
+   */
+  async getFirstProductId(): Promise<string> {
+    const firstAddButton = this.page.locator('[data-test^="add-to-cart-"]').first();
+    await firstAddButton.waitFor({ state: 'visible', timeout: 5000 });
+    const dataTestId = await firstAddButton.getAttribute('data-test');
+    // Extract product ID from "add-to-cart-sauce-labs-backpack"
+    return dataTestId?.replace('add-to-cart-', '') || '';
+  }
 }

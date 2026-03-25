@@ -19,10 +19,26 @@ test.describe('Checkout Step Two - Overview @checkout', () => {
     });
   });
 
-  test('should display product information @regression', async ({ checkoutStepTwoPageReady }) => {
+  test('should display all products information @regression', async ({ checkoutStepTwoPageReady }) => {
+    // Act
     const productNames = await checkoutStepTwoPageReady.getProductNames();
-    expect(productNames.length).toBeGreaterThan(0);
-    expect(productNames[0]).toBe(inventoryData.products[0].name);
+    const productQuantities = await checkoutStepTwoPageReady.getProductQuantities();
+    const productPrices = await checkoutStepTwoPageReady.getProductPrices();
+    const itemCount = await checkoutStepTwoPageReady.getItemCount();
+
+    // Assert - verify each displayed product matches test data
+    expect(itemCount).toBeGreaterThan(0);
+    expect(productNames).toHaveLength(itemCount);
+
+    productNames.forEach((displayName, index) => {
+      // Find this product in test data by name
+      const expectedProduct = inventoryData.products.find(p => p.name === displayName);
+      expect(expectedProduct).toBeDefined();
+
+      // Verify quantity, price match test data
+      expect(productQuantities[index]).toBe('1');
+      expect(productPrices[index]).toBe(`$${expectedProduct!.price.toFixed(2)}`);
+    });
   });
 
   test('should calculate subtotal correctly @regression', async ({ checkoutStepTwoPageReady }) => {

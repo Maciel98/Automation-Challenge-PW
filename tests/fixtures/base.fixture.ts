@@ -132,7 +132,8 @@ export const test = base.extend<MyFixtures>({
 
     await loginPage.goto();
     await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
-    await inventoryPage.addToCart('sauce-labs-backpack');
+    const firstProductId = await inventoryPage.getFirstProductId();
+    await inventoryPage.addToCart(firstProductId);
     await inventoryPage.navbar.navigateToCart();
 
     await use(cartPage);
@@ -151,7 +152,8 @@ export const test = base.extend<MyFixtures>({
 
     await loginPage.goto();
     await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
-    await inventoryPage.addToCart('sauce-labs-backpack');
+    const firstProductId = await inventoryPage.getFirstProductId();
+    await inventoryPage.addToCart(firstProductId);
     await inventoryPage.navbar.navigateToCart();
     await cartPage.proceedToCheckout();
 
@@ -172,7 +174,8 @@ export const test = base.extend<MyFixtures>({
 
     await loginPage.goto();
     await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
-    await inventoryPage.addToCart('sauce-labs-backpack');
+    const firstProductId = await inventoryPage.getFirstProductId();
+    await inventoryPage.addToCart(firstProductId);
     await inventoryPage.navbar.navigateToCart();
     await cartPage.proceedToCheckout();
     await checkoutStepOnePage.fillInformationAndContinue(
@@ -199,7 +202,8 @@ export const test = base.extend<MyFixtures>({
 
     await loginPage.goto();
     await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
-    await inventoryPage.addToCart('sauce-labs-backpack');
+    const firstProductId = await inventoryPage.getFirstProductId();
+    await inventoryPage.addToCart(firstProductId);
     await inventoryPage.navbar.navigateToCart();
     await cartPage.proceedToCheckout();
     await checkoutStepOnePage.fillInformationAndContinue(
