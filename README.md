@@ -1,265 +1,215 @@
-# SauceDemo Login Automation - Playwright POM
+# SauceDemo E2E Test Automation - AI Challenge 🤖
 
-A robust Playwright test suite implementing the Page Object Model (POM) pattern for testing the SauceDemo login functionality at https://www.saucedemo.com/.
+> **Challenge:** Use AI to build a complete E2E test automation framework from scratch using Playwright and the Page Object Model (POM) pattern.
+
+This project demonstrates how AI tools (specifically Claude Code) were used to create a comprehensive test suite for [Swag Labs](https://www.saucedemo.com/) (SauceDemo), covering the entire user journey from login to order completion.
+
+---
+
+## 📋 Deliverables
+
+All challenge deliverables are located in the [`deliverables/`](deliverables/) folder:
+
+| File | Description |
+|------|-------------|
+| [`testStrategy.md`](deliverables/testStrategy.md) | Overall test strategy, scope, and coverage model |
+| [`inventory.md`](deliverables/inventory.md) | Complete test scenario inventory (all identified test cases) |
+| [`aiNotes.md`](deliverables/aiNotes.md) | AI-assisted development notes and learnings |
+| [`pipeline.yml`](deliverables/pipeline.yml) | CI/CD pipeline configuration for automated test execution |
+
+---
 
 ## 🏗️ Project Structure
 
-This project follows POM best practices with a clear separation of concerns:
-
 ```
 automation-challenge-pw/
-├── tests/
-│   ├── e2e/
-│   │   └── login/
-│   │       └── login.spec.ts          # Login test cases
-│   ├── fixtures/
-│   │   └── base.fixture.ts            # Custom Playwright fixtures
-│   ├── pages/
-│   │   └── login.page.ts              # LoginPage page object
-│   └── helpers/
-│       ├── assertions.ts              # Reusable assertion helpers
-│       └── credentials.ts             # Credential management
-├── playwright.config.ts                # Playwright configuration
-├── tsconfig.json                       # TypeScript configuration
-├── .env                                # Environment variables (not in git)
-├── .env.example                        # Environment variable template
-└── package.json                        # Project dependencies
+├── deliverables/                    # Challenge deliverables (see above)
+│   ├── testStrategy.md
+│   ├── inventory.md
+│   ├── aiNotes.md
+│   └── pipeline.yml
+│
+├── docs/                            # AI-generated application knowledge
+│   ├── app-knowledge/               # Detailed page documentation with selectors & interactions
+│   │   ├── login-page.md
+│   │   ├── inventory-page.md
+│   │   ├── cart-page.md
+│   │   ├── checkout-pages.md
+│   │   ├── navbar.md
+│   │   └── sidebar-menu.md
+│   │
+│   └── snapshots/                   # YAML snapshots with confirmed element locators
+│       ├── login-page.yaml
+│       ├── inventory-page.yaml
+│       ├── cart-page.yaml
+│       ├── checkout-step-one.yaml
+│       ├── checkout-step-two.yaml
+│       ├── checkout-complete.yaml
+│       ├── navbar.yaml
+│       └── sidebar-menu.yaml
+│
+├── tests/                           # Test implementation (POM pattern)
+│   ├── tests/                       # Test specs organized by feature
+│   │   ├── auth/                    # Authentication tests
+│   │   ├── product/                 # Product catalog tests
+│   │   ├── cart/                    # Shopping cart tests
+│   │   ├── checkout/                # Checkout flow tests
+│   │   ├── navigation/              # Navigation component tests
+│   │   └── E2E/                     # End-to-end critical path tests (@smoke)
+│   │
+│   ├── pages/                       # Page objects (POM) - mirrors UI structure
+│   │   ├── components/              # Reusable UI components
+│   │   │   ├── navbar.page.ts
+│   │   │   └── sidebar.page.ts
+│   │   ├── login.page.ts
+│   │   ├── inventory.page.ts
+│   │   ├── cart.page.ts
+│   │   └── checkout*.page.ts
+│   │
+│   ├── fixtures/                    # Custom Playwright fixtures
+│   │   └── base.fixture.ts
+│   │
+│   ├── test-data/                   # Test data JSON files (no hardcoding)
+│   │   ├── login.json
+│   │   ├── inventory.json
+│   │   ├── cart.json
+│   │   └── checkout*.json
+│   │
+│   └── helpers/                     # Helper functions
+│       ├── credentials.ts
+│       └── assertions.ts
+│
+├── playwright.config.ts             # Playwright configuration
+├── tsconfig.json                    # TypeScript configuration
+├── .env                             # Environment variables (not in git)
+├── .env.example                     # Environment variable template
+└── CLAUDE.md                        # AI instructions & project guidelines
 ```
 
-## 🚀 Getting Started
+---
+
+## 🤖 AI-Generated Documentation
+
+The [`docs/`](docs/) folder contains comprehensive application knowledge **generated by AI** through exploration and analysis of the SauceDemo application:
+
+### **app-knowledge/** - Page Documentation
+Detailed markdown files documenting each page's:
+- Element selectors using `data-test` attributes
+- User interactions and behaviors
+- Form fields and validation rules
+- Navigation patterns
+
+### **snapshots/** - Element Snapshots
+YAML files with confirmed element locators for:
+- All interactive elements (buttons, inputs, links)
+- Container elements (lists, cards, modals)
+- Text content and labels
+- State information (enabled/disabled, visible/hidden)
+
+**Why this matters:** These AI-generated artifacts ensure test stability by using documented, stable selectors instead of guessing or relying on brittle text-based locators.
+
+---
+
+## 🧪 Running Tests
 
 ### Prerequisites
-
 - Node.js (v18 or higher)
 - npm or yarn
 
 ### Installation
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/Maciel98/Automation-Challenge-PW.git
-cd Automation-Challenge-PW
-```
-
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
-```
 
-3. Set up environment variables:
-```bash
+# Set up environment variables
 cp .env.example .env
 ```
 
-4. Edit `.env` with your test credentials (or use defaults):
-```env
-STANDARD_USER=standard_user
-LOCKED_OUT_USER=locked_out_user
-TEST_PASSWORD=secret_sauce
-```
-
-## 🧪 Running Tests
-
-### Run all tests
+### Test Execution
 ```bash
+# Run all tests
 npm test
-```
 
-### Run tests in headed mode (see browser)
-```bash
+# Run tests in headed mode (see browser)
 npm run test:headed
-```
 
-### Debug tests with Playwright Inspector
-```bash
+# Debug tests with Playwright Inspector
 npm run test:debug
-```
 
-### Run tests with Playwright UI
-```bash
-npm run test:ui
-```
-
-### View HTML test report
-```bash
+# View HTML test report
 npm run test:report
+
+# Run smoke tests only (critical paths)
+npx playwright test --grep @smoke
+
+# Run specific test file
+npx playwright test tests/tests/auth/login.spec.ts
 ```
 
-### Run specific test file
-```bash
-npx playwright test tests/e2e/login/login.spec.ts
-```
+---
 
-## 📝 Page Object Model Implementation
+## ✨ Key Features
 
-### LoginPage ([`tests/pages/login.page.ts`](tests/pages/login.page.ts))
-
-The LoginPage encapsulates all login interactions:
-
-```typescript
-import { LoginPage } from '../pages/login.page';
-
-// Navigate to login
-await loginPage.goto();
-
-// Login with credentials
-await loginPage.login(email, password);
-
-// Login and wait for navigation
-await loginPage.loginAndWaitForNavigation(email, password);
-
-// Check for errors
-const hasError = await loginPage.hasErrorMessage();
-```
-
-**Key Features:**
-- ✅ Single class per page
-- ✅ Locators as readonly properties
-- ✅ Methods represent user intent (not low-level clicks)
-- ✅ No assertions inside page object
+### Page Object Model (POM) Implementation
+- ✅ One class per page/components
+- ✅ Intent-revealing methods (`login()`, `addToCart()`, `checkout()`)
+- ✅ No assertions inside page objects
 - ✅ Stateless design
+- ✅ Fixture integration for clean test code
 
-### Fixtures ([`tests/fixtures/base.fixture.ts`](tests/fixtures/base.fixture.ts))
+### Component Composition
+- Reusable UI components (navbar, sidebar) extracted to `pages/components/`
+- Composed inside page objects for better maintainability
 
-Custom fixtures integrate POMs with Playwright's test framework:
+### Test Data Management
+- All test data in `tests/test-data/` JSON files
+- No hardcoded values in tests
+- Credentials stored in `.env` (security best practice)
 
-```typescript
-import { test, expect } from '../fixtures/base.fixture';
+### Test Tagging
+- `@smoke` - Critical path tests
+- `@P0`, `@P1`, `@P2` - Priority levels
+- `@E2E` - End-to-end journey tests
+- `@auth`, `@cart`, `@checkout` - Feature tags
 
-test('login test', async ({ loginPage }) => {
-  await loginPage.goto();
-  // loginPage is automatically created
-});
-```
-
-**Benefits:**
-- 🔄 Automatic lifecycle management
-- 🎯 Clean test code with dependency injection
-- 🧩 Composable fixtures
-
-## 📁 Test Organization
-
-### Test Structure
-
-Tests follow the Arrange-Act-Assert (AAA) pattern:
-
-```typescript
-test('should login with valid credentials', async ({ loginPage, page }) => {
-  // Arrange
-  await loginPage.goto();
-
-  // Act
-  await loginPage.loginAndWaitForNavigation(email, password);
-
-  // Assert
-  await expect(page).toHaveURL(/\/account/);
-});
-```
-
-### Helper Functions
-
-**Credential Management** ([`tests/helpers/credentials.ts`](tests/helpers/credentials.ts)):
-```typescript
-import { getTestCredentials } from '../helpers/credentials';
-
-const { email, password } = getTestCredentials();
-```
-
-**Assertion Helpers** ([`tests/helpers/assertions.ts`](tests/helpers/assertions.ts)):
-```typescript
-import { expectErrorMessage, expectURL } from '../helpers/assertions';
-
-await expectErrorMessage(page, 'Invalid credentials');
-await expectURL(page, /\/account/);
-```
-
-## 🎯 POM Best Practices Applied
-
-| Pattern | Implementation |
-|---------|---------------|
-| **One class per page** | `LoginPage` for login page interactions |
-| **Intent-revealing methods** | `login()`, `loginAndWaitForNavigation()` |
-| **No assertions in POM** | All `expect()` calls in test files |
-| **Stateless design** | Page objects don't cache data |
-| **Fixture integration** | POMs available as test fixtures |
-| **Proper locator strategy** | Role-based and attribute selectors |
-
-## 🔧 Configuration
-
-### Playwright Config ([`playwright.config.ts`](playwright.config.ts))
-
-- **Test directory**: `./tests`
-- **Parallel execution**: Enabled
-- **Retries**: 2 on CI, 0 locally
-- **Reporter**: HTML (with trace on retry)
-
-### TypeScript Config ([`tsconfig.json`](tsconfig.json))
-
-- **Target**: ES2022
-- **Module**: CommonJS
-- **Strict mode**: Enabled
-- **Type checking**: Full with Playwright types
+---
 
 ## 📊 Test Coverage
 
-Current test scenarios:
+Coverage spans the complete user journey:
+1. **Authentication** - Login scenarios (valid, invalid, locked users)
+2. **Product Catalog** - Browse, filter, sort products
+3. **Shopping Cart** - Add/remove items, quantity updates
+4. **Checkout Flow** - 3-step checkout process
+5. **Navigation** - Navbar and sidebar menu interactions
+6. **Critical Paths** - End-to-end smoke tests
 
-**Standard User (Valid Login):**
-1. ✅ Navigate to login page
-2. ✅ Login with valid credentials
-3. ✅ Session persistence after login
+See [`deliverables/inventory.md`](deliverables/inventory.md) for the complete test scenario inventory.
 
-**Locked Out User:**
-4. ✅ Show error for locked_out_user
-5. ✅ Prevent navigation to dashboard when locked
+---
 
-**Invalid Credentials:**
-6. ✅ Show error with wrong username
-7. ✅ Show error with wrong password
-8. ✅ Show error with empty fields
+## 🎯 AI Development Approach
 
-**Error Banner Interactions:**
-9. ✅ Dismiss error banner
+This project was built using **Claude Code** with the following approach:
 
-**Total: 9 test scenarios**
+1. **Application Exploration** - AI explored SauceDemo to understand structure
+2. **Knowledge Capture** - Documented selectors and interactions in `docs/`
+3. **POM Structure** - Used `playwright-pom` skill to structure page objects
+4. **Test Creation** - Wrote tests following POM best practices
+5. **Test Data** - Extracted test data to JSON files (no hardcoding)
 
-## 🎨 How to Prompt for POM
+**Key Principle:** AI reads `docs/app-knowledge/` before writing tests to ensure stable selectors and correct interactions.
 
-When requesting new tests or features, use these patterns:
-
-### For new page objects:
-```
-"Create a CheckoutPage page object using POM best practices with:
-- Locator selectors for form fields
-- Intent-revealing action methods
-- No assertions inside the page object"
-```
-
-### For test cases:
-```
-"Write tests for the password reset flow using the POM pattern.
-Use fixtures for setup and helpers for assertions."
-```
-
-### For enhancements:
-```
-"Add error validation tests to the login spec.
-Follow POM conventions - keep assertions in tests, not page objects."
-```
+---
 
 ## 📚 Resources
 
 - [Playwright Documentation](https://playwright.dev)
 - [Page Object Model Guide](https://playwright.dev/docs/pom)
-- [Best Practices](.claude/skills/playwright-pom/page-object-model.md)
+- [SauceDemo Application](https://www.saucedemo.com/)
+- [Deliverables](deliverables/) - Challenge artifacts and documentation
 
-## 🤝 Contributing
-
-1. Create a feature branch
-2. Add page objects to `tests/pages/`
-3. Write tests in `tests/e2e/`
-4. Use fixtures from `tests/fixtures/`
-5. Keep POMs stateless and assertion-free
+---
 
 ## 📄 License
 
