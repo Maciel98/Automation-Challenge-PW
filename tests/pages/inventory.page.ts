@@ -1,4 +1,4 @@
-import { type Page, type Locator } from '@playwright/test';
+import { type Page, type Locator, expect } from '@playwright/test';
 import { NavbarPage } from './navbar.page';
 
 /**
@@ -20,6 +20,8 @@ import { NavbarPage } from './navbar.page';
  */
 export class InventoryPage {
   readonly page: Page;
+  readonly path = '/inventory.html';
+  readonly url = /\/inventory\.html/;
   readonly navbar: NavbarPage;  // Composition: has-a NavbarPage
   readonly sortDropdown: Locator;
   readonly inventoryList: Locator;
@@ -40,8 +42,15 @@ export class InventoryPage {
    * Navigate to the inventory page
    */
   async goto() {
-    await this.page.goto('https://www.saucedemo.com/inventory.html');
+    await this.page.goto(this.path);
     await this.inventoryList.waitFor({ state: 'visible', timeout: 5000 });
+  }
+
+  /**
+   * Verify we're on the inventory page
+   */
+  async isLoaded() {
+    await expect(this.page).toHaveURL(this.url);
   }
 
   /**

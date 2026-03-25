@@ -1,4 +1,4 @@
-import { type Page, type Locator } from '@playwright/test';
+import { type Page, type Locator, expect } from '@playwright/test';
 
 /**
  * CheckoutStepTwoPage - Page Object for Checkout Overview Page
@@ -9,6 +9,8 @@ import { type Page, type Locator } from '@playwright/test';
  */
 export class CheckoutStepTwoPage {
   readonly page: Page;
+  readonly path = '/checkout-step-two.html';
+  readonly url = /\/checkout-step-two\.html/;
   readonly pageTitle: Locator;
   readonly checkoutSummaryContainer: Locator;
   readonly cartList: Locator;
@@ -49,8 +51,15 @@ export class CheckoutStepTwoPage {
    * Navigate to the checkout step two page
    */
   async goto() {
-    await this.page.goto('https://www.saucedemo.com/checkout-step-two.html');
+    await this.page.goto(this.path);
     await this.pageTitle.waitFor({ state: 'visible', timeout: 5000 });
+  }
+
+  /**
+   * Verify we're on the checkout step two page
+   */
+  async isLoaded() {
+    await expect(this.page).toHaveURL(this.url);
   }
 
   /**

@@ -16,11 +16,14 @@ import { type Page, type Locator, expect } from '@playwright/test';
  */
 export class LoginPage {
   readonly page: Page;
+  readonly path = '/';
+  readonly url = /\/$/;
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
   readonly errorMessage: Locator;
   readonly errorIcon: Locator;
+  readonly inventoryList: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -30,15 +33,23 @@ export class LoginPage {
     this.loginButton = page.locator('[data-test="login-button"]');
     this.errorMessage = page.locator('[data-test="error"]');
     this.errorIcon = page.locator('.error-icon');
+    this.inventoryList = page.locator('.inventory_list');
   }
 
   /**
    * Navigate to the login page and wait for form to be ready
    */
   async goto() {
-    await this.page.goto('https://www.saucedemo.com/');
+    await this.page.goto(this.path);
     // Wait for the form to be visible and ready for interaction
     await this.usernameInput.waitFor({ state: 'visible', timeout: 5000 });
+  }
+
+  /**
+   * Verify we're on the login page
+   */
+  async isLoaded() {
+    await expect(this.page).toHaveURL(this.url);
   }
 
   /**
@@ -116,5 +127,13 @@ export class LoginPage {
   async isOnDashboardPage(): Promise<boolean> {
     const url = this.page.url();
     return url.includes('inventory.html');
+  }
+
+  /**
+   * Check if the page has the correct title
+   */
+  async hasPageTitle(expectedTitle: string): Promise<boolean> {
+    const title = await this.page.title();
+    return title === expectedTitle;
   }
 }

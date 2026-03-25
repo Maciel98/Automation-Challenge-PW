@@ -1,4 +1,4 @@
-import { type Page, type Locator } from '@playwright/test';
+import { type Page, type Locator, expect } from '@playwright/test';
 import { NavbarPage } from './navbar.page';
 
 /**
@@ -12,6 +12,8 @@ import { NavbarPage } from './navbar.page';
  */
 export class CartPage {
   readonly page: Page;
+  readonly path = '/cart.html';
+  readonly url = /\/cart\.html/;
   readonly navbar: NavbarPage;  // Composition: has-a NavbarPage
   readonly pageTitle: Locator;
   readonly cartList: Locator;
@@ -38,8 +40,15 @@ export class CartPage {
    * Navigate to the cart page
    */
   async goto() {
-    await this.page.goto('https://www.saucedemo.com/cart.html');
+    await this.page.goto(this.path);
     await this.pageTitle.waitFor({ state: 'visible', timeout: 5000 });
+  }
+
+  /**
+   * Verify we're on the cart page
+   */
+  async isLoaded() {
+    await expect(this.page).toHaveURL(this.url);
   }
 
   /**

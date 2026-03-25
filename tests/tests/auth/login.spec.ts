@@ -12,29 +12,29 @@ test.describe('Authentication @auth', () => {
   test.describe('Standard User (Valid Login)', () => {
     test('TC001: should navigate to login page @smoke', async ({ loginPage }) => {
       await loginPage.goto();
-      await expect(loginPage.page).toHaveTitle(/Swag Labs/);
+      await loginPage.isLoaded();
       await expect(loginPage.usernameInput).toBeVisible();
       await expect(loginPage.passwordInput).toBeVisible();
       await expect(loginPage.loginButton).toBeVisible();
     });
 
-    test('should login with valid credentials @smoke', async ({ loginPage, page }) => {
+    test('should login with valid credentials @smoke', async ({ loginPage, inventoryPage, page }) => {
       await loginPage.goto();
       await loginPage.loginAndWaitForDashboard(standardUser, password);
 
-      await expect(page).toHaveURL(/\/inventory\.html/);
+      await inventoryPage.isLoaded();
       await expect(loginPage.usernameInput).not.toBeVisible();
-      await expect(page.locator('.inventory_list')).toBeVisible();
+      await expect(loginPage.inventoryList).toBeVisible();
     });
 
-    test('TC012: should maintain session after login @regression', async ({ loginPage, page }) => {
+    test('TC012: should maintain session after login @regression', async ({ loginPage, inventoryPage, page }) => {
       await loginPage.goto();
       await loginPage.loginAndWaitForDashboard(standardUser, password);
 
-      await page.goto('https://www.saucedemo.com/inventory.html');
+      await inventoryPage.goto();
       await page.waitForTimeout(1000);
 
-      await expect(page).toHaveURL(/\/inventory\.html/);
+      await inventoryPage.isLoaded();
       await expect(loginPage.usernameInput).not.toBeVisible();
     });
   });

@@ -1,4 +1,4 @@
-import { type Page, type Locator } from '@playwright/test';
+import { type Page, type Locator, expect } from '@playwright/test';
 import { NavbarPage } from './navbar.page';
 
 /**
@@ -11,6 +11,8 @@ import { NavbarPage } from './navbar.page';
  */
 export class CheckoutCompletePage {
   readonly page: Page;
+  readonly path = '/checkout-complete.html';
+  readonly url = /\/checkout-complete\.html/;
   readonly navbar: NavbarPage;  // Composition: has-a NavbarPage
   readonly pageTitle: Locator;
   readonly checkoutCompleteContainer: Locator;
@@ -39,8 +41,15 @@ export class CheckoutCompletePage {
    * Navigate to the checkout complete page
    */
   async goto() {
-    await this.page.goto('https://www.saucedemo.com/checkout-complete.html');
+    await this.page.goto(this.path);
     await this.pageTitle.waitFor({ state: 'visible', timeout: 5000 });
+  }
+
+  /**
+   * Verify we're on the checkout complete page
+   */
+  async isLoaded() {
+    await expect(this.page).toHaveURL(this.url);
   }
 
   /**
