@@ -149,6 +149,56 @@ export class PageName {
 }
 ```
 
+**Page Object URL Convention:**
+All page objects MUST include these three properties/methods:
+
+```typescript
+export class PageName {
+  readonly page: Page;
+
+  // Path property - ONLY the route, starting with /
+  // ✅ CORRECT: readonly path = '/inventory.html'
+  // ❌ WRONG: readonly path = 'https://www.saucedemo.com/inventory.html'
+  readonly path = '/inventory.html';
+
+  // URL pattern - regex for verification (used by isLoaded)
+  readonly url = /\/inventory\.html/;
+
+  constructor(page: Page) {
+    this.page = page;
+  }
+
+  // goto() method - uses this.path (Playwright prepends baseURL)
+  async goto() {
+    await this.page.goto(this.path);
+    // Wait for key element to be visible
+  }
+
+  // isLoaded() method - verifies URL matches pattern
+  // Uses expect().toHaveURL() for proper assertion
+  async isLoaded() {
+    await expect(this.page).toHaveURL(this.url);
+  }
+}
+```
+
+**Rules:**
+- `path` property: MUST contain only the route starting with `/` - NEVER include domain or protocol
+- `url` property: MUST be a regex pattern matching the route
+- `goto()` method: MUST use `this.path` - Playwright automatically prepends `baseURL` from config
+- `isLoaded()` method: MUST only contain URL assertion using `expect().toHaveURL(this.url)` - NO selectors or other checks
+- Import `expect` from `@playwright/test` in every page object that uses `isLoaded()`
+
+**Why This Convention?**
+- ✅ **Environment-aware**: Works with dev/test/prd projects via `baseURL` in playwright.config.ts
+- ✅ **Single source of truth**: URL patterns live in their respective page objects
+- ✅ **Reusable verification**: `isLoaded()` can be used across all tests
+- ✅ **Clean separation**: Page logic in page objects, assertions in tests
+
+**Do NOT add to component files:**
+- Components like `NavbarPage`, `SidebarPage` do NOT have `path`, `url`, or `isLoaded()` methods
+- Components are reused across pages and don't have their own URL
+
 **Test Structure:**
 ```typescript
 import { test, expect } from '../fixtures/base.fixture';
@@ -160,8 +210,8 @@ test('scenario name', async ({ pageObject }) => {
   // Act
   await pageObject.performAction();
 
-  // Assert
-  await expect(page).toHaveURL(/expected-url/);
+  // Assert - use isLoaded() for URL verification
+  await pageObject.isLoaded();
 });
 ```
 
@@ -492,6 +542,18 @@ async loginAndWaitForDashboard(username: string, password: string) {
 }
 ```
 
+### Page Loading Verification Pattern
+```typescript
+// Using isLoaded() to verify page navigation
+test('should navigate to inventory', async ({ loginPage, inventoryPage }) => {
+  await loginPage.goto();
+  await loginPage.login('standard_user', 'secret_sauce');
+
+  // Verify we're on the inventory page
+  await inventoryPage.isLoaded();
+});
+```
+
 ---
 
 ## Test Creation Workflow
@@ -544,11 +606,12 @@ test('scenario name', async ({ pageObject }) => {
 | 2 | Read `docs/snapshots/<page>.yaml` | ✅ Get confirmed selectors |
 | 3 | Check `tests/test-data/<page>.json` | ✅ Use test data, no hardcoding |
 | 4 | Use `playwright-pom` skill | ✅ Follow POM structure |
-| 5 | Create page object | ✅ No assertions inside |
+| 5 | Create page object | ✅ No assertions inside, includes `path`, `url`, `isLoaded()` |
 | 6 | Use `data-test` selectors | ✅ From knowledge base |
-| 7 | Write test spec | ✅ AAA pattern, use test data |
-| 8 | Use fixtures | ✅ Dependency injection |
-| 9 | Run tests | ✅ `npm test` passes |
+| 7 | Verify path property | ✅ Only route (e.g., `/inventory.html`), NOT full URL |
+| 8 | Write test spec | ✅ AAA pattern, use test data, call `isLoaded()` |
+| 9 | Use fixtures | ✅ Dependency injection |
+| 10 | Run tests | ✅ `npm test` passes |
 
 ### Common Patterns
 
@@ -650,12 +713,15 @@ npx playwright test tests/e2e/login/login.spec.ts
 ✅ **Use test data from `tests/test-data/` - no hardcoded values**
 ✅ **Follow POM best practices: no assertions in page objects**
 ✅ **Use fixtures for clean test code**
+✅ **All page objects must include: `path`, `url`, and `isLoaded()` methods**
+✅ **Path properties must only contain route (e.g., `/inventory.html`), never full URLs**
 
 ❌ **Don't skip reading the knowledge base**
 ❌ **Don't guess selectors - use documented ones**
 ❌ **Don't hardcode test data - use JSON files**
 ❌ **Don't put assertions in page objects**
 ❌ **Don't use text-based selectors when `data-test` available**
+❌ **Don't hardcode full URLs in `path` properties - use relative paths only**
 
 ---
 
