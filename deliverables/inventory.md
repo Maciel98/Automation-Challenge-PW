@@ -25,8 +25,10 @@ This inventory categorizes test scenarios for the Swag Labs e-commerce applicati
 | LOG-001 | Auto | Navigate to login page - Login page loads successfully with username and password fields visible |
 | LOG-002 | Auto | Log in with standard_user credentials - User is authenticated and redirected to inventory page |
 | INV-001 | Auto | View inventory page - Page displays 6 available products |
-| E2E-001 | Auto | Complete full purchase flow - User logs in, adds item to cart, completes checkout, and receives order confirmation |
-| INV-002 | Later | Add multiple different products to cart - All selected products are added and cart badge increments |
+| INV-002 | Auto | Add multiple different products to cart - All selected products are added and cart badge increments |
+| CRT-005 | Auto | Click checkout button from cart - User navigates to checkout step one page |
+| CO2-002 | Auto | Verify subtotal, tax, and total on overview - Calculations are correct (subtotal + tax = total) |
+| CO2-003 | Auto | Click finish button - Order is submitted and navigates to checkout complete page |
 
 ---
 
@@ -45,11 +47,13 @@ This inventory categorizes test scenarios for the Swag Labs e-commerce applicati
 
 | Test ID | Automation | Test Case |
 |---------|------------|-----------|
+| E2E-001 | Auto | Complete full purchase flow - User logs in, adds item to cart, completes checkout, and receives order confirmation |
+| E2E-003 | Auto | Complete checkout with multiple items - Totals are calculated correctly and order completes |
 | LOG-003 | Later | Verify session persistence after login - User remains authenticated when navigating between pages |
 | LOG-004 | Later | Log in with locked_out_user credentials - Error message "Sorry, this user has been locked out" displays |
 | LOG-005 | Auto | Attempt login with empty field/s - Validation error displays or user stays on login page |
 | LOG-006 | Auto | Log in with incorrect credentials - Error message "Username and password do not match" displays |
-| LOG-007 | Later | Navigate to any url other than login without logging in - User is redirected to login page |
+| LOG-007 | Auto | Navigate to any url other than login without logging in - User is redirected to login page |
 
 ### Inventory & Products
 
@@ -57,11 +61,11 @@ This inventory categorizes test scenarios for the Swag Labs e-commerce applicati
 
 | Test ID | Automation | Test Case |
 |---------|------------|-----------|
-| INV-003 | Later | Remove product from inventory page - Product is removed from cart and badge decrements |
-| INV-004 | Later | Select sort by name (A-Z) - Products are sorted alphabetically from A to Z |
-| INV-005 | Later | Select sort by name (Z-A) - Products are sorted alphabetically from Z to A |
-| INV-006 | Later | Select sort by price (low to high) - Products are sorted by price ascending |
-| INV-007 | Later | Select sort by price (high to low) - Products are sorted by price descending |
+| INV-003 | Auto | Remove product from inventory page - Product is removed from cart and badge decrements |
+| INV-004 | Auto | Select sort by name (A-Z) - Products are sorted alphabetically from A to Z |
+| INV-005 | Auto | Select sort by name (Z-A) - Products are sorted alphabetically from Z to A |
+| INV-006 | Auto | Select sort by price (low to high) - Products are sorted by price ascending |
+| INV-007 | Auto | Select sort by price (high to low) - Products are sorted by price descending |
 
 ### Cart Functionality
 
@@ -71,10 +75,10 @@ This inventory categorizes test scenarios for the Swag Labs e-commerce applicati
 |---------|------------|-----------|
 | CRT-001 | Later | Navigate to cart with single item - Cart page displays the added product |
 | CRT-002 | Later | Navigate to cart with multiple items - Cart page displays all added products |
-| CRT-004 | Later | Click remove button on item - Item disappears from cart list and badge decreases |
-| CRT-005 | Later | Click checkout button from cart - User navigates to checkout step one page |
-| CRT-006 | Later | Click continue shopping button - User navigates back to inventory page |
-| CRT-007 | Later | Refresh page with items in cart - Cart contents persist after page refresh |
+| CRT-004 | Auto | Click remove button on item - Item disappears from cart list and badge decreases |
+| CRT-005 | Auto | Click checkout button from cart - User navigates to checkout step one page |
+| CRT-006 | Auto | Click continue shopping button - User navigates back to inventory page |
+| CRT-007 | Auto | Refresh page with items in cart - Cart contents persist after page refresh |
 
 ### Checkout Flow
 
@@ -84,8 +88,6 @@ This inventory categorizes test scenarios for the Swag Labs e-commerce applicati
 |---------|------------|-----------|
 | CO1-001 | Later | Complete all fields and click continue - User proceeds to checkout step two overview page |
 | CO2-001 | Later | View checkout overview page - All cart items are displayed with correct details |
-| CO2-002 | Later | Verify subtotal, tax, and total on overview - Calculations are correct (subtotal + tax = total) |
-| CO2-003 | Later | Click finish button - Order is submitted and navigates to checkout complete page |
 | CCO-001 | Later | Verify order confirmation page displays - Confirmation page loads with success message |
 | CCO-002 | Later | Verify cart after order completion - Cart is empty and badge is removed |
 | NAV-002 | Later | Cart badge shows count when items added - Badge displays correct number of items in cart |
@@ -95,7 +97,7 @@ This inventory categorizes test scenarios for the Swag Labs e-commerce applicati
 | NAV-006 | Later | Click cart icon to navigate to cart page - Cart page loads |
 | SID-001 | Auto | Click logout - User is redirected to login page |
 | SID-002 | Later | Verify all menu items are visible - All navigation options are displayed |
-| SID-003 | Later | Click close button - Sidebar collapses and returns to previous page |
+| SID-003 | Auto | Click close button - Sidebar collapses and returns to previous page |
 | NAV-001 | Later | Verify primary header is visible - Header displays correctly on page load |
 | NAV-007 | Later | Click hamburger menu to open sidebar - Sidebar expands when menu clicked |
 
@@ -108,7 +110,6 @@ This inventory categorizes test scenarios for the Swag Labs e-commerce applicati
 
 | Test ID | Automation | Test Case |
 |---------|------------|-----------|
-| E2E-003 | Auto | Complete checkout with multiple items - Totals are calculated correctly and order completes |
 
 ---
 
@@ -204,7 +205,7 @@ The inventoryList.md file contains:
 - Tests organized by page (Login, Inventory, Cart, Checkout, E2E, Navbar, Sidebar)
 - Complete test descriptions with tags
 - Unique test IDs (LOG-001, INV-001, etc.)
-- Full test coverage: 59 tests
+- Full test coverage: 56 tests
 
 ## EXTRA
 
