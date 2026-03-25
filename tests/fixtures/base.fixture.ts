@@ -1,6 +1,7 @@
 import { test as base } from '@playwright/test';
 import { LoginPage } from '../pages/login.page';
 import { NavbarPage } from '../pages/navbar.page';
+import { SidebarPage } from '../pages/sidebar.page';
 import { InventoryPage } from '../pages/inventory.page';
 import { CartPage } from '../pages/cart.page';
 import { CheckoutStepOnePage } from '../pages/checkout-step-one.page';
@@ -21,6 +22,7 @@ const TEST_CUSTOMER = checkoutStepOneData.testCustomer;
 type MyFixtures = {
   loginPage: LoginPage;
   navbarPage: NavbarPage;
+  sidebarPage: SidebarPage;
   inventoryPage: InventoryPage;
   cartPage: CartPage;
   checkoutStepOnePage: CheckoutStepOnePage;
@@ -55,6 +57,14 @@ export const test = base.extend<MyFixtures>({
    */
   navbarPage: async ({ page }, use) => {
     await use(new NavbarPage(page));
+  },
+
+  /**
+   * SidebarPage fixture
+   * Automatically creates a new SidebarPage instance for each test
+   */
+  sidebarPage: async ({ page }, use) => {
+    await use(new SidebarPage(page));
   },
 
   /**

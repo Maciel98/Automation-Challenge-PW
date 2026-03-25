@@ -3,6 +3,22 @@ import inventoryData from '../../../test-data/inventory.json';
 import checkoutCompleteData from '../../../test-data/checkout-complete.json';
 
 test.describe('Checkout Step Two - Overview @checkout', () => {
+  test.describe('Price Calculations', () => {
+    test('should verify subtotal, tax, and total calculations are correct @smoke @regression', async ({
+      checkoutStepTwoPageReady,
+    }) => {
+      // CO2-002: Verify subtotal, tax, and total on overview - Calculations are correct
+      const subtotal = await checkoutStepTwoPageReady.getSubtotal();
+      const tax = await checkoutStepTwoPageReady.getTax();
+      const total = await checkoutStepTwoPageReady.getTotal();
+
+      // Verify: Total = Subtotal + Tax
+      expect(total).toBeCloseTo(subtotal + tax, 2);
+      expect(total).toBeGreaterThan(subtotal);
+      expect(tax).toBeGreaterThan(0);
+    });
+  });
+
   test('should display product information @regression', async ({ checkoutStepTwoPageReady }) => {
     const productNames = await checkoutStepTwoPageReady.getProductNames();
     expect(productNames.length).toBeGreaterThan(0);
@@ -22,16 +38,16 @@ test.describe('Checkout Step Two - Overview @checkout', () => {
     expect(total).toBeCloseTo(subtotal + tax, 2);
   });
 
-  test('should cancel and return to inventory @regression', async ({ checkoutStepTwoPageReady, page }) => {
+  test('should cancel and return to inventory @regression', async ({ checkoutStepTwoPageReady, inventoryPage }) => {
     await checkoutStepTwoPageReady.cancel();
 
-    await expect(page).toHaveURL(/\/inventory\.html/);
+    await inventoryPage.isLoaded();
   });
 
-  test('should finish order and navigate to complete page @smoke @regression', async ({ checkoutStepTwoPageReady, checkoutCompletePage, page }) => {
+  test('should finish order and navigate to complete page @smoke @regression', async ({ checkoutStepTwoPageReady, checkoutCompletePage }) => {
     await checkoutStepTwoPageReady.finishOrder();
 
-    await expect(page).toHaveURL(/\/checkout-complete\.html/);
+    await checkoutCompletePage.isLoaded();
     await expect(checkoutStepTwoPageReady.pageTitle).toHaveText(checkoutCompleteData.labels.title);
   });
 });

@@ -2,6 +2,18 @@ import { test, expect } from '../../fixtures/base.fixture';
 import inventoryData from '../../test-data/inventory.json';
 
 test.describe('Inventory @inventory', () => {
+  test.describe('Page Display', () => {
+    test('should display all available products @smoke @regression', async ({ authenticatedInventoryPage }) => {
+      // INV-001: View inventory page - Page displays 6 available products
+      const productCount = await authenticatedInventoryPage.page
+        .locator('[data-test="inventory-item"]')
+        .count();
+
+      expect(productCount).toBe(inventoryData.products.length);
+      expect(productCount).toBe(6);
+    });
+  });
+
   test.describe('Add to Cart', () => {
     test('User can add product to cart @smoke', async ({ authenticatedInventoryPage }) => {
       const product = inventoryData.products[0];

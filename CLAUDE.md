@@ -215,6 +215,38 @@ test('scenario name', async ({ pageObject }) => {
 });
 ```
 
+### Anti-Patterns to Avoid
+
+**❌ WRONG: Hardcoded URL patterns in tests**
+```typescript
+// DON'T: Hardcode URL patterns directly in tests
+test('should navigate to inventory', async ({ page }) => {
+  await someAction();
+  await expect(page).toHaveURL(/\/inventory\.html/); // ❌ Hardcoded pattern
+});
+```
+
+**✅ CORRECT: Use page object's isLoaded() method**
+```typescript
+// DO: Use the page object's isLoaded() method
+test('should navigate to inventory', async ({ inventoryPage }) => {
+  await someAction();
+  await inventoryPage.isLoaded(); // ✅ Uses centralized URL pattern
+});
+```
+
+**Why this is wrong:**
+- ❌ Duplicates URL patterns across multiple test files
+- ❌ Makes maintenance harder - changing a URL requires updating many files
+- ❌ Violates Single Responsibility Principle - tests shouldn't know URL patterns
+- ❌ Creates inconsistency - different tests might use different patterns
+
+**Why use isLoaded():**
+- ✅ Single source of truth for URL patterns in page objects
+- ✅ Easier maintenance - change URL in one place
+- ✅ Consistent verification across all tests
+- ✅ Follows POM pattern - encapsulation of page details
+
 ### 4. Fixture Integration
 
 Use custom fixtures from `tests/fixtures/base.fixture.ts`:
@@ -593,8 +625,8 @@ test('scenario name', async ({ pageObject }) => {
   // Act
   await pageObject.performAction();
 
-  // Assert
-  await expect(page).toHaveURL(/expected-url/);
+  // Assert - use isLoaded() for URL verification
+  await pageObject.isLoaded();
 });
 ```
 
@@ -715,6 +747,7 @@ npx playwright test tests/e2e/login/login.spec.ts
 ✅ **Use fixtures for clean test code**
 ✅ **All page objects must include: `path`, `url`, and `isLoaded()` methods**
 ✅ **Path properties must only contain route (e.g., `/inventory.html`), never full URLs**
+✅ **Use `pageObject.isLoaded()` for URL verification - NEVER hardcode URL patterns in tests**
 
 ❌ **Don't skip reading the knowledge base**
 ❌ **Don't guess selectors - use documented ones**
@@ -722,6 +755,7 @@ npx playwright test tests/e2e/login/login.spec.ts
 ❌ **Don't put assertions in page objects**
 ❌ **Don't use text-based selectors when `data-test` available**
 ❌ **Don't hardcode full URLs in `path` properties - use relative paths only**
+❌ **Don't hardcode URL patterns in tests - use `pageObject.isLoaded()` instead**
 
 ---
 

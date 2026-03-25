@@ -17,9 +17,9 @@ test.describe('Checkout Complete @checkout', () => {
     expect(cartCount).toBe(0);
   });
 
-  test('should navigate back to inventory @regression', async ({ checkoutCompletePageReady, page }) => {
+  test('should navigate back to inventory @regression', async ({ checkoutCompletePageReady, inventoryPage }) => {
     await checkoutCompletePageReady.backToProducts();
 
-    await expect(page).toHaveURL(/\/inventory\.html/);
+    await inventoryPage.isLoaded();
   });
 });

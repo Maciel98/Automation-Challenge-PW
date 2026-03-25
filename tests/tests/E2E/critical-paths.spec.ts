@@ -84,7 +84,7 @@ test.describe('E2E Critical Paths @E2E', () => {
     );
 
     // Verify checkout overview
-    await expect(checkoutStepTwoPage.page).toHaveURL(/\/checkout-step-two\.html/);
+    await checkoutStepTwoPage.isLoaded();
     const productNames = await checkoutStepTwoPage.getProductNames();
     expect(productNames).toContain(TEST_PRODUCT.name);
 
@@ -100,7 +100,7 @@ test.describe('E2E Critical Paths @E2E', () => {
     await checkoutStepTwoPage.finishOrder();
 
     // Assert: Verify order confirmation
-    await expect(checkoutCompletePage.page).toHaveURL(/\/checkout-complete\.html/);
+    await checkoutCompletePage.isLoaded();
     const completeHeader = await checkoutCompletePage.getCompleteHeader();
     expect(completeHeader).toBe(checkoutCompleteData.labels.thankYouMessage);
 
