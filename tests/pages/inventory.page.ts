@@ -109,4 +109,24 @@ export class InventoryPage {
     // Extract product ID from "add-to-cart-sauce-labs-backpack"
     return dataTestId?.replace('add-to-cart-', '') || '';
   }
+
+  /**
+   * Get the first N available product IDs from the inventory page
+   * @param count - Number of product IDs to return
+   * @returns Array of product IDs (capped at available items)
+   */
+  async getFirstProductIds(count: number): Promise<string[]> {
+    const addButtons = this.page.locator('[data-test^="add-to-cart-"]');
+    const availableCount = await addButtons.count();
+    const toGet = Math.min(count, availableCount);
+
+    const ids: string[] = [];
+    for (let i = 0; i < toGet; i++) {
+      const button = addButtons.nth(i);
+      const dataTestId = await button.getAttribute('data-test');
+      const productId = dataTestId?.replace('add-to-cart-', '') || '';
+      ids.push(productId);
+    }
+    return ids;
+  }
 }

@@ -8,6 +8,7 @@ import { CheckoutStepOnePage } from '../pages/checkout-step-one.page';
 import { CheckoutStepTwoPage } from '../pages/checkout-step-two.page';
 import { CheckoutCompletePage } from '../pages/checkout-complete.page';
 import checkoutStepOneData from '../test-data/checkout-step-one.json';
+import { setupCheckoutWithItems } from '../helpers/checkout-setup';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -32,6 +33,7 @@ type MyFixtures = {
   cartWithItemPage: CartPage;
   checkoutStepOnePageWithData: CheckoutStepOnePage;
   checkoutStepTwoPageReady: CheckoutStepTwoPage;
+  checkoutStepTwoPageWithTwoItems: CheckoutStepTwoPage;
   checkoutCompletePageReady: CheckoutCompletePage;
 };
 
@@ -162,29 +164,22 @@ export const test = base.extend<MyFixtures>({
 
   /**
    * CheckoutStepTwoPage ready fixture
-   * Automatically logs in, adds product, fills checkout info, and navigates to checkout step two
+   * Automatically logs in, adds 1 product, fills checkout info, and navigates to checkout step two
    * Use this for tests that operate on the checkout overview page
    */
   checkoutStepTwoPageReady: async ({ page }, use) => {
-    const loginPage = new LoginPage(page);
-    const inventoryPage = new InventoryPage(page);
-    const cartPage = new CartPage(page);
-    const checkoutStepOnePage = new CheckoutStepOnePage(page);
-    const checkoutStepTwoPage = new CheckoutStepTwoPage(page);
+    const checkoutPage = await setupCheckoutWithItems(page, 1);
+    await use(checkoutPage);
+  },
 
-    await loginPage.goto();
-    await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
-    const firstProductId = await inventoryPage.getFirstProductId();
-    await inventoryPage.addToCart(firstProductId);
-    await inventoryPage.navbar.navigateToCart();
-    await cartPage.proceedToCheckout();
-    await checkoutStepOnePage.fillInformationAndContinue(
-      TEST_CUSTOMER.firstName,
-      TEST_CUSTOMER.lastName,
-      TEST_CUSTOMER.postalCode
-    );
-
-    await use(checkoutStepTwoPage);
+  /**
+   * CheckoutStepTwoPage with 2 items fixture
+   * Automatically logs in, adds 2 products, fills checkout info, and navigates to checkout step two
+   * Use this for tests that validate multiple product handling
+   */
+  checkoutStepTwoPageWithTwoItems: async ({ page }, use) => {
+    const checkoutPage = await setupCheckoutWithItems(page, 2);
+    await use(checkoutPage);
   },
 
   /**
@@ -193,26 +188,10 @@ export const test = base.extend<MyFixtures>({
    * Use this for tests that operate on the order confirmation page
    */
   checkoutCompletePageReady: async ({ page }, use) => {
-    const loginPage = new LoginPage(page);
-    const inventoryPage = new InventoryPage(page);
-    const cartPage = new CartPage(page);
-    const checkoutStepOnePage = new CheckoutStepOnePage(page);
-    const checkoutStepTwoPage = new CheckoutStepTwoPage(page);
+    const checkoutStepTwoPage = await setupCheckoutWithItems(page, 1);
     const checkoutCompletePage = new CheckoutCompletePage(page);
 
-    await loginPage.goto();
-    await loginPage.loginAndWaitForDashboard(STANDARD_USER, TEST_PASSWORD);
-    const firstProductId = await inventoryPage.getFirstProductId();
-    await inventoryPage.addToCart(firstProductId);
-    await inventoryPage.navbar.navigateToCart();
-    await cartPage.proceedToCheckout();
-    await checkoutStepOnePage.fillInformationAndContinue(
-      TEST_CUSTOMER.firstName,
-      TEST_CUSTOMER.lastName,
-      TEST_CUSTOMER.postalCode
-    );
     await checkoutStepTwoPage.finishOrder();
-
     await use(checkoutCompletePage);
   },
 });
