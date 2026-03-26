@@ -423,6 +423,13 @@ jobs:
       # This is a non-blocking check - failures create bug tickets
       # but don't block ongoing development work
       # -------------------------------------------------------------------------
+      - name: 🔍 Debug Environment Variables
+        run: |
+          echo "CI=$CI"
+          echo "STANDARD_USER is set: $(if [ -n "$STANDARD_USER" ]; then echo 'YES'; else echo 'NO'; fi)"
+          echo "LOCKED_OUT_USER is set: $(if [ -n "$LOCKED_OUT_USER" ]; then echo 'YES'; else echo 'NO'; fi)"
+          echo "TEST_PASSWORD is set: $(if [ -n "$TEST_PASSWORD" ]; then echo 'YES'; else echo 'NO'; fi)"
+
       - name: 🌙 Nightly Regression Suite
         id: nightly-run
         run: npx playwright test --grep @regression --project=test
