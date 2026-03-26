@@ -54,6 +54,7 @@ test.describe('E2E Critical Paths @E2E', () => {
   test('User can complete full purchase flow @smoke @regression', async ({
     loginPage,
     inventoryPage,
+    navbarPage,
     cartPage,
     checkoutStepOnePage,
     checkoutStepTwoPage,
@@ -65,10 +66,10 @@ test.describe('E2E Critical Paths @E2E', () => {
     await inventoryPage.addToCart(TEST_PRODUCT.id);
 
     // Navigate to checkout
-    await inventoryPage.navbar.navigateToCart();
+    await navbarPage.navigateToCart();
 
     // Verify cart has the product
-    const cartItemCount = await inventoryPage.navbar.getCartBadgeCount();
+    const cartItemCount = await navbarPage.getCartBadgeCount();
     expect(cartItemCount).toBe(1);
 
     // Proceed through checkout flow
@@ -101,9 +102,9 @@ test.describe('E2E Critical Paths @E2E', () => {
     expect(completeHeader).toBe(checkoutCompleteData.labels.thankYouMessage);
 
     // Verify cart is cleared after order
-    const finalCartCount = await checkoutCompletePage.navbar.getCartBadgeCount();
+    const finalCartCount = await navbarPage.getCartBadgeCount();
     expect(finalCartCount).toBe(0);
-    await expect(checkoutCompletePage.navbar.shoppingCartBadge).not.toBeVisible();
+    await expect(navbarPage.shoppingCartBadge).not.toBeVisible();
   });
 
   /**
@@ -122,6 +123,7 @@ test.describe('E2E Critical Paths @E2E', () => {
   test('User can complete checkout with multiple items @regression', async ({
     loginPage,
     inventoryPage,
+    navbarPage,
     cartPage,
     checkoutStepOnePage,
     checkoutStepTwoPage,
@@ -149,10 +151,10 @@ test.describe('E2E Critical Paths @E2E', () => {
     }
 
     // Navigate to checkout
-    await inventoryPage.navbar.navigateToCart();
+    await navbarPage.navigateToCart();
 
     // Verify cart has all products
-    const cartItemCount = await inventoryPage.navbar.getCartBadgeCount();
+    const cartItemCount = await navbarPage.getCartBadgeCount();
     expect(cartItemCount).toBe(TEST_PRODUCTS.length);
 
     // Proceed through checkout flow
@@ -188,8 +190,8 @@ test.describe('E2E Critical Paths @E2E', () => {
     expect(completeHeader).toBe(checkoutCompleteData.labels.thankYouMessage);
 
     // Verify cart is cleared after order
-    const finalCartCount = await checkoutCompletePage.navbar.getCartBadgeCount();
+    const finalCartCount = await navbarPage.getCartBadgeCount();
     expect(finalCartCount).toBe(0);
-    await expect(checkoutCompletePage.navbar.shoppingCartBadge).not.toBeVisible();
+    await expect(navbarPage.shoppingCartBadge).not.toBeVisible();
   });
 });

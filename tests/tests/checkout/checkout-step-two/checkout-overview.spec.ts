@@ -30,7 +30,7 @@ test.describe('Checkout Step Two - Overview @checkout', () => {
       // Calculate expected total
       const expectedTotal = expectedSubtotal + expectedTax;
 
-      // Verify exact calculations (not just greater than)
+      // Verify exact calculations
       expect(actualSubtotal).toBeCloseTo(expectedSubtotal, 2);
       expect(actualTax).toBeCloseTo(expectedTax, 2);
       expect(actualTotal).toBeCloseTo(expectedTotal, 2);
