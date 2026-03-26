@@ -1,10 +1,6 @@
 import { test, expect } from '../../fixtures/base.fixture';
 import inventoryData from '../../test-data/inventory.json';
 
-import dotenv from 'dotenv';
-
-dotenv.config();
-
 test.describe('Sidebar Menu @navigation', () => {
   test.describe('Logout', () => {
     test('should logout and redirect to login page @smoke @regression', async ({

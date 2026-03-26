@@ -1,7 +1,4 @@
 import { type Page, type Locator, expect } from '@playwright/test';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 /**
  * LoginPage - Page Object for SauceDemo.com

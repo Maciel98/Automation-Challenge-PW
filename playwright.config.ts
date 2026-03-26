@@ -3,8 +3,11 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
+ *
+ * This loads .env file for local development.
+ * In CI, environment variables are set via GitHub Secrets.
  */
-// require('dotenv').config();
+require('dotenv').config();
 
 /**
  * See https://playwright.dev/docs/test-configuration.

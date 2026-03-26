@@ -11,7 +11,7 @@ export interface SauceDemoCredentials {
  *
  * Environment variables are set by:
  * - CI: GitHub Secrets (automatically injected)
- * - Local: .env file via dotenv loaded in login.page.ts
+ * - Local: .env file via playwright.config.ts
  *
  * @throws Error if credentials are not set
  */
@@ -33,7 +33,7 @@ export function getStandardUserCredentials(): SauceDemoCredentials {
  *
  * Environment variables are set by:
  * - CI: GitHub Secrets (automatically injected)
- * - Local: .env file via dotenv loaded in login.page.ts
+ * - Local: .env file via playwright.config.ts
  *
  * @throws Error if credentials are not set
  */
