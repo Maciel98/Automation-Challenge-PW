@@ -251,6 +251,7 @@ jobs:
       - name: 🐛 Create Issue on Failure
         if: failure()
         uses: actions/github-script@v7
+        continue-on-error: true  # Don't fail the job if issue creation fails
         with:
           script: |
             github.rest.issues.create({
@@ -358,6 +359,7 @@ jobs:
       - name: 🚨 Rollback Notification
         if: failure()
         uses: actions/github-script@v7
+        continue-on-error: true  # Don't fail the job if issue creation fails
         with:
           script: |
             github.rest.issues.create({
@@ -462,6 +464,7 @@ jobs:
       - name: 🐛 Create Issue on Failure
         if: steps.nightly-run.outcome == 'failure'
         uses: actions/github-script@v7
+        continue-on-error: true  # Don't fail the job if issue creation fails
         with:
           script: |
             github.rest.issues.create({
