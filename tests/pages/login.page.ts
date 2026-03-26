@@ -26,12 +26,17 @@ export class LoginPage {
   readonly inventoryList: Locator;
   readonly errorButton: Locator;
 
-  // Default credentials loaded from environment
-  private readonly defaultUsername = process.env.STANDARD_USER || 'standard_user';
-  private readonly defaultPassword = process.env.TEST_PASSWORD || 'secret_sauce';
+  // Credentials loaded from environment (no hardcoded values)
+  private defaultUsername: string;
+  private defaultPassword: string;
 
   constructor(page: Page) {
     this.page = page;
+
+    // Credentials from environment (no hardcoded values)
+    this.defaultUsername = process.env.STANDARD_USER ?? (() => { throw new Error('STANDARD_USER not set'); })();
+    this.defaultPassword = process.env.TEST_PASSWORD ?? (() => { throw new Error('TEST_PASSWORD not set'); })();
+
     // SauceDemo login selectors - using data-test-id attributes (POM best practice)
     this.usernameInput = page.locator('[data-test="username"]');
     this.passwordInput = page.locator('[data-test="password"]');
