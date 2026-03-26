@@ -650,28 +650,22 @@ npx playwright test --grep "@P0"
 
 ### 8.4 Integration with CI/CD
 
-**Current State:**
-- Tests run locally via npm scripts
-- Manual execution before commits
+**Pipeline Overview:**
 
-**Future CI/CD Integration:**
-1. **Pre-Merge (PR)**
-   - Smoke tests only
-   - Must pass before merge
-   - Fast feedback (parallel execution)
+The project uses GitHub Actions to implement a three-environment quality gate strategy:
 
-2. **Post-Merge**
-   - Full regression suite
-   - Runs on main branch updates
-   - Artifacts: HTML report, traces, screenshots
+| Stage | Trigger | Environment | Tests | Blocking |
+|-------|---------|-------------|-------|----------|
+| **smoke-dev** | Every push/PR | DEV | @smoke only | Yes |
+| **test-stage** | Merge to test | TEST | @smoke + @regression | Yes |
+| **smoke-prd** | Merge to main | PRD | @smoke only | Yes |
+| **nightly-regression** | Daily 2 AM | TEST | @regression only | No |
 
-3. **Scheduled**
-   - Full regression nightly
-   - Early detection of environment issues
-
-4. **Release Gates**
-   - Smoke tests as hard requirement
-   - Full regression before production deployment
+**Key Principles:**
+- Smoke tests run in all environments as deployment health checks
+- Regression tests run only in TEST as comprehensive quality gates
+- Production failures trigger rollback, not debugging
+- Artifacts (reports, traces) retained for debugging failures
 
 ### 8.5 Reporting and Metrics
 
@@ -902,34 +896,4 @@ tests/
     ├── inventory.json
     └── checkout*.json
 ```
-
-### Quick Reference Commands
-
-```bash
-# Install dependencies
-npm install
-
-# Run all tests
-npm test
-
-# Run smoke tests
-npx playwright test --grep @smoke
-
-# Run specific test file
-npx playwright test tests/tests/E2E/critical-paths.spec.ts
-
-# Run in headed mode
-npm run test:headed
-
-# Debug tests
-npm run test:debug
-
-# View HTML report
-npm run test:report
-```
-
 ---
-
-**Document Version:** 1.0
-**Last Updated:** 2026-03-26
-**Next Review:** 2026-06-26
