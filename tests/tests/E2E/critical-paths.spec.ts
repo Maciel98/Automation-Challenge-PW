@@ -90,7 +90,17 @@ test.describe('E2E Critical Paths @E2E', () => {
     const tax = await checkoutStepTwoPage.getTax();
     const total = await checkoutStepTwoPage.getTotal();
 
-    expect(subtotal).toBe(TEST_PRODUCT.price);
+    // Calculate expected values
+    const expectedSubtotal = TEST_PRODUCT.price;
+    const expectedTax = expectedSubtotal * checkoutStepTwoData.taxRate;
+    const expectedTotal = expectedSubtotal + expectedTax;
+
+    // Verify calculations match expected values
+    expect(subtotal).toBeCloseTo(expectedSubtotal, 2);
+    expect(tax).toBeCloseTo(expectedTax, 2);
+    expect(total).toBeCloseTo(expectedTotal, 2);
+
+    // Verify relationship: Total = Subtotal + Tax
     expect(total).toBeCloseTo(subtotal + tax, 2);
 
     // Complete the order
@@ -173,13 +183,17 @@ test.describe('E2E Critical Paths @E2E', () => {
     }
 
     // Verify price calculations for multiple items
-    const subtotal = await checkoutStepTwoPage.getSubtotal();
-    const tax = await checkoutStepTwoPage.getTax();
-    const total = await checkoutStepTwoPage.getTotal();
+    const actualSubtotal = await checkoutStepTwoPage.getSubtotal();
+    const actualTax = await checkoutStepTwoPage.getTax();
+    const actualTotal = await checkoutStepTwoPage.getTotal();
 
-    expect(subtotal).toBeCloseTo(expectedSubtotal, 2);
-    expect(tax).toBeCloseTo(expectedTax, 2);
-    expect(total).toBeCloseTo(expectedTotal, 2);
+    // Verify calculations match expected values
+    expect(actualSubtotal).toBeCloseTo(expectedSubtotal, 2);
+    expect(actualTax).toBeCloseTo(expectedTax, 2);
+    expect(actualTotal).toBeCloseTo(expectedTotal, 2);
+
+    // Verify relationship: Total = Subtotal + Tax
+    expect(actualTotal).toBeCloseTo(actualSubtotal + actualTax, 2);
 
     // Complete the order
     await checkoutStepTwoPage.finishOrder();
