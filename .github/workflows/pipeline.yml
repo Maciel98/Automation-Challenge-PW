@@ -377,7 +377,7 @@ jobs:
   # JOB 4: NIGHTLY REGRESSION
   # ===========================================================================
   # PURPOSE: Catch regressions that may have developed between releases
-  # TRIGGER: Scheduled run at 2 AM UTC daily
+  # TRIGGER: Scheduled run at 2 AM UTC daily OR manual workflow dispatch
   # SCOPE: @regression tagged tests in TEST environment
   # GATE: NON-BLOCKING - creates bug tickets but doesn't block deployment
   # ===========================================================================
@@ -386,8 +386,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
-    # Only run on scheduled trigger
-    if: github.event_name == 'schedule'
+    # Run on scheduled trigger OR manual dispatch
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
 
     steps:
       # -------------------------------------------------------------------------
