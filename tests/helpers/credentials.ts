@@ -1,11 +1,3 @@
-import dotenv from 'dotenv';
-
-// Load environment variables from .env file only in local development
-// In CI, environment variables are set via GitHub Secrets
-if (process.env.CI !== 'true') {
-  dotenv.config();
-}
-
 /**
  * SauceDemo credentials interface
  */
@@ -16,8 +8,11 @@ export interface SauceDemoCredentials {
 
 /**
  * Get standard user credentials from environment variables
- * In CI: reads from GitHub Secrets
- * Locally: reads from .env file
+ *
+ * Environment variables are set by:
+ * - CI: GitHub Secrets (automatically injected)
+ * - Local: .env file via dotenv loaded in login.page.ts
+ *
  * @throws Error if credentials are not set
  */
 export function getStandardUserCredentials(): SauceDemoCredentials {
@@ -25,9 +20,8 @@ export function getStandardUserCredentials(): SauceDemoCredentials {
   const password = process.env.TEST_PASSWORD;
 
   if (!username || !password) {
-    const source = process.env.CI === 'true' ? 'GitHub Secrets' : '.env file';
     throw new Error(
-      `Missing credentials! Please set STANDARD_USER and TEST_PASSWORD in ${source}`
+      'Missing credentials! Please set STANDARD_USER and TEST_PASSWORD environment variables.'
     );
   }
 
@@ -36,8 +30,11 @@ export function getStandardUserCredentials(): SauceDemoCredentials {
 
 /**
  * Get locked out user credentials from environment variables
- * In CI: reads from GitHub Secrets
- * Locally: reads from .env file
+ *
+ * Environment variables are set by:
+ * - CI: GitHub Secrets (automatically injected)
+ * - Local: .env file via dotenv loaded in login.page.ts
+ *
  * @throws Error if credentials are not set
  */
 export function getLockedOutUserCredentials(): SauceDemoCredentials {
@@ -45,9 +42,8 @@ export function getLockedOutUserCredentials(): SauceDemoCredentials {
   const password = process.env.TEST_PASSWORD;
 
   if (!username || !password) {
-    const source = process.env.CI === 'true' ? 'GitHub Secrets' : '.env file';
     throw new Error(
-      `Missing credentials! Please set LOCKED_OUT_USER and TEST_PASSWORD in ${source}`
+      'Missing credentials! Please set LOCKED_OUT_USER and TEST_PASSWORD environment variables.'
     );
   }
 
