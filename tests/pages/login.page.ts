@@ -27,6 +27,7 @@ export class LoginPage {
   readonly errorMessage: Locator;
   readonly errorIcon: Locator;
   readonly inventoryList: Locator;
+  readonly errorButton: Locator;
 
   // Default credentials loaded from environment
   private readonly defaultUsername = process.env.STANDARD_USER || 'standard_user';
@@ -41,6 +42,7 @@ export class LoginPage {
     this.errorMessage = page.locator('[data-test="error"]');
     this.errorIcon = page.locator('.error-icon');
     this.inventoryList = page.locator('.inventory_list');
+    this.errorButton = page.locator('[data-test="error-button"]');
   }
 
   /**
@@ -121,7 +123,7 @@ export class LoginPage {
    * Dismiss the error banner by clicking the X button
    */
   async dismissError() {
-    await this.page.locator('[data-test="error-button"]').click();
+    await this.errorButton.click();
     await this.errorMessage.waitFor({ state: 'hidden' });
   }
 

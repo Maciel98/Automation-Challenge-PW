@@ -23,6 +23,8 @@ export class SidebarPage {
   readonly aboutLink: Locator;
   readonly logoutLink: Locator;
   readonly resetAppStateLink: Locator;
+  readonly menuItemList: Locator;
+  readonly overlay: Locator;
 
   constructor(page: Page, navbar: NavbarPage) {
     this.page = page;
@@ -39,6 +41,12 @@ export class SidebarPage {
     this.aboutLink = page.locator('[data-test="about-sidebar-link"]');
     this.logoutLink = page.locator('[data-test="logout-sidebar-link"]');
     this.resetAppStateLink = page.locator('[data-test="reset-sidebar-link"]');
+
+    // Menu item list for getting all items
+    this.menuItemList = page.locator('nav.bm-item-list a');
+
+    // Overlay for closing sidebar by clicking outside
+    this.overlay = page.locator('.bm-overlay');
   }
 
   /**
@@ -147,16 +155,14 @@ export class SidebarPage {
    * Useful for verification in tests
    */
   async getMenuItemsText(): Promise<string[]> {
-    const menuItems = await this.page.locator('nav.bm-item-list a').allTextContents();
-    return menuItems;
+    return await this.menuItemList.allTextContents();
   }
 
   /**
    * Get count of menu items visible
    */
   async getMenuItemCount(): Promise<number> {
-    const count = await this.page.locator('nav.bm-item-list a').count();
-    return count;
+    return await this.menuItemList.count();
   }
 
   /**
@@ -172,7 +178,7 @@ export class SidebarPage {
    * Alternative method to close()
    */
   async closeByClickingOutside() {
-    await this.page.locator('.bm-overlay').click();
+    await this.overlay.click();
     await this.sidebarContainer.waitFor({ state: 'hidden' });
   }
 

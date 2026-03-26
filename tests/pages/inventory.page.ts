@@ -25,6 +25,10 @@ export class InventoryPage {
   readonly navbar: NavbarPage;  // Composition: has-a NavbarPage
   readonly sortDropdown: Locator;
   readonly inventoryList: Locator;
+  readonly inventoryItemName: Locator;
+  readonly inventoryItemPrice: Locator;
+  readonly inventoryItem: Locator;
+  readonly addToCartButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -36,6 +40,14 @@ export class InventoryPage {
 
     // Product list
     this.inventoryList = page.locator('[data-test="inventory-list"]');
+
+    // Product item elements
+    this.inventoryItemName = page.locator('[data-test="inventory-item-name"]');
+    this.inventoryItemPrice = page.locator('[data-test="inventory-item-price"]');
+    this.inventoryItem = page.locator('[data-test="inventory-item"]');
+
+    // Add to cart buttons (using starts-with for dynamic product IDs)
+    this.addToCartButton = page.locator('[data-test^="add-to-cart-"]');
   }
 
   /**
@@ -85,23 +97,21 @@ export class InventoryPage {
    * Get all product names displayed on the page
    */
   async getProductNames(): Promise<string[]> {
-    const productNames = await this.page.locator('[data-test="inventory-item-name"]').allTextContents();
-    return productNames;
+    return await this.inventoryItemName.allTextContents();
   }
 
   /**
    * Get all product prices displayed on the page
    */
   async getProductPrices(): Promise<string[]> {
-    const productPrices = await this.page.locator('[data-test="inventory-item-price"]').allTextContents();
-    return productPrices;
+    return await this.inventoryItemPrice.allTextContents();
   }
 
   /**
    * Get the count of products displayed on the page
    */
   async getProductCount(): Promise<number> {
-    return await this.page.locator('[data-test="inventory-item"]').count();
+    return await this.inventoryItem.count();
   }
 
   /**
@@ -110,7 +120,7 @@ export class InventoryPage {
    * @returns The product ID (e.g., 'sauce-labs-backpack')
    */
   async getFirstProductId(): Promise<string> {
-    const firstAddButton = this.page.locator('[data-test^="add-to-cart-"]').first();
+    const firstAddButton = this.addToCartButton.first();
     await firstAddButton.waitFor({ state: 'visible', timeout: 5000 });
     const dataTestId = await firstAddButton.getAttribute('data-test');
     // Extract product ID from "add-to-cart-sauce-labs-backpack"
@@ -123,13 +133,12 @@ export class InventoryPage {
    * @returns Array of product IDs (capped at available items)
    */
   async getFirstProductIds(count: number): Promise<string[]> {
-    const addButtons = this.page.locator('[data-test^="add-to-cart-"]');
-    const availableCount = await addButtons.count();
+    const availableCount = await this.addToCartButton.count();
     const toGet = Math.min(count, availableCount);
 
     const ids: string[] = [];
     for (let i = 0; i < toGet; i++) {
-      const button = addButtons.nth(i);
+      const button = this.addToCartButton.nth(i);
       const dataTestId = await button.getAttribute('data-test');
       const productId = dataTestId?.replace('add-to-cart-', '') || '';
       ids.push(productId);

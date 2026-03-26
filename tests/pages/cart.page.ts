@@ -19,6 +19,10 @@ export class CartPage {
   readonly cartList: Locator;
   readonly continueShoppingButton: Locator;
   readonly checkoutButton: Locator;
+  readonly inventoryItemName: Locator;
+  readonly itemQuantity: Locator;
+  readonly inventoryItemPrice: Locator;
+  readonly inventoryItem: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -34,6 +38,12 @@ export class CartPage {
     // Action buttons
     this.continueShoppingButton = page.locator('[data-test="continue-shopping"]');
     this.checkoutButton = page.locator('[data-test="checkout"]');
+
+    // Cart item elements
+    this.inventoryItemName = page.locator('[data-test="inventory-item-name"]');
+    this.itemQuantity = page.locator('[data-test="item-quantity"]');
+    this.inventoryItemPrice = page.locator('[data-test="inventory-item-price"]');
+    this.inventoryItem = page.locator('[data-test="inventory-item"]');
   }
 
   /**
@@ -81,32 +91,28 @@ export class CartPage {
    * Get all product names in the cart
    */
   async getProductNames(): Promise<string[]> {
-    const productNames = await this.page.locator('[data-test="inventory-item-name"]').allTextContents();
-    return productNames;
+    return await this.inventoryItemName.allTextContents();
   }
 
   /**
    * Get all product quantities in the cart
    */
   async getProductQuantities(): Promise<string[]> {
-    const quantities = await this.page.locator('[data-test="item-quantity"]').allTextContents();
-    return quantities;
+    return await this.itemQuantity.allTextContents();
   }
 
   /**
    * Get all product prices in the cart
    */
   async getProductPrices(): Promise<string[]> {
-    const productPrices = await this.page.locator('[data-test="inventory-item-price"]').allTextContents();
-    return productPrices;
+    return await this.inventoryItemPrice.allTextContents();
   }
 
   /**
    * Get the number of items in the cart
    */
   async getCartItemCount(): Promise<number> {
-    const items = await this.page.locator('[data-test="inventory-item"]').count();
-    return items;
+    return await this.inventoryItem.count();
   }
 
   /**
