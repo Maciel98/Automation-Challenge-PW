@@ -111,9 +111,9 @@ jobs:
         run: npx playwright test --grep @smoke --project=dev
         env:
           CI: true
-          STANDARD_USER: standard_user
-          LOCKED_OUT_USER: locked_out_user
-          TEST_PASSWORD: secret_sauce
+          STANDARD_USER: ${{ secrets.STANDARD_USER }}
+          LOCKED_OUT_USER: ${{ secrets.LOCKED_OUT_USER }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
       # -------------------------------------------------------------------------
       # STEP 6: Upload HTML report (always, even on failure)
@@ -191,9 +191,9 @@ jobs:
         run: npx playwright test --grep @smoke --project=test
         env:
           CI: true
-          STANDARD_USER: standard_user
-          LOCKED_OUT_USER: locked_out_user
-          TEST_PASSWORD: secret_sauce
+          STANDARD_USER: ${{ secrets.STANDARD_USER }}
+          LOCKED_OUT_USER: ${{ secrets.LOCKED_OUT_USER }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
       # -------------------------------------------------------------------------
       # STEP 6: Run REGRESSION tests on TEST
@@ -216,9 +216,9 @@ jobs:
         run: npx playwright test --grep @regression --project=test
         env:
           CI: true
-          STANDARD_USER: standard_user
-          LOCKED_OUT_USER: locked_out_user
-          TEST_PASSWORD: secret_sauce
+          STANDARD_USER: ${{ secrets.STANDARD_USER }}
+          LOCKED_OUT_USER: ${{ secrets.LOCKED_OUT_USER }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
       # -------------------------------------------------------------------------
       # STEP 7: Upload HTML report
@@ -324,9 +324,9 @@ jobs:
         run: npx playwright test --grep @smoke --project=prd
         env:
           CI: true
-          STANDARD_USER: standard_user
-          LOCKED_OUT_USER: locked_out_user
-          TEST_PASSWORD: secret_sauce
+          STANDARD_USER: ${{ secrets.STANDARD_USER }}
+          LOCKED_OUT_USER: ${{ secrets.LOCKED_OUT_USER }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
       # -------------------------------------------------------------------------
       # STEP 6: Upload HTML report
@@ -429,9 +429,9 @@ jobs:
         continue-on-error: true  # Don't fail the workflow, just log bugs
         env:
           CI: true
-          STANDARD_USER: standard_user
-          LOCKED_OUT_USER: locked_out_user
-          TEST_PASSWORD: secret_sauce
+          STANDARD_USER: ${{ secrets.STANDARD_USER }}
+          LOCKED_OUT_USER: ${{ secrets.LOCKED_OUT_USER }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
       # -------------------------------------------------------------------------
       # STEP 6: Upload HTML report
