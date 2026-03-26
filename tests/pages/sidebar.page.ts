@@ -90,8 +90,8 @@ export class SidebarPage {
    */
   async navigateToAbout(): Promise<Page> {
     await this.aboutLink.click();
-    // Wait for navigation to saucelabs.com to complete
-    await this.page.waitForURL(/saucelabs\.com/, { timeout: 10000 });
+    // Wait for navigation - check for URL change instead of full page load
+    await this.page.waitForURL(/saucelabs\.com/, { timeout: 10000, waitUntil: 'commit' });
     return this.page;
   }
 
