@@ -14,7 +14,7 @@ test.describe('Authentication @auth', () => {
 
     test('should login with valid credentials @smoke', async ({ loginPage, inventoryPage }) => {
       await loginPage.goto();
-      await loginPage.loginAndWaitForInventoryWithDefaults();
+      await loginPage.loginWithDefaults();
 
       await inventoryPage.isLoaded();
       await expect(loginPage.usernameInput).not.toBeVisible();
@@ -23,7 +23,7 @@ test.describe('Authentication @auth', () => {
 
     test('should maintain session after login @regression', async ({ loginPage, inventoryPage }) => {
       await loginPage.goto();
-      await loginPage.loginAndWaitForInventoryWithDefaults();
+      await loginPage.loginWithDefaults();
 
       await inventoryPage.goto();
 

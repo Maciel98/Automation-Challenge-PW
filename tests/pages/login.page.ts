@@ -74,25 +74,11 @@ export class LoginPage {
   }
 
   /**
-   * Login and wait for navigation to inventory page
-   * Use this for successful login scenarios
-   * @param username - Username
-   * @param password - Password
-   */
-  async loginAndWaitForInventory(username: string, password: string) {
-    await this.login(username, password);
-    // Wait for navigation to inventory page (successful login)
-    await this.page.waitForURL(/\/inventory\.html/);
-  }
-
-  /**
-   * Login using default credentials and wait for navigation to inventory page
+   * Login using default credentials
    * Convenience method that uses the default standard_user credentials
    */
-  async loginAndWaitForInventoryWithDefaults() {
+  async loginWithDefaults() {
     await this.login(this.defaultUsername, this.defaultPassword);
-    // Wait for navigation to inventory page (successful login)
-    await this.page.waitForURL(/\/inventory\.html/);
   }
 
   /**

@@ -10,13 +10,21 @@ import { NavbarPage } from './navbar.page';
  *
  * Menu Items:
  * - All Items - Navigates to inventory page
- * - About - Opens external saucelabs.com
+ * - About - Navigates to external saucelabs.com (same tab)
  * - Logout - Logs out user
  * - Reset App State - Clears cart and resets filters
+ *
+ * NOTE: The About link navigates in the SAME tab to saucelabs.com (external site).
+ * Since this is external navigation, the URL pattern is exposed via aboutUrl property:
+ *
+ *   await sidebarPage.navigateToAbout();
+ *   await expect(page).toHaveURL(sidebarPage.aboutUrl);
+ *   await page.goBack();  // Return to app
  */
 export class SidebarPage {
   readonly page: Page;
   readonly navbar: NavbarPage;
+  readonly aboutUrl = /saucelabs\.com/;  // External site URL pattern
   readonly closeButton: Locator;
   readonly sidebarContainer: Locator;
   readonly allItemsLink: Locator;
@@ -79,20 +87,14 @@ export class SidebarPage {
    */
   async navigateToAllItems() {
     await this.allItemsLink.click();
-    // Stays on inventory page, just wait for navigation to settle
-    await this.page.waitForLoadState('networkidle');
   }
 
   /**
    * Navigate to "About" (opens external saucelabs.com)
    * Navigates in the same tab (not a new page as documented)
-   * Returns the current page after navigation
    */
-  async navigateToAbout(): Promise<Page> {
+  async navigateToAbout() {
     await this.aboutLink.click();
-    // Wait for navigation - check for URL change instead of full page load
-    await this.page.waitForURL(/saucelabs\.com/, { timeout: 10000, waitUntil: 'commit' });
-    return this.page;
   }
 
   /**
@@ -101,7 +103,6 @@ export class SidebarPage {
    */
   async logout() {
     await this.logoutLink.click();
-    await this.page.waitForURL(/\/(index\.html)?$/);
   }
 
   /**
@@ -143,11 +144,10 @@ export class SidebarPage {
   /**
    * Open sidebar and navigate to About
    * Convenience method for common workflow
-   * Returns the new page object
    */
-  async openAndNavigateToAbout(): Promise<Page> {
+  async openAndNavigateToAbout() {
     await this.open();
-    return await this.navigateToAbout();
+    await this.navigateToAbout();
   }
 
   /**

@@ -70,6 +70,7 @@ export class CheckoutStepTwoPage {
    */
   async isLoaded() {
     await expect(this.page).toHaveURL(this.url);
+    await this.pageTitle.waitFor({ state: 'visible' });
   }
 
   /**
@@ -77,7 +78,6 @@ export class CheckoutStepTwoPage {
    */
   async finishOrder() {
     await this.finishButton.click();
-    await this.page.waitForURL(/\/checkout-complete\.html/, { timeout: 5000 });
   }
 
   /**
@@ -85,7 +85,6 @@ export class CheckoutStepTwoPage {
    */
   async cancel() {
     await this.cancelButton.click();
-    await this.page.waitForURL(/\/inventory\.html/, { timeout: 5000 });
   }
 
   /**

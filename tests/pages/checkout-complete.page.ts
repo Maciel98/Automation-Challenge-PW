@@ -50,6 +50,7 @@ export class CheckoutCompletePage {
    */
   async isLoaded() {
     await expect(this.page).toHaveURL(this.url);
+    await this.pageTitle.waitFor({ state: 'visible' });
   }
 
   /**
@@ -57,7 +58,6 @@ export class CheckoutCompletePage {
    */
   async backToProducts() {
     await this.backToProductsButton.click();
-    await this.page.waitForURL(/\/inventory\.html/, { timeout: 5000 });
   }
 
   /**

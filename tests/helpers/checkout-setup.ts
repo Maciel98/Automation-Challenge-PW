@@ -39,7 +39,7 @@ export async function setupCheckoutWithItems(
 
   // Login
   await loginPage.goto();
-  await loginPage.loginAndWaitForInventoryWithDefaults();
+  await loginPage.loginWithDefaults();
 
   // Add specified number of items
   const productIds = await inventoryPage.getFirstProductIds(itemCount);

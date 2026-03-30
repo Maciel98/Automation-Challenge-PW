@@ -464,7 +464,7 @@ When creating new tests:
 
 **CRITICAL:** Tests MUST NOT import `dotenv` or define credential constants. All credential access is centralized in:
 
-1. **`tests/pages/login.page.ts`** - Default credentials via `loginAndWaitForInventoryWithDefaults()`
+1. **`tests/pages/login.page.ts`** - Default credentials via `loginWithDefaults()`
 2. **`tests/helpers/credentials.ts`** - Helper functions for specific user types
 
 **✅ CORRECT: Using standard user (default)**
@@ -473,7 +473,7 @@ import { test, expect } from '../../fixtures/base.fixture';
 
 test('should login with standard user', async ({ loginPage, inventoryPage }) => {
   await loginPage.goto();
-  await loginPage.loginAndWaitForInventoryWithDefaults(); // ✅ Uses default credentials from .env
+  await loginPage.loginWithDefaults(); // ✅ Uses default credentials from .env
 
   await inventoryPage.isLoaded();
 });
@@ -574,7 +574,7 @@ test('should handle problem user', async ({ loginPage, inventoryPage }) => {
 
 ### Summary
 
-- ✅ **Standard user**: Use `loginAndWaitForInventoryWithDefaults()`
+- ✅ **Standard user**: Use `loginWithDefaults()`
 - ✅ **Locked user**: Use `getLockedOutUserCredentials()` from helpers
 - ✅ **New user types**: Create new login helper in `LoginPage` class
 - ❌ **Never**: Import `dotenv` in tests or define credential constants

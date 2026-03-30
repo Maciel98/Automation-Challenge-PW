@@ -55,7 +55,6 @@ export class NavbarPage {
    */
   async navigateToCart() {
     await this.shoppingCartLink.click();
-    await this.page.waitForURL(/\/cart\.html/);
   }
 
   /**

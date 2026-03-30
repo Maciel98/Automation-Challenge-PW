@@ -63,6 +63,7 @@ export class InventoryPage {
    */
   async isLoaded() {
     await expect(this.page).toHaveURL(this.url);
+    await this.inventoryList.waitFor({ state: 'visible' });
   }
 
   /**

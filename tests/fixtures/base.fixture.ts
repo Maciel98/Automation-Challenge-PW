@@ -110,7 +110,7 @@ export const test = base.extend<MyFixtures>({
   authenticatedInventoryPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
-    await loginPage.loginAndWaitForInventoryWithDefaults();
+    await loginPage.loginWithDefaults();
     const inventoryPage = new InventoryPage(page);
     await use(inventoryPage);
   },
@@ -126,7 +126,7 @@ export const test = base.extend<MyFixtures>({
     const cartPage = new CartPage(page);
 
     await loginPage.goto();
-    await loginPage.loginAndWaitForInventoryWithDefaults();
+    await loginPage.loginWithDefaults();
     const firstProductId = await inventoryPage.getFirstProductId();
     await inventoryPage.addToCart(firstProductId);
     await inventoryPage.navbar.navigateToCart();
@@ -146,7 +146,7 @@ export const test = base.extend<MyFixtures>({
     const checkoutStepOnePage = new CheckoutStepOnePage(page);
 
     await loginPage.goto();
-    await loginPage.loginAndWaitForInventoryWithDefaults();
+    await loginPage.loginWithDefaults();
     const firstProductId = await inventoryPage.getFirstProductId();
     await inventoryPage.addToCart(firstProductId);
     await inventoryPage.navbar.navigateToCart();

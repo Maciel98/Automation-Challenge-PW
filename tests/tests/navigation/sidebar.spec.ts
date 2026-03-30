@@ -6,12 +6,11 @@ test.describe('Sidebar Menu @navigation', () => {
     test('should logout and redirect to login page @smoke @regression', async ({
       loginPage,
       sidebarPage,
-      page,
     }) => {
       // SID-001: Click logout - User is redirected to login page
       // First login
       await loginPage.goto();
-      await loginPage.loginAndWaitForInventoryWithDefaults();
+      await loginPage.loginWithDefaults();
 
       // Open sidebar and logout
       await sidebarPage.openAndLogout();
@@ -26,7 +25,7 @@ test.describe('Sidebar Menu @navigation', () => {
 
   test.describe('Menu Display', () => {
     test('should close sidebar menu when clicking close button @regression', async ({
-      authenticatedInventoryPage,
+      authenticatedInventoryPage, // Required: provides authenticated session
       sidebarPage,
     }) => {
       await sidebarPage.open();
@@ -36,7 +35,10 @@ test.describe('Sidebar Menu @navigation', () => {
       expect(isOpen).toBeFalsy();
     });
 
-    test('should display all menu items @regression', async ({ authenticatedInventoryPage, sidebarPage }) => {
+    test('should display all menu items @regression', async ({
+      authenticatedInventoryPage, // Required: provides authenticated session
+      sidebarPage
+    }) => {
       await sidebarPage.open();
 
       const menuItemCount = await sidebarPage.getMenuItemCount();
@@ -62,18 +64,18 @@ test.describe('Sidebar Menu @navigation', () => {
     });
 
     test('should navigate to about page and open external saucelabs.com @regression', async ({
-      authenticatedInventoryPage,
+      authenticatedInventoryPage, // Required: provides authenticated session
       sidebarPage,
       page,
     }) => {
-      // Navigate to About - opens new tab
-      const newPage = await sidebarPage.openAndNavigateToAbout();
+      // Navigate to About - navigates in same tab to external site
+      await sidebarPage.openAndNavigateToAbout();
 
-      // Verify new page opened and navigated to saucelabs.com
-      await expect(newPage).toHaveURL(/saucelabs\.com/);
+      // Verify navigated to saucelabs.com
+      await expect(page).toHaveURL(sidebarPage.aboutUrl);
 
-      // Clean up - close the new page
-      await newPage.close();
+      // Navigate back to restore app state for other tests
+      await page.goBack();
     });
   });
 

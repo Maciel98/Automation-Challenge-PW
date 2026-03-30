@@ -62,7 +62,7 @@ test.describe('E2E Critical Paths @E2E', () => {
   }) => {
     // Act: Login and add product to cart
     await loginPage.goto();
-    await loginPage.loginAndWaitForInventoryWithDefaults();
+    await loginPage.loginWithDefaults();
     await inventoryPage.addToCart(TEST_PRODUCT.id);
 
     // Navigate to checkout
@@ -153,7 +153,7 @@ test.describe('E2E Critical Paths @E2E', () => {
 
     // Act: Login and add multiple products to cart
     await loginPage.goto();
-    await loginPage.loginAndWaitForInventoryWithDefaults();
+    await loginPage.loginWithDefaults();
 
     // Add each product to cart
     for (const product of TEST_PRODUCTS) {

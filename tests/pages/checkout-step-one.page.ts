@@ -50,6 +50,7 @@ export class CheckoutStepOnePage {
    */
   async isLoaded() {
     await expect(this.page).toHaveURL(this.url);
+    await this.pageTitle.waitFor({ state: 'visible' });
   }
 
   /**
@@ -69,7 +70,6 @@ export class CheckoutStepOnePage {
    */
   async continueToOverview() {
     await this.continueButton.click();
-    await this.page.waitForURL(/\/checkout-step-two\.html/, { timeout: 5000 });
   }
 
   /**
@@ -88,7 +88,6 @@ export class CheckoutStepOnePage {
    */
   async cancel() {
     await this.cancelButton.click();
-    await this.page.waitForURL(/\/cart\.html/, { timeout: 5000 });
   }
 
   /**
