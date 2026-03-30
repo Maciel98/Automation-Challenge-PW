@@ -67,7 +67,6 @@ export class CartPage {
    */
   async removeProduct(productId: string) {
     const removeButton = this.page.locator(`[data-test="remove-${productId}"]`);
-    await removeButton.waitFor({ state: 'visible', timeout: 5000 });
     await removeButton.click();
   }
 

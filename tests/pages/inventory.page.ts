@@ -71,7 +71,6 @@ export class InventoryPage {
    */
   async addToCart(productId: string) {
     const addButton = this.page.locator(`[data-test="add-to-cart-${productId}"]`);
-    await addButton.waitFor({ state: 'visible', timeout: 5000 });
     await addButton.click();
   }
 
@@ -81,7 +80,6 @@ export class InventoryPage {
    */
   async removeFromCart(productId: string) {
     const removeButton = this.page.locator(`[data-test="remove-${productId}"]`);
-    await removeButton.waitFor({ state: 'visible', timeout: 5000 });
     await removeButton.click();
   }
 
@@ -121,7 +119,6 @@ export class InventoryPage {
    */
   async getFirstProductId(): Promise<string> {
     const firstAddButton = this.addToCartButton.first();
-    await firstAddButton.waitFor({ state: 'visible', timeout: 5000 });
     const dataTestId = await firstAddButton.getAttribute('data-test');
     // Extract product ID from "add-to-cart-sauce-labs-backpack"
     return dataTestId?.replace('add-to-cart-', '') || '';
