@@ -23,7 +23,6 @@ export class LoginPage {
   readonly loginButton: Locator;
   readonly errorMessage: Locator;
   readonly errorIcon: Locator;
-  readonly inventoryList: Locator;
   readonly errorButton: Locator;
 
   // Credentials loaded from environment (no hardcoded values)
@@ -43,7 +42,6 @@ export class LoginPage {
     this.loginButton = page.locator('[data-test="login-button"]');
     this.errorMessage = page.locator('[data-test="error"]');
     this.errorIcon = page.locator('.error-icon');
-    this.inventoryList = page.locator('.inventory_list');
     this.errorButton = page.locator('[data-test="error-button"]');
   }
 
@@ -60,6 +58,8 @@ export class LoginPage {
    */
   async isLoaded() {
     await expect(this.page).toHaveURL(this.url);
+    // Wait for login button as anchor element indicating page is ready
+    await this.loginButton.waitFor({ state: 'visible' });
   }
 
   /**
