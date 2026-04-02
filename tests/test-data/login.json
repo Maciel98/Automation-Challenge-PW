@@ -4,5 +4,9 @@
     "invalidCredentials": "Epic sadface: Username and password do not match any user in this service",
     "missingUsername": "Epic sadface: Username is required",
     "missingPassword": "Epic sadface: Password is required"
+  },
+  "invalidCredentials": {
+    "username": "invalid_user",
+    "password": "wrong_password"
   }
 }

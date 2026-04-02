@@ -124,14 +124,6 @@ export class LoginPage {
   }
 
   /**
-   * Verify we're on the inventory page (successful login)
-   */
-  async isOnInventoryPage(): Promise<boolean> {
-    const url = this.page.url();
-    return url.includes('inventory.html');
-  }
-
-  /**
    * Check if the page has the correct title
    */
   async hasPageTitle(expectedTitle: string): Promise<boolean> {

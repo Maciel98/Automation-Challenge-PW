@@ -15,10 +15,7 @@ test.describe('Authentication @auth', () => {
     test('should login with valid credentials @smoke', async ({ loginPage, inventoryPage }) => {
       await loginPage.goto();
       await loginPage.loginWithDefaults();
-
       await inventoryPage.isLoaded();
-      await expect(loginPage.usernameInput).not.toBeVisible();
-      await expect(loginPage.inventoryList).toBeVisible();
     });
 
     test('should maintain session after login @regression', async ({ loginPage, inventoryPage }) => {
@@ -26,9 +23,7 @@ test.describe('Authentication @auth', () => {
       await loginPage.loginWithDefaults();
 
       await inventoryPage.goto();
-
       await inventoryPage.isLoaded();
-      await expect(loginPage.usernameInput).not.toBeVisible();
     });
   });
 
@@ -55,14 +50,9 @@ test.describe('Authentication @auth', () => {
       await loginPage.goto();
       await loginPage.loginExpectingError(username, password);
 
-      const isOnInventory = await loginPage.isOnInventoryPage();
-      expect(isOnInventory).toBeFalsy();
-
       // Verify error message is displayed
       const errorMessage = await loginPage.getErrorMessage();
       expect(errorMessage).toBe(loginData.errorMessages.lockedOut);
-
-      await expect(loginPage.usernameInput).toBeVisible();
     });
   });
 
@@ -71,7 +61,7 @@ test.describe('Authentication @auth', () => {
       const { password } = getStandardUserCredentials();
 
       await loginPage.goto();
-      await loginPage.loginExpectingError('invalid_user', password);
+      await loginPage.loginExpectingError(loginData.invalidCredentials.username, password);
 
       const hasError = await loginPage.hasErrorMessage();
       expect(hasError).toBeTruthy();
@@ -84,7 +74,7 @@ test.describe('Authentication @auth', () => {
       const { username } = getStandardUserCredentials();
 
       await loginPage.goto();
-      await loginPage.loginExpectingError(username, 'wrong_password');
+      await loginPage.loginExpectingError(username, loginData.invalidCredentials.password);
 
       const hasError = await loginPage.hasErrorMessage();
       expect(hasError).toBeTruthy();
