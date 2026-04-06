@@ -33,6 +33,14 @@ Read the relevant docs **before writing any test or page object**.
 
 ---
 
+## Skill Maintenance
+
+When editing skills in `.agents/skills/`, use `/create-agent-skills` to follow proper structure and avoid information overload.
+
+**Key principle:** Keep skills concise — reference existing docs instead of duplicating.
+
+---
+
 ## Project-Specific Conventions
 
 These files define how **this project** extends or constrains the base skills.
