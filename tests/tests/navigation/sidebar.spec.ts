@@ -37,7 +37,7 @@ test.describe('Sidebar Menu @navigation', () => {
 
     test('should display all menu items @regression', async ({
       authenticatedInventoryPage, // Required: provides authenticated session
-      sidebarPage
+      sidebarPage,
     }) => {
       await sidebarPage.open();
 
@@ -96,6 +96,41 @@ test.describe('Sidebar Menu @navigation', () => {
       // Verify cart is cleared
       const cartCountAfter = await authenticatedInventoryPage.navbar.getCartBadgeCount();
       expect(cartCountAfter).toBe(0);
+    });
+
+    test('should clear cart with multiple items @smoke @regression', async ({
+      authenticatedInventoryPage,
+      sidebarPage,
+      page,
+    }) => {
+      // Add multiple items to cart
+      const testProducts = inventoryData.products.slice(0, 3);
+      for (const product of testProducts) {
+        await authenticatedInventoryPage.addToCart(product.id);
+      }
+
+      // Verify cart has items
+      const cartCountBefore = await authenticatedInventoryPage.navbar.getCartBadgeCount();
+      expect(cartCountBefore).toBe(testProducts.length);
+      await expect(authenticatedInventoryPage.navbar.shoppingCartBadge).toBeVisible();
+
+      // Verify remove buttons are present (state: items in cart)
+      const removeButtonCountBefore = page.locator('[data-test^="remove-"]').count();
+      expect(await removeButtonCountBefore).toBe(testProducts.length);
+
+      // Reset app state via sidebar
+      await sidebarPage.openAndResetAppState();
+
+      // Verify cart is cleared - badge count = 0
+      const cartCountAfter = await authenticatedInventoryPage.navbar.getCartBadgeCount();
+      expect(cartCountAfter).toBe(0);
+
+      // Verify cart badge is hidden when empty
+      await expect(authenticatedInventoryPage.navbar.shoppingCartBadge).not.toBeVisible();
+
+      // NOTE: Reset App State clears the cart but doesn't reset button states
+      // Button states remain as "Remove" even though cart is empty
+      // This is actual application behavior - buttons reset only on page refresh
     });
   });
 });
