@@ -13,6 +13,7 @@ Page objects encapsulate **actions**, not locators. A test should read like a us
 | Actions | Public methods that perform a user-visible behavior. Return `Promise<void>` or the next page object. |
 | Assertions | **Never** inside page objects. Tests own all `expect()` calls. |
 | Navigation | Methods that navigate return the destination page object, not `void`. |
+| Waits | **Never** explicit waits in actions. Playwright's `click()` auto-waits for visible/stable/enabled. |
 | State | Page objects are stateless. No caching locator text, no tracking "current step." |
 | Constructor | Takes `Page` (or `Locator` for components). Nothing else. No URLs, no test data. |
 | Naming | `LoginPage`, `DashboardPage`, `NavbarComponent`. File: `login.page.ts`, `navbar.component.ts`. |
@@ -121,6 +122,27 @@ await loginPage.loginWithDefaults();
 await inventoryPage.isLoaded();
 await inventoryPage.addToCart('sauce-labs-backpack');
 ```
+
+### Waiting — Trust Playwright's Auto-Waiting
+
+**Key rule:** Don't add explicit waits. Playwright action methods (`click()`, `fill()`, etc.) already auto-wait for elements to be visible, stable, and enabled.
+
+```typescript
+// ❌ Wrong — redundant wait
+async resetAppState() {
+  await this.resetButton.waitFor({ state: 'visible' }); // ← unnecessary
+  await this.resetButton.click();
+}
+
+// ✅ Correct — rely on auto-waiting
+async resetAppState() {
+  await this.resetButton.click(); // Playwright waits automatically
+}
+```
+
+**Only add explicit waits for:**
+- Custom animations that aren't captured by stability checks
+- API-driven state changes that don't affect the DOM immediately
 
 ### Fixtures Over `beforeEach`
 
