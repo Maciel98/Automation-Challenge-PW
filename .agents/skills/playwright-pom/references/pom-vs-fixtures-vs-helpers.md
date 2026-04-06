@@ -2,6 +2,7 @@
 
 > **When to use**: When deciding how to organize reusable test code in a Playwright project.
 > **Prerequisites**: [core/page-object-model.md](../core/page-object-model.md), [core/fixtures-and-hooks.md](../core/fixtures-and-hooks.md)
+> **Project conventions**: See [Project-Specific Conditions](#project-specific-conditions) for how this project extends these patterns.
 
 ## Quick Answer
 
@@ -12,6 +13,138 @@
 - **Helper functions** for stateless utilities (generate data, format values, simple waits)
 
 If you are only going to use one pattern, use **custom fixtures** -- they handle setup/teardown, compose well, and Playwright is built around them. But you should use all three.
+
+---
+
+## Project-Specific Conditions
+
+This project extends the base patterns with specific implementations that differ from standard Playwright documentation.
+
+### `isLoaded()` vs `waitForURL()`
+
+**Standard approach (from base docs):**
+```typescript
+// ❌ This project does NOT use waitForURL in page object methods
+async loginAs(username: string, password: string): Promise<DashboardPage> {
+  await this.page.getByLabel('Username').fill(username);
+  await this.page.getByLabel('Password').fill(password);
+  await this.page.getByRole('button', { name: 'Sign in' }).click();
+  await this.page.waitForURL('/dashboard'); // ← NOT used in this project
+  return new DashboardPage(this.page);
+}
+```
+
+**This project's approach:**
+```typescript
+// ✅ Action methods trigger only — tests verify with isLoaded()
+async loginWithDefaults() {
+  const { username, password } = getStandardUserCredentials();
+  await this.usernameInput.fill(username);
+  await this.passwordInput.fill(password);
+  await this.submitButton.click();
+  // No waitForURL — let the test verify with isLoaded()
+}
+
+// In the test:
+await loginPage.goto();
+await loginPage.loginWithDefaults();
+await inventoryPage.isLoaded(); // Test owns verification
+```
+
+**Why this approach:**
+- Separation of concerns: action methods perform actions, tests verify outcomes
+- `isLoaded()` confirms both URL AND page rendering (via anchor element)
+- Tests decide when to verify, not the page object
+- Makes navigation failures more visible in test assertions
+
+### No `waitForURL` in Action Methods
+
+**What to avoid:**
+```typescript
+// ❌ Wrong — action method shouldn't wait for URL
+async proceedToCheckout() {
+  await this.checkoutButton.click();
+  await this.page.waitForURL(/checkout/); // ← Not this method's job
+}
+```
+
+**What to do instead:**
+```typescript
+// ✅ Correct — trigger the action only
+async proceedToCheckout() {
+  await this.checkoutButton.click();
+}
+
+// In test — let the next page object verify:
+await cartPage.proceedToCheckout();
+await checkoutPage.isLoaded(); // Verify we arrived
+```
+
+### `path` vs `url` Properties
+
+This project distinguishes between navigation paths and verification URLs:
+
+```typescript
+export class InventoryPage {
+  // Used by goto() — relative path only
+  readonly path = '/inventory.html';
+
+  // Used by isLoaded() — regex for verification
+  readonly url = /\/inventory\.html/;
+
+  async goto() {
+    await this.page.goto(this.path); // Uses path
+  }
+
+  async isLoaded() {
+    await expect(this.page).toHaveURL(this.url); // Uses url (regex)
+    await expect(this.productList).toBeVisible(); // Plus rendering check
+  }
+}
+```
+
+**Why separate properties:**
+- `path` is for navigation (relative, works with baseURL)
+- `url` is for verification (regex, flexible matching)
+- Environment changes only require updating `baseURL` in config
+- Regex allows for query parameters and other URL variations
+
+### Fixtures Are Mandatory
+
+This project requires ALL page objects to be injected via fixtures — never direct instantiation.
+
+```typescript
+// ❌ Wrong — direct instantiation
+test('user logs in', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+});
+
+// ✅ Correct — via fixture
+test('user logs in', async ({ loginPage }) => {
+  await loginPage.goto();
+});
+```
+
+When creating a new page object, you MUST register it in `tests/fixtures/base.fixture.ts`.
+
+### No Hardcoded Test Data
+
+This project uses centralized helpers for all test data and credentials.
+
+```typescript
+// ❌ Wrong — hardcoded values
+await loginPage.login('standard_user', 'secret_sauce');
+await page.fill('#first-name', 'John');
+await page.fill('#postal-code', '90210');
+
+// ✅ Correct — via helpers
+await loginPage.loginWithDefaults(); // Reads from .env
+const checkoutData = getCheckoutData(); // From test-data/*.json
+await checkoutPage.fillInformation(checkdownData);
+```
+
+---
 
 ## Comparison Table
 

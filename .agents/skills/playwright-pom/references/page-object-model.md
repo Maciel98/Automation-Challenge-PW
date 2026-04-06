@@ -1,6 +1,7 @@
 # Page Object Model
 
 > **When to use**: Any page or component is touched by more than one test file, or a single test file interacts with more than two distinct UI regions.
+> **Project conventions**: See [POM Conventions — This Project](#pom-conventions--this-project) for project-specific rules.
 
 Page objects encapsulate **actions**, not locators. A test should read like a user story: `await loginPage.login('admin', 'secret')`, never `await loginPage.usernameInput.fill('admin')`. The POM is a boundary between "what the user does" and "how the UI is structured." Assertions stay in tests, never inside page objects.
 
@@ -15,6 +16,172 @@ Page objects encapsulate **actions**, not locators. A test should read like a us
 | State | Page objects are stateless. No caching locator text, no tracking "current step." |
 | Constructor | Takes `Page` (or `Locator` for components). Nothing else. No URLs, no test data. |
 | Naming | `LoginPage`, `DashboardPage`, `NavbarComponent`. File: `login.page.ts`, `navbar.component.ts`. |
+
+---
+
+## POM Conventions — This Project
+
+Project-specific rules that extend the base POM patterns. Apply these conventions on top of the patterns below.
+
+### `path` and `url` Properties
+
+Every page object must define both:
+
+```typescript
+// path — route only, starting with /. NEVER include domain or protocol.
+readonly path = '/inventory.html';
+
+// url — regex for isLoaded() verification
+readonly url = /\/inventory\.html/;
+```
+
+**Rules:**
+- `path` is used by `goto()` — Playwright prepends `baseURL` from config automatically
+- `url` is used by `isLoaded()` — regex match, not full string
+- Changing environments (dev/staging/prod) only requires updating `baseURL` in `playwright.config.ts`
+
+### `isLoaded()` — What It Does and Doesn't Do
+
+`isLoaded()` does **two things**: assert the URL matches, then assert that one anchor element is visible.
+The anchor element confirms the page actually rendered — not just that the URL changed.
+
+```typescript
+// ✅ Correct — URL + one stable anchor element
+async isLoaded() {
+  await expect(this.page).toHaveURL(this.url);
+  await expect(this.productList).toBeVisible();
+}
+```
+
+**Choosing the anchor element:**
+- Pick one element that is always present when the page is fully loaded
+- Prefer a container or heading that represents the page's primary content
+- Use a `data-test` locator (already defined as a class property)
+- One element is enough — this is a readiness check, not a full assertion suite
+
+```typescript
+// ❌ Wrong — too many checks, isLoaded becomes a test
+async isLoaded() {
+  await expect(this.page).toHaveURL(this.url);
+  await expect(this.productList).toBeVisible();
+  await expect(this.sortDropdown).toBeVisible();  // ← extra, not needed
+  await expect(this.cartBadge).toBeHidden();      // ← this is a test assertion
+}
+
+// ❌ Wrong — URL only, no rendering confirmation
+async isLoaded() {
+  await expect(this.page).toHaveURL(this.url);
+}
+```
+
+**Who calls `isLoaded()`:**
+- Tests call it after navigation to verify they landed on the right page
+- Action methods do NOT call it — the test decides when to verify
+
+### `goto()` — Navigation Methods
+
+`goto()` navigates directly to the page via URL. That is its only responsibility.
+
+```typescript
+async goto() {
+  await this.page.goto(this.path);
+}
+```
+
+**Action methods that trigger navigation** (e.g. clicking "Checkout") only trigger the action.
+They do not call `isLoaded()`, do not call `waitForURL`, and do not assert anything.
+
+```typescript
+// ✅ Correct
+async proceedToCheckout() {
+  await this.checkoutButton.click();
+}
+
+// ❌ Wrong
+async proceedToCheckout() {
+  await this.checkoutButton.click();
+  await this.page.waitForURL(/checkout/); // ← not this method's responsibility
+}
+```
+
+### No Cross-Domain Helpers
+
+Do not create helpers that span multiple page objects.
+
+```typescript
+// ❌ Wrong — crosses page boundaries
+async loginAndAddToCart(item: string) {
+  await this.login();
+  await this.inventoryPage.addToCart(item); // violates single responsibility
+}
+
+// ✅ Correct — chain in the test
+await loginPage.goto();
+await loginPage.loginWithDefaults();
+await inventoryPage.isLoaded();
+await inventoryPage.addToCart('sauce-labs-backpack');
+```
+
+### Fixtures Over `beforeEach`
+
+Page objects are always injected via fixtures. Never use `beforeEach` to set up page objects.
+
+```typescript
+// ❌ Wrong
+let loginPage: LoginPage;
+beforeEach(async ({ page }) => {
+  loginPage = new LoginPage(page);
+});
+
+// ✅ Correct — via fixture
+test('...', async ({ loginPage }) => { ... });
+```
+
+When adding a new page object, register it in `tests/fixtures/base.fixture.ts`.
+
+### Credential Access
+
+Credentials are accessed only through centralized helpers — never inline in tests.
+
+```typescript
+// ✅ Standard user (most tests)
+await loginPage.loginWithDefaults(); // reads from .env internally
+
+// ✅ Specific user type
+import { getLockedOutUserCredentials } from '../../helpers/credentials';
+const { username, password } = getLockedOutUserCredentials();
+await loginPage.loginExpectingError(username, password);
+
+// ❌ Never do this in a test
+const user = process.env.STANDARD_USER; // ← no dotenv in tests
+await loginPage.login('standard_user', 'secret_sauce'); // ← no hardcoding
+```
+
+When you need a new user type, add a method to `LoginPage` and a helper to `credentials.ts`.
+Do not add `dotenv` imports or credential constants to test files.
+
+### Components
+
+Components (navbar, sidebar) live under `pages/components/` and are composed inside page objects.
+
+```typescript
+// Composed inside the page, not the test
+export class InventoryPage {
+  readonly navbar: NavbarPage;
+
+  constructor(page: Page) {
+    this.navbar = new NavbarPage(page);
+  }
+}
+
+// Used via the page object in tests
+await inventoryPage.navbar.navigateToCart();
+```
+
+Components **do not** have `path`, `url`, or `isLoaded()`.
+They are not standalone pages — they have no URL of their own.
+
+---
 
 ## Patterns
 
