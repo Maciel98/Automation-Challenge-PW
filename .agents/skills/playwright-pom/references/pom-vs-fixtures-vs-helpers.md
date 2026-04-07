@@ -144,6 +144,69 @@ const checkoutData = getCheckoutData(); // From test-data/*.json
 await checkoutPage.fillInformation(checkdownData);
 ```
 
+### Page Object Method Return Patterns
+
+This project follows strict patterns for what page object methods should return:
+
+**Action methods (click, navigate, etc.)**: Return `void` or `Promise<void>` — NOT page objects
+
+```typescript
+// ✅ Correct — action methods return void
+async backToProducts() {
+  await this.backToProductsButton.click();
+}
+
+async clickProductNameByIndex(index: number) {
+  await this.inventoryItemName.nth(index).click();
+}
+
+async proceedToCheckout() {
+  await this.checkoutButton.click();
+}
+```
+
+**Get methods**: Return data values
+
+```typescript
+// ✅ Correct — get methods return data
+async getProductName(): Promise<string> {
+  const name = await this.productName.textContent();
+  return name?.trim() || '';
+}
+
+async getCartItemCount(): Promise<number> {
+  return await this.inventoryItem.count();
+}
+```
+
+**Tests create page objects manually after navigation**:
+
+```typescript
+// ❌ Wrong — don't return page objects from action methods
+async navigateToDetail(): Promise<DetailPage> {
+  await this.click();
+  return new DetailPage(this.page);
+}
+
+// ✅ Correct — action method returns void, test creates page object
+async navigateToDetail() {
+  await this.click();
+}
+
+// In test:
+test('navigates to detail', async ({ inventoryPage }) => {
+  await inventoryPage.navigateToDetail(); // Action method
+  const detailPage = new DetailPage(inventoryPage.page); // Test creates PO
+  await detailPage.isLoaded(); // Test verifies navigation
+});
+```
+
+**Why this pattern:**
+- Clear separation: action methods perform actions, tests manage page object lifecycle
+- Tests explicitly control when to create new page objects
+- Consistent with project's `isLoaded()` pattern — tests verify outcomes
+- Avoids hidden dependencies and makes navigation flow explicit in tests
+
 ---
 
 ## Comparison Table

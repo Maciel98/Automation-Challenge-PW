@@ -21,11 +21,18 @@ Creates test specifications based on page objects and user requirements. Ensures
 ## What It Does
 
 1. **Understand Requirement** - Break down user request into testable scenarios
-2. **Identify Page Objects** - Check which page objects are needed and available
-3. **Check Existing Tests** - Search for similar tests to avoid duplication
+2. **Identify Fixtures** - Check which fixtures from tests/fixtures/base.fixture.ts are needed
+3. **Check Existing Tests** - Search for similar tests to avoid duplication and understand patterns
 4. **Read Test Data** - Check available test data in tests/test-data/*.json
 5. **Create Test Specifications** - Invoke test-creator agent to generate test files following AAA pattern
 6. **Apply Tags** - Apply appropriate tags per project conventions
+
+**CRITICAL: Fixtures-First Approach**
+This command follows the project's fixture-first approach:
+- Always use fixtures from `tests/fixtures/base.fixture.ts`
+- Never manually instantiate page objects or perform login in tests
+- Follow patterns from existing test files (e.g., `tests/tests/inventory/inventory.spec.ts`)
+- Create new fixtures only when existing ones don't meet the test's preconditions
 
 ## Output Format
 
@@ -82,10 +89,28 @@ Creates test specifications based on page objects and user requirements. Ensures
 
 All tests follow:
 - **AAA Pattern** - Arrange, Act, Assert
-- **Fixtures only** - No manual page object instantiation
-- **Test data** - No hardcoded values
+- **Fixtures only** - Always use fixtures from tests/fixtures/base.fixture.ts (NEVER manual instantiation or login)
+- **Test data** - No hardcoded values (all from tests/test-data/*.json)
 - **Independence** - No shared state between tests
 - **Tagging** - Per project conventions
+- **Pattern matching** - Follow existing test patterns (see tests/tests/inventory/inventory.spec.ts as reference)
+
+**Example fixture usage:**
+```typescript
+// ✅ CORRECT - Use fixtures
+test('should display products', async ({ authenticatedInventoryPage }) => {
+  const count = await authenticatedInventoryPage.getProductCount();
+  expect(count).toBeGreaterThan(0);
+});
+
+// ❌ WRONG - Manual instantiation
+test('should display products', async ({ page }) => {
+  const loginPage = new LoginPage(page); // WRONG!
+  await loginPage.goto();
+  await loginPage.loginWithDefaults();
+  // ...
+});
+```
 
 ## When To Use
 

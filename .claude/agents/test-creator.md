@@ -44,23 +44,35 @@ Break down into:
 5. Complete checkout
 6. See order confirmation
 
-## Step 2: Identify Required Page Objects
+## Step 2: Identify Required Page Objects and Fixtures
 
-**Check available page objects:**
+**CRITICAL: Always use fixtures from tests/fixtures/base.fixture.ts**
+
+The project uses fixtures to provide pre-configured page objects. Check available fixtures:
 ```bash
-ls -1 tests/pages/*.page.ts
+cat tests/fixtures/base.fixture.ts
 ```
 
-**Read relevant page objects to understand available actions:**
+**Common fixtures:**
+- `authenticatedInventoryPage` - Already logged in and on inventory page
+- `authenticatedInventoryItemPage` - Already logged in and on product detail page
+- `cartWithItemPage` - Already logged in with item in cart
+- `checkoutStepOnePageWithData` - Already at checkout step one with item in cart
+- `checkoutStepTwoPageReady` - Already at checkout step two with info filled
+- `checkoutCompletePageReady` - Already at order confirmation page
+
+**Check available page objects to understand available actions:**
 ```bash
 cat tests/pages/inventory.page.ts
 cat tests/pages/cart.page.ts
 cat tests/pages/checkout-*.page.ts
 ```
 
-**Check fixtures:**
+**Pattern to follow:**
 ```bash
-cat tests/fixtures/base.fixture.ts
+# Look at existing tests to understand the pattern
+cat tests/tests/inventory/inventory.spec.ts
+cat tests/tests/cart/cart.spec.ts
 ```
 
 ## Step 3: Check Existing Tests
@@ -100,24 +112,42 @@ tests/tests/
 
 ## Step 6: Create Test Specification
 
-**Test structure:**
+**CRITICAL: Use fixtures - NEVER manually instantiate page objects or login**
+
+❌ **WRONG - Manual instantiation:**
+```typescript
+test('should display products', async ({ page }) => {
+  const loginPage = new LoginPage(page); // WRONG
+  await loginPage.goto();
+  await loginPage.loginWithDefaults();
+  // ...
+});
+```
+
+✅ **CORRECT - Use fixtures:**
+```typescript
+test('should display products', async ({ authenticatedInventoryPage }) => {
+  // authenticatedInventoryPage is already logged in and ready!
+  const productCount = await authenticatedInventoryPage.getProductCount();
+  expect(productCount).toBeGreaterThan(0);
+});
+```
+
+**Test structure with fixtures:**
 ```typescript
 import { test, expect } from '../../fixtures/base.fixture';
+import testData from '../../test-data/{page}.json';
 
 test.describe('{Feature Name}', () => {
-  test.beforeEach(async ({ authSetup }) => {
-    // Setup if needed (e.g., login)
-  });
-
-  test('should {expected behavior}', async ({ pageObjects }) => {
-    // Arrange - Set up the test
-    const testData = { from: 'tests/test-data/{page}.json' };
+  test('should {expected behavior}', async ({ fixtureName }) => {
+    // Arrange - Set up the test (fixture provides pre-configured page objects)
+    const expectedValue = testData.validValue;
 
     // Act - Execute the behavior
-    await pageObject.action(testData.valid);
+    await fixtureName.action(testData.valid);
 
     // Assert - Verify the outcome
-    await expect(pageObject.element).toBeVisible();
+    await expect(fixtureName.element).toBeVisible();
   });
 });
 ```
@@ -204,14 +234,15 @@ test('should navigate from inventory to cart', async ({
 <success_criteria>
 Test creation is complete when:
 - [ ] Test file created in correct feature folder
-- [ ] Tests use fixtures (no manual instantiation)
+- [ ] **Tests use fixtures from base.fixture.ts (CRITICAL - no manual login or instantiation)**
 - [ ] No hardcoded values (all from test-data files)
 - [ ] AAA pattern with clear comments
 - [ ] Descriptive test names ("should {expected behavior}")
 - [ ] Tests are independent (no shared state)
 - [ ] No raw selectors in tests
 - [ ] Proper tags applied
-- [ ] Each test sets up its own preconditions
+- [ ] Each test uses appropriate fixtures for preconditions
+- [ ] Pattern follows existing test files (e.g., tests/tests/inventory/inventory.spec.ts)
 </success_criteria>
 
 <output_format>
@@ -257,8 +288,15 @@ await loginPage.login('standard_user', 'secret_sauce'); // WRONG
 ❌ **Manual page object instantiation:**
 ```typescript
 const login = new LoginPage(page); // WRONG
+await login.goto();
+await login.loginWithDefaults();
 ```
-✅ Use fixtures
+✅ **Use fixtures:**
+```typescript
+test('example', async ({ authenticatedInventoryPage }) => {
+  // authenticatedInventoryPage is already logged in and ready!
+});
+```
 
 ❌ **Shared state between tests:**
 ```typescript
@@ -281,6 +319,65 @@ test('test1', async ({ }) => { }); // WRONG
 test('login', async ({ }) => { }); // WRONG
 ```
 ✅ Use "should {expected behavior}"
+
+❌ **Not using existing fixtures:**
+```typescript
+test('view product', async ({ inventoryItemPage }) => {
+  const loginPage = new LoginPage(page); // WRONG - manually logging in
+  await loginPage.goto();
+  await loginPage.loginWithDefaults();
+  await inventoryItemPage.goto(0);
+});
+```
+✅ **Use appropriate fixture or create one if needed:**
+```typescript
+test('view product', async ({ authenticatedInventoryItemPage }) => {
+  // Already logged in and on product detail page!
+  const name = await authenticatedInventoryItemPage.getProductName();
+  expect(name).toBeTruthy();
+});
+```
+
+❌ **Action methods returning page objects:**
+```typescript
+// In page object:
+async navigateToDetail(): Promise<DetailPage> { // WRONG - don't return page objects
+  await this.click();
+  return new DetailPage(this.page);
+}
+```
+✅ **Action methods return void, tests create page objects:**
+```typescript
+// In page object:
+async navigateToDetail() { // CORRECT - return void
+  await this.click();
+}
+
+// In test:
+test('navigates to detail', async ({ inventoryPage }) => {
+  await inventoryPage.navigateToDetail(); // Action method
+  const detailPage = new DetailPage(inventoryPage.page); // Test creates PO
+  await detailPage.isLoaded();
+});
+```
+
+**When to create new fixtures:**
+- When you find yourself repeating the same setup code across multiple tests
+- When tests need a specific pre-configured state (e.g., logged in, on a specific page, with items in cart)
+- Pattern: Check `tests/fixtures/base.fixture.ts` and add new fixtures following the existing pattern
+- Example: `authenticatedInventoryItemPage` was added to avoid manual login in every inventory-item test
+
+**Page Object Method Patterns:**
+- **Action methods (click, navigate, etc.)**: Return `void` or `Promise<void>` - NOT page objects
+  - ✅ `async clickProductNameByIndex(index: number) { ... }`
+  - ✅ `async backToProducts() { ... }`
+  - ✅ `async proceedToCheckout() { ... }`
+- **Get methods**: Return data values
+  - ✅ `async getProductName(): Promise<string> { ... }`
+  - ✅ `async getCartItemCount(): Promise<number> { ... }`
+- **Navigation**: Tests create page objects manually, don't return from action methods
+  - ❌ `async navigateToDetail(): Promise<DetailPage> { ... }` // WRONG!
+  - ✅ `async clickDetail() { ... }` // Tests do: `const detailPage = new DetailPage(page)`
 
 ❌ **Missing AAA structure:**
 ```typescript
