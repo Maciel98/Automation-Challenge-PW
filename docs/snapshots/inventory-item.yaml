@@ -53,23 +53,23 @@ selectors:
 # Product ID mapping
 products:
   - id: 0
-    name: "Sauce Labs Backpack"
-    slug: "sauce-labs-backpack"
-  - id: 1
     name: "Sauce Labs Bike Light"
     slug: "sauce-labs-bike-light"
-  - id: 2
+  - id: 1
     name: "Sauce Labs Bolt T-Shirt"
     slug: "sauce-labs-bolt-t-shirt"
-  - id: 3
-    name: "Sauce Labs Fleece Jacket"
-    slug: "sauce-labs-fleece-jacket"
-  - id: 4
+  - id: 2
     name: "Sauce Labs Onesie"
     slug: "sauce-labs-onesie"
-  - id: 5
+  - id: 3
     name: "Test.allTheThings() T-Shirt (Red)"
     slug: "test.allthethings()-t-shirt-(red)"
+  - id: 4
+    name: "Sauce Labs Backpack"
+    slug: "sauce-labs-backpack"
+  - id: 5
+    name: "Sauce Labs Fleece Jacket"
+    slug: "sauce-labs-fleece-jacket"
 
 # User flows
 flows:

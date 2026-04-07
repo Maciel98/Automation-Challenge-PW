@@ -24,6 +24,7 @@ type MyFixtures = {
   checkoutStepTwoPage: CheckoutStepTwoPage;
   checkoutCompletePage: CheckoutCompletePage;
   authenticatedInventoryPage: InventoryPage;
+  authenticatedInventoryItemPage: InventoryItemPage;
   cartWithItemPage: CartPage;
   checkoutStepOnePageWithData: CheckoutStepOnePage;
   checkoutStepTwoPageReady: CheckoutStepTwoPage;
@@ -123,6 +124,20 @@ export const test = base.extend<MyFixtures>({
     await loginPage.loginWithDefaults();
     const inventoryPage = new InventoryPage(page);
     await use(inventoryPage);
+  },
+
+  /**
+   * Authenticated InventoryItemPage fixture
+   * Automatically logs in and navigates to the first product detail page
+   * Use this for tests that require an authenticated session on a product detail page
+   */
+  authenticatedInventoryItemPage: async ({ page }, use) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.loginWithDefaults();
+    const inventoryItemPage = new InventoryItemPage(page);
+    await inventoryItemPage.goto(0); // Navigate to first product
+    await use(inventoryItemPage);
   },
 
   /**

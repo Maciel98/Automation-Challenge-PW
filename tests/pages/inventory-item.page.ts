@@ -1,5 +1,5 @@
 import { type Page, type Locator, expect } from '@playwright/test';
-import { InventoryPage } from './inventory.page';
+import { NavbarPage } from './navbar.page';
 
 /**
  * InventoryItemPage - Page Object for SauceDemo.com Product Detail Page
@@ -15,6 +15,7 @@ export class InventoryItemPage {
   readonly page: Page;
   readonly path = '/inventory-item.html';
   readonly url = /\/inventory-item\.html\?id=\d+/;
+  readonly navbar: NavbarPage;
   readonly productName: Locator;
   readonly productDescription: Locator;
   readonly productPrice: Locator;
@@ -25,6 +26,7 @@ export class InventoryItemPage {
 
   constructor(page: Page) {
     this.page = page;
+    this.navbar = new NavbarPage(page);
 
     // Product information elements
     this.productName = page.locator('[data-test="inventory-item-name"]');
@@ -107,12 +109,9 @@ export class InventoryItemPage {
 
   /**
    * Navigate back to the inventory page
-   * @returns Instance of InventoryPage for chaining
    */
-  async backToProducts(): Promise<InventoryPage> {
+  async backToProducts() {
     await this.backToProductsButton.click();
-    await this.page.waitForURL('**/inventory.html');
-    return new InventoryPage(this.page);
   }
 
   /**

@@ -143,4 +143,38 @@ export class InventoryPage {
     }
     return ids;
   }
+
+  /**
+   * Get the first product name from the inventory page
+   * @returns The first product name
+   */
+  async getFirstProductName(): Promise<string> {
+    const name = await this.inventoryItemName.first().textContent();
+    return name?.trim() || '';
+  }
+
+  /**
+   * Get product name by index
+   * @param index - The index of the product (0-based)
+   * @returns The product name at the specified index
+   */
+  async getProductNameByIndex(index: number): Promise<string> {
+    const name = await this.inventoryItemName.nth(index).textContent();
+    return name?.trim() || '';
+  }
+
+  /**
+   * Click on the first product name to navigate to detail page
+   */
+  async clickFirstProductName() {
+    await this.inventoryItemName.first().click();
+  }
+
+  /**
+   * Click on product name by index to navigate to detail page
+   * @param index - The index of the product (0-based)
+   */
+  async clickProductNameByIndex(index: number) {
+    await this.inventoryItemName.nth(index).click();
+  }
 }

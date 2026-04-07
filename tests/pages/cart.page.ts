@@ -120,4 +120,13 @@ export class CartPage {
     const itemCount = await this.getCartItemCount();
     return itemCount === 0;
   }
+
+  /**
+   * Get the first product name in the cart
+   * @returns The first product name
+   */
+  async getFirstProductName(): Promise<string> {
+    const name = await this.inventoryItemName.first().textContent();
+    return name?.trim() || '';
+  }
 }
