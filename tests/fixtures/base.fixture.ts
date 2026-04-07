@@ -3,6 +3,7 @@ import { LoginPage } from '../pages/login.page';
 import { NavbarPage } from '../pages/navbar.page';
 import { SidebarPage } from '../pages/sidebar.page';
 import { InventoryPage } from '../pages/inventory.page';
+import { InventoryItemPage } from '../pages/inventory-item.page';
 import { CartPage } from '../pages/cart.page';
 import { CheckoutStepOnePage } from '../pages/checkout-step-one.page';
 import { CheckoutStepTwoPage } from '../pages/checkout-step-two.page';
@@ -17,6 +18,7 @@ type MyFixtures = {
   navbarPage: NavbarPage;
   sidebarPage: SidebarPage;
   inventoryPage: InventoryPage;
+  inventoryItemPage: InventoryItemPage;
   cartPage: CartPage;
   checkoutStepOnePage: CheckoutStepOnePage;
   checkoutStepTwoPage: CheckoutStepTwoPage;
@@ -68,6 +70,14 @@ export const test = base.extend<MyFixtures>({
    */
   inventoryPage: async ({ page }, use) => {
     await use(new InventoryPage(page));
+  },
+
+  /**
+   * InventoryItemPage fixture
+   * Automatically creates a new InventoryItemPage instance for each test
+   */
+  inventoryItemPage: async ({ page }, use) => {
+    await use(new InventoryItemPage(page));
   },
 
   /**

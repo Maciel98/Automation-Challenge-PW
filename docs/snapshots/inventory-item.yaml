@@ -1,0 +1,94 @@
+# Inventory Item Detail Page Snapshot
+# URL: https://www.saucedemo.com/inventory-item.html?id={numeric_id}
+
+page:
+  url: /inventory-item.html
+  url_pattern: "**/inventory-item.html?id=*"
+  title: "Swag Labs"
+  requires_auth: true
+
+selectors:
+  # Product Information
+  product_name:
+    selector: '[data-test="inventory-item-name"]'
+    type: div
+    description: Product title/name
+
+  product_description:
+    selector: '[data-test="inventory-item-desc"]'
+    type: div
+    description: Detailed product information
+
+  product_price:
+    selector: '[data-test="inventory-item-price"]'
+    type: div
+    description: Product price
+
+  product_image:
+    selector: '.inventory_details_img'
+    type: img
+    description: Product photo/image
+
+  description_container:
+    selector: '.inventory_details_desc'
+    type: div
+    description: Wrapper for description text
+
+  # Action Buttons
+  add_to_cart:
+    selector: '[data-test="add-to-cart"]'
+    type: button
+    description: Add item to shopping cart
+
+  remove:
+    selector: '[data-test="remove"]'
+    type: button
+    description: Remove item from cart (appears after adding)
+
+  back_to_products:
+    selector: '[data-test="back-to-products"]'
+    type: button
+    description: Navigate back to inventory page
+
+# Product ID mapping
+products:
+  - id: 0
+    name: "Sauce Labs Backpack"
+    slug: "sauce-labs-backpack"
+  - id: 1
+    name: "Sauce Labs Bike Light"
+    slug: "sauce-labs-bike-light"
+  - id: 2
+    name: "Sauce Labs Bolt T-Shirt"
+    slug: "sauce-labs-bolt-t-shirt"
+  - id: 3
+    name: "Sauce Labs Fleece Jacket"
+    slug: "sauce-labs-fleece-jacket"
+  - id: 4
+    name: "Sauce Labs Onesie"
+    slug: "sauce-labs-onesie"
+  - id: 5
+    name: "Test.allTheThings() T-Shirt (Red)"
+    slug: "test.allthethings()-t-shirt-(red)"
+
+# User flows
+flows:
+  view_product_details:
+    - From inventory page
+    - Click product name or image
+    - Navigate to detail page
+    - View product information
+
+  add_to_cart:
+    - Click "Add to cart" button
+    - Button changes to "Remove"
+    - Cart badge increments
+
+  remove_from_cart:
+    - Click "Remove" button
+    - Button changes to "Add to cart"
+    - Cart badge decrements
+
+  navigate_back:
+    - Click "Back to products"
+    - Return to inventory page
