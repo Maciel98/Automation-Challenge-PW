@@ -27,9 +27,17 @@ automation-challenge-pw/
 │   └── workflows/                   # CI/CD workflows
 │       └── pipeline.yml             # Automated test execution pipeline
 │
+├── .claude/                         # Claude Code AI configuration
+│   ├── commands/                    # Custom slash commands
+│   ├── workflows/                   # Multi-step AI workflows
+│   ├── skills/                      # Custom AI skills
+│   └── agents/                      # Custom AI agents
+│
 ├── deliverables/                    # Challenge deliverables (see above)
 │   ├── testStrategy.md
+│   ├── testStrategyQuestions.md
 │   ├── inventory.md
+│   ├── inventoryList.md
 │   └── aiNotes.md
 │
 ├── docs/                            # AI-generated application knowledge
@@ -171,9 +179,7 @@ npx playwright test tests/tests/auth/login.spec.ts
 
 ### Test Tagging
 - `@smoke` - Critical path tests
-- `@P0`, `@P1`, `@P2` - Priority levels
 - `@E2E` - End-to-end journey tests
-- `@auth`, `@cart`, `@checkout` - Feature tags
 
 ---
 
@@ -195,15 +201,44 @@ See the inventory deliverables for complete test details:
 
 ## 🎯 AI Development Approach
 
-This project was built using **Claude Code** with the following approach:
+This project was built using **Claude Code** with a skill-driven workflow:
 
-1. **Application Exploration** - AI explored SauceDemo to understand structure
-2. **Knowledge Capture** - Documented selectors and interactions in `docs/`
-3. **POM Structure** - Used `playwright-pom` skill to structure page objects
-4. **Test Creation** - Wrote tests following POM best practices
-5. **Test Data** - Extracted test data to JSON files (no hardcoding)
+### Core Skills
+| Skill | Purpose |
+|-------|---------|
+| `analyze` | Explore app and generate documentation in `docs/` |
+| `pom-update` | Create/update Page Object Model classes from documentation |
+| `create-test` | Generate test specs from page objects and requirements |
+| `validate` | Verify tests and page objects follow POM best practices |
+| `automation` | Full workflow: analyze → create POMs → create tests → validate |
 
-**Key Principle:** AI reads `docs/app-knowledge/` before writing tests to ensure stable selectors and correct interactions.
+### Development Flow
+1. **Application Analysis** - Use `/analyze` or `analyze` skill to explore SauceDemo and generate:
+   - Page documentation in `docs/app-knowledge/`
+   - Element snapshots in `docs/snapshots/`
+
+2. **Page Object Creation** - Use `/pom-update` or `pom-update` skill to:
+   - Read `docs/app-knowledge/<page>.md` for selectors
+   - Create/update page objects in `tests/pages/`
+   - Register fixtures in `tests/fixtures/base.fixture.ts`
+
+3. **Test Generation** - Use `/create-test` or `create-test` skill to:
+   - Read page objects and test data from `tests/test-data/`
+   - Generate test specs in `tests/tests/<feature>/`
+   - Apply tags per `docs/conventions/tagging.md`
+
+4. **Validation** - Use `/validate` or `validate` skill to ensure:
+   - No assertions in page objects
+   - No hardcoded values in tests
+   - Proper fixture usage
+   - POM best practices followed
+
+5. **Full Automation** - Use `/automation` skill to execute the complete workflow end-to-end
+
+### Custom Commands & Workflows
+The `.claude/` folder contains custom commands (e.g., `/analyze`, `/pom-update`, `/create-test`) and multi-step workflows that orchestrate these skills for common development tasks.
+
+**Key Principle:** AI always reads `docs/app-knowledge/` and `docs/snapshots/` before writing code to ensure stable selectors and correct interactions.
 
 ---
 
@@ -214,7 +249,3 @@ This project was built using **Claude Code** with the following approach:
 - [SauceDemo Application](https://www.saucedemo.com/)
 
 ---
-
-## 📄 License
-
-ISC
