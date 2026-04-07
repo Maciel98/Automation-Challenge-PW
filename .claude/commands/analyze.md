@@ -2,13 +2,12 @@
 description: Analyzes web application for new development and updates documentation
 ---
 
-# Command: /analyze
+# /analyze
 
-<purpose>
 Analyzes the web application to detect new development work and update documentation. Integrates with existing docs/app-knowledge/ and docs/snapshots/ structure.
-</purpose>
 
-<usage>
+## Usage
+
 ```
 /analyze [optional: specific page or feature description]
 ```
@@ -18,37 +17,17 @@ Analyzes the web application to detect new development work and update documenta
 - `/analyze new order confirmation page` - Analyzes specific page
 - `/analyze the new guest checkout flow` - Analyzes feature
 - `/analyze new sidebar menu component` - Analyzes component
-</usage>
 
-<process>
-<steps>
-## Step 1: Check Existing Documentation
+## What It Does
 
-List what's already documented in docs/app-knowledge/ and docs/snapshots/
+1. Check Existing Documentation - List what's already documented in docs/app-knowledge/ and docs/snapshots/
+2. Use Playwright CLI - Invoke pom-analyzer agent to discover application structure using Playwright codegen, document all pages with data-test selectors, record interactions and navigation, create .md and .yaml files
+3. Compare and Detect - Identify what's new or changed compared to existing docs
+4. Create/Update Documentation - Generate docs/app-knowledge/{page}.md and docs/snapshots/{page}.yaml
+5. Report Findings - Summary of new pages, updated pages, and next steps
 
-## Step 2: Use Playwright CLI
+## Output Format
 
-Invoke pom-analyzer agent to:
-- Discover application structure using Playwright codegen
-- Document all pages with data-test selectors
-- Record interactions and navigation
-- Create .md and .yaml files
-
-## Step 3: Compare and Detect
-
-Identify what's new or changed compared to existing docs
-
-## Step 4: Create/Update Documentation
-
-Generate docs/app-knowledge/{page}.md and docs/snapshots/{page}.yaml
-
-## Step 5: Report Findings
-
-Summary of new pages, updated pages, and next steps
-</steps>
-</process>
-
-<output_format>
 ```markdown
 # Analysis Complete! ✅
 
@@ -72,17 +51,16 @@ Summary of new pages, updated pages, and next steps
 2. Run `/pom-update` to create page objects
 3. Run `/create-test` to create tests
 ```
-</output_format>
 
-<when_to_use>
+## When To Use
+
 - **After development sprints**: When new features have been added
 - **Before creating tests**: To ensure documentation is current
 - **When POMs feel outdated**: To refresh page structure knowledge
 - **Onboarding new team members**: To document current state
-</when_to_use>
 
-<see_also>
+## See Also
+
 - `/pom-update` - Create or update page objects from documentation
 - `/create-test` - Create tests from page objects
 - `/automation` - Complete workflow (analyze + POM + tests + validate)
-</see_also>

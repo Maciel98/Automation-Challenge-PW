@@ -2,13 +2,12 @@
 description: Creates test specifications from page objects and requirements
 ---
 
-# Command: /create-test
+# /create-test
 
-<purpose>
 Creates test specifications based on page objects and user requirements. Ensures all tests follow project conventions and best practices.
-</purpose>
 
-<usage>
+## Usage
+
 ```
 /create-test [what to test]
 ```
@@ -18,37 +17,18 @@ Creates test specifications based on page objects and user requirements. Ensures
 - `/create-test login page authentication` - Page tests
 - `/create-test error handling when checkout form is incomplete` - Error scenarios
 - `/create-test complete user journey from login to order confirmation` - E2E test
-</usage>
 
-<process>
-<steps>
-## Step 1: Understand Requirement
+## What It Does
 
-Break down user request into testable scenarios
+1. **Understand Requirement** - Break down user request into testable scenarios
+2. **Identify Page Objects** - Check which page objects are needed and available
+3. **Check Existing Tests** - Search for similar tests to avoid duplication
+4. **Read Test Data** - Check available test data in tests/test-data/*.json
+5. **Create Test Specifications** - Invoke test-creator agent to generate test files following AAA pattern
+6. **Apply Tags** - Apply appropriate tags per project conventions
 
-## Step 2: Identify Page Objects
+## Output Format
 
-Check which page objects are needed and available
-
-## Step 3: Check Existing Tests
-
-Search for similar tests to avoid duplication
-
-## Step 4: Read Test Data
-
-Check available test data in tests/test-data/*.json
-
-## Step 5: Create Test Specifications
-
-Invoke test-creator agent to generate test files following AAA pattern
-
-## Step 6: Apply Tags
-
-Apply appropriate tags per project conventions
-</steps>
-</process>
-
-<output_format>
 ```markdown
 # Test Creation Complete! ✅
 
@@ -75,16 +55,9 @@ Apply appropriate tags per project conventions
 2. Run tests: npm test
 3. Run /validate to check quality
 ```
-</output_format>
 
-<when_to_use>
-- **After `/pom-update`**: When page objects are ready
-- **For new features**: To add test coverage
-- **For existing features**: To improve test coverage
-- **Before deploying**: To ensure critical paths are tested
-</when_to_use>
+## Test Categories
 
-<test_categories>
 **Happy Path Tests:**
 - Normal user flows
 - Successful operations
@@ -104,19 +77,25 @@ Apply appropriate tags per project conventions
 - Complete user journeys
 - Multi-page workflows
 - Critical business paths
-</test_categories>
 
-<standards_followed>
+## Standards Followed
+
 All tests follow:
 - **AAA Pattern** - Arrange, Act, Assert
 - **Fixtures only** - No manual page object instantiation
 - **Test data** - No hardcoded values
 - **Independence** - No shared state between tests
 - **Tagging** - Per project conventions
-</standards_followed>
 
-<see_also>
+## When To Use
+
+- **After `/pom-update`**: When page objects are ready
+- **For new features**: To add test coverage
+- **For existing features**: To improve test coverage
+- **Before deploying**: To ensure critical paths are tested
+
+## See Also
+
 - `/pom-update` - Create page objects before creating tests
 - `/validate` - Validate test quality after creation
 - `/automation` - Complete workflow (analyze + POM + tests + validate)
-</see_also>

@@ -2,13 +2,12 @@
 description: Creates or updates Page Object Model classes from documentation
 ---
 
-# Command: /pom-update
+# /pom-update
 
-<purpose>
 Creates or updates Page Object Model classes based on application documentation. Ensures all page objects follow project conventions and POM best practices.
-</purpose>
 
-<usage>
+## Usage
+
 ```
 /pom-update [optional: specific page or feature description]
 ```
@@ -17,29 +16,15 @@ Creates or updates Page Object Model classes based on application documentation.
 - `/pom-update` - Updates all page objects
 - `/pom-update checkout complete page` - Updates specific page
 - `/pom-update cart and checkout flow` - Updates feature pages
-</usage>
 
-<process>
-<steps>
-## Step 1: Read Existing Page Objects
+## What It Does
 
-Check what already exists in tests/pages/
+1. **Read Existing Page Objects** - Check what already exists in tests/pages/
+2. **Read Documentation** - Read docs/app-knowledge/ and docs/snapshots/ for target pages
+3. **Create or Update Page Objects** - Invoke pom-updater agent to create new page objects for pages that don't exist, update existing page objects if elements have changed, register fixtures in tests/fixtures/base.fixture.ts, update test data in tests/test-data/ if needed
 
-## Step 2: Read Documentation
+## Output Format
 
-Read docs/app-knowledge/ and docs/snapshots/ for target pages
-
-## Step 3: Create or Update Page Objects
-
-Invoke pom-updater agent to:
-- Create new page objects for pages that don't exist
-- Update existing page objects if elements have changed
-- Register fixtures in tests/fixtures/base.fixture.ts
-- Update test data in tests/test-data/ if needed
-</steps>
-</process>
-
-<output_format>
 ```markdown
 # POM Update Complete! ✅
 
@@ -63,24 +48,23 @@ Invoke pom-updater agent to:
 - `tests/pages/{page}.page.ts` - {NEW/UPDATED}
 - `tests/fixtures/base.fixture.ts` - UPDATED
 ```
-</output_format>
 
-<when_to_use>
-- **After `/analyze`**: When new documentation has been created
-- **When page structure changes**: After UI updates
-- **Before creating tests**: To ensure page objects are current
-- **When tests fail**: Due to outdated selectors
-</when_to_use>
+## Standards Followed
 
-<standards_followed>
 All page objects follow:
 - **POM Standards** - No assertions, private locators, action methods
 - **Project Conventions** - data-test selectors, isLoaded() for URLs
 - **TypeScript Best Practices** - Proper typing, no 'any'
-</standards_followed>
 
-<see_also>
+## When To Use
+
+- **After `/analyze`**: When new documentation has been created
+- **When page structure changes**: After UI updates
+- **Before creating tests**: To ensure page objects are current
+- **When tests fail**: Due to outdated selectors
+
+## See Also
+
 - `/analyze` - Create documentation before creating POMs
 - `/create-test` - Create tests from page objects
 - `/automation` - Complete workflow (analyze + POM + tests + validate)
-</see_also>

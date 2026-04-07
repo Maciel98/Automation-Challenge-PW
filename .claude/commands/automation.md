@@ -2,13 +2,12 @@
 description: Complete test automation workflow - analyze, create POMs, create tests, validate, run
 ---
 
-# Command: /automation
+# /automation
 
-<purpose>
 Main orchestrator command that handles complete test automation from analysis to execution. Intelligently determines what needs to be done and skips unnecessary work.
-</purpose>
 
-<usage>
+## Usage
+
 ```
 /automation [what to automate]
 ```
@@ -18,52 +17,44 @@ Main orchestrator command that handles complete test automation from analysis to
 - `/automate new guest checkout flow` - New feature automation
 - `/automate the entire application` - Full application coverage
 - `/automate shopping cart functionality` - Existing feature tests
-</usage>
 
-<objective>
-Orchestrate complete automation:
-1. Assessment - Determine what exists
-2. Analyze - If documentation missing (skip if exists)
-3. Update POMs - If page objects missing/outdated (skip if current)
-4. Create Tests - If test scenarios missing (skip if covered)
-5. Validate - Always run quality checks
-6. Run Tests - Verify everything works
-7. Report - Complete summary with next steps
-</objective>
+## What It Does
 
-<process>
-<steps>
-## Step 1: Assessment
+Orchestrates complete automation:
 
+1. **Assessment** - Determine what exists (documentation, page objects, tests, fixtures)
+2. **Analyze** - If documentation missing (skip if exists)
+3. **Update POMs** - If page objects missing/outdated (skip if current)
+4. **Create Tests** - If test scenarios missing (skip if covered)
+5. **Validate** - Always run quality checks
+6. **Run Tests** - Verify everything works
+7. **Report** - Complete summary with next steps
+
+## Process
+
+### Step 1: Assessment
 Check existing documentation, page objects, tests, and fixtures
 
-## Step 2: Analyze (If Needed)
-
+### Step 2: Analyze (If Needed)
 Invoke pom-analyzer if documentation is missing or outdated
 
-## Step 3: Update POMs (If Needed)
-
+### Step 3: Update POMs (If Needed)
 Invoke pom-updater if page objects are missing or outdated
 
-## Step 4: Create Tests (If Needed)
-
+### Step 4: Create Tests (If Needed)
 Invoke test-creator based on user requirements
 
-## Step 5: Validate
-
+### Step 5: Validate
 Invoke test-validator for comprehensive quality checks
 
-## Step 6: Run Tests
-
+### Step 6: Run Tests
 Execute test suite and capture results
 
-## Step 7: Final Report
-
+### Step 7: Final Report
 Generate comprehensive summary with findings and next steps
-</steps>
-</process>
 
-<output_format>
+## Output Format
+
 ```markdown
 # Automation Complete! ✅
 
@@ -104,9 +95,9 @@ Generate comprehensive summary with findings and next steps
 ## Next Steps
 {Based on results}
 ```
-</output_format>
 
-<workflow_variations>
+## Workflow Variations
+
 **New Feature (Everything New):**
 ```
 /automate new guest checkout flow
@@ -145,9 +136,9 @@ Generate comprehensive summary with findings and next steps
 → Run Tests: ✅
 → Report
 ```
-</workflow_variations>
 
-<advantages_over_individual_commands>
+## Advantages Over Individual Commands
+
 **Individual Commands:**
 ```
 /analyze → /pom-update → /create-test → /validate → npm test
@@ -163,19 +154,18 @@ Generate comprehensive summary with findings and next steps
 - Automatic workflow
 - Smart decisions (skip what's done)
 - Comprehensive report
-</advantages_over_individual_commands>
 
-<when_to_use>
+## When To Use
+
 - **New feature development**: Complete automation in one command
 - **Sprint completion**: Automate all features from a sprint
 - **Test suite creation**: Build complete test coverage
 - **Onboarding**: Get up to speed with automation
 - **Quality gates**: Ensure everything is working before deploy
-</when_to_use>
 
-<see_also>
+## See Also
+
 - `/analyze` - Individual analysis step
 - `/pom-update` - Individual POM creation
 - `/create-test` - Individual test creation
 - `/validate` - Individual validation step
-</see_also>

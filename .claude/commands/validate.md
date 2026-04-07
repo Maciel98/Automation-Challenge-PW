@@ -2,13 +2,12 @@
 description: Validates page objects and tests against best practices and standards
 ---
 
-# Command: /validate
+# /validate
 
-<purpose>
 Validates all code (page objects and tests) against best practices and project standards. Ensures code quality and maintains standards across the test suite.
-</purpose>
 
-<usage>
+## Usage
+
 ```
 /validate [optional: specific path or "pom" or "tests"]
 ```
@@ -18,68 +17,20 @@ Validates all code (page objects and tests) against best practices and project s
 - `/validate pom` - Validates only page objects
 - `/validate tests` - Validates only test files
 - `/validate tests/tests/checkout/` - Validates specific folder
-</usage>
 
-<objective>
+## What It Does
+
 Run 5-layer validation:
-1. Syntax Check - TypeScript compilation
-2. Structure Check (Page Objects) - POM standards
-3. Structure Check (Tests) - Test standards
-4. Standards Check (Project Conventions) - CLAUDE.md rules
-5. Quality Check - Code quality metrics
-</objective>
 
-<process>
-<steps>
-## Step 1: Syntax Check
+1. **Syntax Check** - TypeScript compilation: `npx tsc --noEmit`
+2. **Structure Check (Page Objects)** - POM standards: All locators are private readonly, No assertions in page objects, has navigate() method, has isLoaded() method, Navigation methods return next page objects
+3. **Structure Check (Tests)** - Test standards: Uses fixtures (not manual instantiation), No hardcoded values, AAA pattern (Arrange, Act, Assert), Descriptive test names, Tests are independent
+4. **Standards Check (Project Conventions)** - CLAUDE.md rules: Selectors use data-test attributes from snapshots, No assertions in page objects, Test data from tests/test-data/*.json, Credentials from tests/helpers/credentials.ts, Page objects via fixtures only, isLoaded() owns URL verification, Tests are independent
+5. **Quality Check** - Code quality metrics: Clear, descriptive names, Single responsibility per method, Proper typing (no 'any'), Logical organization, Consistent conventions
+6. **Generate Report** - Create detailed validation report with findings
 
-Run TypeScript compilation: `npx tsc --noEmit`
+## Output Format
 
-## Step 2: Structure Check (Page Objects)
-
-Validate POM structure:
-- All locators are private readonly
-- No assertions in page objects
-- has navigate() method
-- has isLoaded() method
-- Navigation methods return next page objects
-
-## Step 3: Structure Check (Tests)
-
-Validate test structure:
-- Uses fixtures (not manual instantiation)
-- No hardcoded values
-- AAA pattern (Arrange, Act, Assert)
-- Descriptive test names
-- Tests are independent
-
-## Step 4: Standards Check (Project Conventions)
-
-Verify project-specific rules from CLAUDE.md:
-- Selectors use data-test attributes from snapshots
-- No assertions in page objects
-- Test data from tests/test-data/*.json
-- Credentials from tests/helpers/credentials.ts
-- Page objects via fixtures only
-- isLoaded() owns URL verification
-- Tests are independent
-
-## Step 5: Quality Check
-
-Assess code quality:
-- Clear, descriptive names
-- Single responsibility per method
-- Proper typing (no 'any')
-- Logical organization
-- Consistent conventions
-
-## Step 6: Generate Report
-
-Create detailed validation report with findings
-</steps>
-</process>
-
-<output_format>
 ```markdown
 # Validation Report
 
@@ -123,9 +74,9 @@ Status: ✅ Passed / ❌ Failed
 ### Low Priority
 1. {recommendation}
 ```
-</output_format>
 
-<common_issues_detected>
+## Common Issues Detected
+
 **Page Object Issues:**
 - ❌ Public locators (should be private readonly)
 - ❌ Assertions in page objects (should be in tests)
@@ -138,26 +89,25 @@ Status: ✅ Passed / ❌ Failed
 - ❌ Raw selectors in tests (use page object methods)
 - ❌ Shared state between tests (make independent)
 - ❌ Non-descriptive test names
-</common_issues_detected>
 
-<when_to_use>
+## When To Use
+
 - **After creating tests**: To ensure quality standards
 - **Before committing code**: To catch issues early
 - **After refactoring**: To ensure standards maintained
 - **During code review**: To get automated feedback
 - **Onboarding**: To learn project standards
-</when_to_use>
 
-<standards_validated_against>
+## Standards Validated Against
+
 - **POM patterns** - Complete POM coding standards
 - **Project conventions** - CLAUDE.md non-negotiable rules
 - **Test data standards** - Test data conventions
 - **Tagging strategy** - Test tagging conventions
-</standards_validated_against>
 
-<see_also>
+## See Also
+
 - `/analyze` - Analyze application before validating
 - `/pom-update` - Fix POM issues detected
 - `/create-test` - Create better tests after validation
 - `/automation` - Complete workflow with validation included
-</see_also>
