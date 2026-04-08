@@ -85,6 +85,16 @@ export class InventoryPage {
   }
 
   /**
+   * Get the count of remove buttons visible on the page
+   * Indicates how many items are currently in the cart
+   * @returns The number of remove buttons visible
+   */
+  async getRemoveButtonCount(): Promise<number> {
+    const removeButtons = this.page.locator('[data-test^="remove-"]');
+    return await removeButtons.count();
+  }
+
+  /**
    * Sort products by the specified option
    * @param sortOption - The sort option to select
    */

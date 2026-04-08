@@ -19,13 +19,12 @@ test.describe('Inventory Item @inventory-item', () => {
       }
     });
 
-    test('should navigate from inventory to item detail page @smoke', async ({ authenticatedInventoryPage }) => {
+    test('should navigate from inventory to item detail page @smoke', async ({ authenticatedInventoryPage, inventoryItemPage }) => {
       // Arrange
       const firstProductName = await authenticatedInventoryPage.getFirstProductName();
 
       // Act
       await authenticatedInventoryPage.clickProductNameByIndex(0);
-      const inventoryItemPage = new InventoryItemPage(authenticatedInventoryPage.page);
       await inventoryItemPage.isLoaded();
 
       // Assert
@@ -33,10 +32,9 @@ test.describe('Inventory Item @inventory-item', () => {
       expect(detailPageName).toBe(firstProductName);
     });
 
-    test('should navigate back to products from detail page @smoke', async ({ authenticatedInventoryItemPage }) => {
+    test('should navigate back to products from detail page @smoke', async ({ authenticatedInventoryItemPage, inventoryPage }) => {
       // Act
       await authenticatedInventoryItemPage.backToProducts();
-      const inventoryPage = new InventoryPage(authenticatedInventoryItemPage.page);
 
       // Assert
       await inventoryPage.isLoaded();

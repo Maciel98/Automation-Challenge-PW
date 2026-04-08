@@ -115,8 +115,8 @@ test.describe('Sidebar Menu @navigation', () => {
       await expect(authenticatedInventoryPage.navbar.shoppingCartBadge).toBeVisible();
 
       // Verify remove buttons are present (state: items in cart)
-      const removeButtonCountBefore = page.locator('[data-test^="remove-"]').count();
-      expect(await removeButtonCountBefore).toBe(testProducts.length);
+      const removeButtonCountBefore = await authenticatedInventoryPage.getRemoveButtonCount();
+      expect(removeButtonCountBefore).toBe(testProducts.length);
 
       // Reset app state via sidebar
       await sidebarPage.openAndResetAppState();
