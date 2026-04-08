@@ -5,29 +5,37 @@ Complete test automation system for the SauceDemo Playwright project with intell
 ## Quick Start
 
 ```
-/automate [what you want to automate]
+/automation [--auto] [what to automate]
 ```
 
 ### Examples
 
 ```bash
-# Automate a complete feature
-/automate user can add items to cart and checkout
+# Automate entire application (interactive with checkpoints)
+/automation
 
-# Automate a new feature
-/automate new guest checkout flow
+# Automate entire application (fully automated)
+/automation --auto
 
-# Automate entire application
-/automate the entire application
+# Automate a specific feature (interactive)
+/automation checkout flow
+
+# Automate a specific flow (fully automated)
+/automation --auto cart and checkout
 ```
 
 ## Available Commands
 
 ### Main Orchestrator
 
-**`/automation`** - Complete workflow (analyze → POM → tests → validate → run)
+**`/automation [--auto]`** - Complete workflow (analyze → POM → tests → validate → run)
 
 The main command that handles everything from analysis to test execution.
+
+| Option | Description |
+|--------|-------------|
+| (no flag) | Interactive mode with checkpoint approvals |
+| `--auto` | Fully automated without checkpoint approvals |
 
 ### Individual Commands
 
@@ -155,7 +163,8 @@ docs/
 
 | Command | Use When |
 |---------|----------|
-| `/automation` | You want complete automation in one command |
+| `/automation` | You want complete automation in one command (interactive) |
+| `/automation --auto` | You want complete automation without checkpoint approvals |
 | `/analyze` | New development was added |
 | `/pom-update` | Page objects need updating |
 | `/create-test` | You want to add test scenarios |
@@ -167,7 +176,7 @@ docs/
 
 ```bash
 # Team adds new "guest checkout" feature
-/automate new guest checkout flow
+/automation --auto new guest checkout flow
 
 # System automatically:
 # 1. Analyzes the new feature
@@ -189,6 +198,21 @@ docs/
 # 2. Creates test scenarios
 # 3. Validates test quality
 # 4. Reports what was created
+```
+
+### Automated Full Workflow
+
+```bash
+# Completely automate a feature from scratch
+/automation --auto new guest checkout flow
+
+# System automatically handles everything without checkpoint approvals:
+# 1. Analyzes the new feature
+# 2. Creates page objects
+# 3. Creates tests
+# 4. Validates everything
+# 5. Runs tests
+# 6. Reports results
 ```
 
 ### After Development Sprint
@@ -277,8 +301,17 @@ The orchestrator ensures:
 
 ### Orchestrator (New Way)
 ```
+1. /automation --auto checkout flow
+   → Everything happens automatically
+   → No checkpoint approvals needed
+   → Smart decisions (skip what's done)
+   → Comprehensive report
+
+OR
+
 1. /automation checkout flow
    → Everything happens automatically
+   → Checkpoint approvals at key steps
    → Smart decisions (skip what's done)
    → Comprehensive report
 ```
@@ -332,8 +365,11 @@ Commands are useful for:
 # Ensure dependencies are installed
 npm install
 
-# Run the orchestrator for a simple feature
+# Run the orchestrator for a simple feature (interactive)
 /automation login functionality
+
+# Or run fully automated
+/automation --auto login functionality
 
 # Review what was created
 # - Check docs/app-knowledge/
@@ -345,8 +381,11 @@ npm install
 ### Daily Usage
 
 ```bash
-# Team adds new feature
-/automate new feature name
+# Team adds new feature (interactive)
+/automation new feature name
+
+# Team adds new feature (fully automated)
+/automation --auto new feature name
 
 # Just need tests for existing feature
 /create-test what you want to test
@@ -354,8 +393,11 @@ npm install
 # Check quality before committing
 /validate
 
-# Full report
-/automate the entire application
+# Full report (interactive)
+/automation
+
+# Full report (fully automated)
+/automation --auto
 ```
 
 ## Support
