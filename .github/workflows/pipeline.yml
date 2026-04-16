@@ -127,6 +127,37 @@ jobs:
           retention-days: 30
 
       # -------------------------------------------------------------------------
+      # STEP 6.5: Upload Allure results (always, even on failure)
+      # -------------------------------------------------------------------------
+      - name: 📈 Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-dev-allure-results
+          path: allure-results/
+          retention-days: 30
+
+      # -------------------------------------------------------------------------
+      # STEP 6.6: Generate Allure Report
+      # -------------------------------------------------------------------------
+      - name: 📈 Generate Allure Report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results --clean -o allure-report
+
+      # -------------------------------------------------------------------------
+      # STEP 6.7: Upload Allure Report
+      # -------------------------------------------------------------------------
+      - name: 📊 Upload Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-dev-allure-report
+          path: allure-report/
+          retention-days: 30
+
+      # -------------------------------------------------------------------------
       # STEP 7: Upload trace files for debugging failures
       # -------------------------------------------------------------------------
       - name: 🐛 Upload Trace Files
@@ -229,6 +260,37 @@ jobs:
         with:
           name: test-stage-html-report
           path: playwright-report/
+          retention-days: 30
+
+      # -------------------------------------------------------------------------
+      # STEP 7.5: Upload Allure results (always, even on failure)
+      # -------------------------------------------------------------------------
+      - name: 📈 Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-stage-allure-results
+          path: allure-results/
+          retention-days: 30
+
+      # -------------------------------------------------------------------------
+      # STEP 7.6: Generate Allure Report
+      # -------------------------------------------------------------------------
+      - name: 📈 Generate Allure Report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results --clean -o allure-report
+
+      # -------------------------------------------------------------------------
+      # STEP 7.7: Upload Allure Report
+      # -------------------------------------------------------------------------
+      - name: 📊 Upload Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-stage-allure-report
+          path: allure-report/
           retention-days: 30
 
       # -------------------------------------------------------------------------
@@ -337,6 +399,37 @@ jobs:
         with:
           name: smoke-prd-html-report
           path: playwright-report/
+          retention-days: 30
+
+      # -------------------------------------------------------------------------
+      # STEP 6.5: Upload Allure results (always, even on failure)
+      # -------------------------------------------------------------------------
+      - name: 📈 Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-prd-allure-results
+          path: allure-results/
+          retention-days: 30
+
+      # -------------------------------------------------------------------------
+      # STEP 6.6: Generate Allure Report
+      # -------------------------------------------------------------------------
+      - name: 📈 Generate Allure Report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results --clean -o allure-report
+
+      # -------------------------------------------------------------------------
+      # STEP 6.7: Upload Allure Report
+      # -------------------------------------------------------------------------
+      - name: 📊 Upload Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-prd-allure-report
+          path: allure-report/
           retention-days: 30
 
       # -------------------------------------------------------------------------
@@ -449,6 +542,37 @@ jobs:
         with:
           name: nightly-regression-html-report
           path: playwright-report/
+          retention-days: 30
+
+      # -------------------------------------------------------------------------
+      # STEP 6.5: Upload Allure results (always, even on failure)
+      # -------------------------------------------------------------------------
+      - name: 📈 Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-regression-allure-results
+          path: allure-results/
+          retention-days: 30
+
+      # -------------------------------------------------------------------------
+      # STEP 6.6: Generate Allure Report
+      # -------------------------------------------------------------------------
+      - name: 📈 Generate Allure Report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results --clean -o allure-report
+
+      # -------------------------------------------------------------------------
+      # STEP 6.7: Upload Allure Report
+      # -------------------------------------------------------------------------
+      - name: 📊 Upload Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-regression-allure-report
+          path: allure-report/
           retention-days: 30
 
       # -------------------------------------------------------------------------

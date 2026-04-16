@@ -23,7 +23,25 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: process.env.CI
+    ? [
+        ['dot'],                                      // Minimal console output for CI
+        ['html', { open: 'never' }],                 // HTML report for artifacts
+        ['allure-playwright', {                      // Allure report for dashboard
+          detail: true,
+          outputFolder: 'allure-results',
+          suiteTitle: true,
+        }],
+      ]
+    : [
+        ['list'],                                    // Verbose console output locally
+        ['html', { open: 'on-failure' }],            // Auto-open HTML report on failure
+        ['allure-playwright', {                      // Allure report for local development
+          detail: true,
+          outputFolder: 'allure-results',
+          suiteTitle: true,
+        }],
+      ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
