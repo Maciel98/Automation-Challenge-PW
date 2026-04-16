@@ -17,11 +17,13 @@ name: E2E Test Pipeline
 # =============================================================================
 # PERMISSIONS
 # =============================================================================
-# Required for creating issues on test failures
+# Required for creating issues on test failures and deploying to GitHub Pages
 # =============================================================================
 permissions:
   issues: write
   contents: read
+  pages: write
+  id-token: write
 
 # =============================================================================
 # TRIGGERS
@@ -608,6 +610,95 @@ jobs:
                     'Please review and triage. This does not block current development work.',
               labels: ['bug', 'nightly-regression', 'non-blocking']
             })
+
+  # ===========================================================================
+  # JOB 5: DEPLOY ALLURE REPORT TO GITHUB PAGES
+  # ===========================================================================
+  # PURPOSE: Deploy Allure test reports to GitHub Pages for a persistent dashboard
+  # TRIGGER: Runs after all test jobs complete
+  # SCOPE: Downloads all Allure results and generates unified dashboard
+  # GATE: NON-BLOCKING - deployment failures don't affect test results
+  # ===========================================================================
+  deploy-allure-report:
+    name: 📊 Deploy Allure Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [smoke-dev, test-stage, smoke-prd, nightly-regression]
+    if: always() && (needs.smoke-dev.result == 'success' || needs.test-stage.result == 'success' || needs.smoke-prd.result == 'success' || needs.nightly-regression.result == 'success')
+
+    steps:
+      # -------------------------------------------------------------------------
+      # STEP 1: Checkout repository
+      # -------------------------------------------------------------------------
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      # -------------------------------------------------------------------------
+      # STEP 2: Setup Node.js
+      # -------------------------------------------------------------------------
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      # -------------------------------------------------------------------------
+      # STEP 3: Download all Allure results artifacts
+      # -------------------------------------------------------------------------
+      - name: 📥 Download Allure Results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*-allure-results'
+          path: allure-results/
+          merge-multiple: true
+
+      # -------------------------------------------------------------------------
+      # STEP 4: Check if Allure results exist
+      # -------------------------------------------------------------------------
+      - name: 🔍 Check for Allure Results
+        run: |
+          if [ ! -d "allure-results" ] || [ -z "$(ls -A allure-results 2>/dev/null)" ]; then
+            echo "❌ No Allure results found to deploy"
+            exit 0
+          fi
+          echo "✅ Found Allure results"
+          ls -la allure-results/ | head -20
+
+      # -------------------------------------------------------------------------
+      # STEP 5: Install Allure CLI
+      # -------------------------------------------------------------------------
+      - name: 📦 Install Allure CLI
+        run: |
+          npm install -g allure-commandline
+          allure --version
+
+      # -------------------------------------------------------------------------
+      # STEP 6: Generate Allure Report
+      # -------------------------------------------------------------------------
+      - name: 📈 Generate Allure Report
+        run: |
+          allure generate allure-results --clean -o allure-report
+          echo "✅ Allure report generated"
+
+      # -------------------------------------------------------------------------
+      # STEP 7: Setup Pages
+      # -------------------------------------------------------------------------
+      - name: 🚀 Setup Pages
+        uses: actions/configure-pages@v4
+
+      # -------------------------------------------------------------------------
+      # STEP 8: Upload artifact for GitHub Pages
+      # -------------------------------------------------------------------------
+      - name: 📤 Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./allure-report
+
+      # -------------------------------------------------------------------------
+      # STEP 9: Deploy to GitHub Pages
+      # -------------------------------------------------------------------------
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
 # =======================================================================================================
 # PIPELINE SUMMARY
