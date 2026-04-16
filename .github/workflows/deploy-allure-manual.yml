@@ -1,4 +1,4 @@
-  name: Deploy Allure Report (Manual)
+name: Deploy Allure Report (Manual)
 
   on:
     workflow_dispatch:
@@ -7,6 +7,7 @@
     pages: write
     id-token: write
     contents: read
+    actions: read  # Added to list and download artifacts
 
   concurrency:
     group: pages
@@ -26,7 +27,17 @@
           with:
             node-version: lts/*
 
-        - name: Download Allure Results
+        - name: Download Allure Results from Latest Run
+          uses: actions/download-artifact@v4
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            run-id: ${{ github.run_id }}
+            pattern: '*-allure-results'
+            path: allure-results/
+            merge-multiple: true
+          continue-on-error: true
+
+        - name: Try Download from Artifacts List
           uses: actions/download-artifact@v4
           with:
             pattern: '*-allure-results'
@@ -42,7 +53,13 @@
               ls -la allure-results/ | head -20
               echo "Total files: $(find allure-results -type f | wc -l)"
             else
-              echo "ERROR: No allure-results directory!"
+              echo "⚠️   No allure-results directory found"
+              echo "This means no artifacts are available to download"
+              echo ""
+              echo "Possible reasons:"
+              echo "  1. No test workflows have run yet"
+              echo "  2. Artifacts have expired (retention period)"
+              echo "  3. Artifacts are from a different branch"
               exit 1
             fi
 
@@ -52,6 +69,7 @@
             allure --version
 
         - name: Generate Report
+          if: hashFiles('allure-results/**') != ''
           run: |
             echo "Generating Allure report..."
             allure generate allure-results --clean -o allure-report
@@ -59,17 +77,21 @@
             ls -la allure-report/
 
         - name: Setup Pages
+          if: hashFiles('allure-results/**') != ''
           uses: actions/configure-pages@v4
 
         - name: Upload to Pages
+          if: hashFiles('allure-results/**') != ''
           uses: actions/upload-pages-artifact@v3
           with:
             path: ./allure-report
 
         - name: Deploy to GitHub Pages
+          if: hashFiles('allure-results/**') != ''
           uses: actions/deploy-pages@v4
 
         - name: Done
+          if: hashFiles('allure-results/**') != ''
           run: |
             echo "🎉 Allure report deployed!"
             echo "📊 Dashboard: https://maciel98.github.io/Automation-Challenge-PW/"
