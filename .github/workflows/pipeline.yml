@@ -768,7 +768,10 @@ jobs:
           # Generate report with history (downloads from previous run)
           allure generate allure-results -o allure-report
           echo "✅ Allure report generated with history"
-          ls -la allure-report/ | head -10
+          echo "📊 Report contents:"
+          ls -la allure-report/
+          echo "📚 History directory:"
+          ls -la allure-report/history/ || echo "No history yet (first run)"
 
       # -------------------------------------------------------------------------
       # STEP 8: Upload history for next run
@@ -780,6 +783,7 @@ jobs:
           name: allure-history
           path: allure-report/history/
           retention-days: 90
+          if-no-files-found: warn
 
       # -------------------------------------------------------------------------
       # STEP 7: Setup Pages
