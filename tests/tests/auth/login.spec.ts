@@ -1,10 +1,18 @@
 import { test, expect } from '../../fixtures/base.fixture';
 import loginData from '../../test-data/login.json';
 import { getStandardUserCredentials, getLockedOutUserCredentials } from '../../helpers/credentials';
+import { Allure, Severity, Tags } from '../../helpers/allure';
 
 test.describe('Authentication @auth', () => {
   test.describe('Standard User (Valid Login)', () => {
     test('should navigate to login page @smoke', async ({ loginPage }) => {
+      // Add Allure metadata
+      Allure.epic('Authentication');
+      Allure.feature('Login');
+      Allure.story('User navigates to login page');
+      Allure.severity(Severity.NORMAL);
+      Allure.tag(Tags.SMOKE, Tags.AUTH, Tags.UI);
+
       await loginPage.goto();
       await loginPage.isLoaded();
       await expect(loginPage.usernameInput).toBeVisible();
@@ -13,6 +21,13 @@ test.describe('Authentication @auth', () => {
     });
 
     test('should login with valid credentials @smoke', async ({ loginPage, inventoryPage }) => {
+      // Add Allure metadata
+      Allure.epic('Authentication');
+      Allure.feature('Login');
+      Allure.story('User logs in with valid credentials');
+      Allure.severity(Severity.CRITICAL);
+      Allure.tag(Tags.SMOKE, Tags.AUTH, Tags.HAPPY_PATH);
+
       await loginPage.goto();
       await loginPage.loginWithDefaults();
       await inventoryPage.isLoaded();
