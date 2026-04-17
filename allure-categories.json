@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Ignored tests",
+    "matchedStatuses": ["skipped"]
+  },
+  {
+    "name": "Infrastructure problems",
+    "matchedStatuses": ["broken", "failed"],
+    "messageRegex": ".*TimeoutError.*|.*NetworkError.*|.*Service Unavailable.*"
+  },
+  {
+    "name": "Outdated tests",
+    "matchedStatuses": ["broken"],
+    "traceRegex": ".*ElementNotFound.*|.*SelectorNotFound.*"
+  },
+  {
+    "name": "Product defects",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*AssertionError.*|.*expect.*"
+  },
+  {
+    "name": "Test defects",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*ReferenceError.*|.*TypeError.*"
+  }
+]

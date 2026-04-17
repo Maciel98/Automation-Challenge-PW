@@ -750,6 +750,13 @@ jobs:
           allure --version
 
       # -------------------------------------------------------------------------
+      # STEP 6.5: Copy Allure categories configuration
+      # -------------------------------------------------------------------------
+      - name: 📋 Copy Categories Configuration
+        run: |
+          cp allure-categories.json allure-results/categories.json
+
+      # -------------------------------------------------------------------------
       # STEP 7: Generate Allure Report
       # -------------------------------------------------------------------------
       - name: 📈 Generate Allure Report
