@@ -730,7 +730,17 @@ jobs:
           merge-multiple: true
 
       # -------------------------------------------------------------------------
-      # STEP 4: Check if Allure results exist
+      # STEP 4: Download previous Allure history
+      # -------------------------------------------------------------------------
+      - name: 📥 Download Previous History
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: allure-history
+          path: allure-results/history/
+
+      # -------------------------------------------------------------------------
+      # STEP 5: Check if Allure results exist
       # -------------------------------------------------------------------------
       - name: 🔍 Check for Allure Results
         run: |
@@ -742,7 +752,7 @@ jobs:
           ls -la allure-results/ | head -20
 
       # -------------------------------------------------------------------------
-      # STEP 5: Install Allure CLI
+      # STEP 6: Install Allure CLI
       # -------------------------------------------------------------------------
       - name: 📦 Install Allure CLI
         run: |
@@ -750,19 +760,26 @@ jobs:
           allure --version
 
       # -------------------------------------------------------------------------
-      # STEP 6: Generate Allure Report with history
+      # STEP 7: Generate Allure Report with history
       # -------------------------------------------------------------------------
       - name: 📈 Generate Allure Report
         run: |
           rm -rf allure-report
-          # Download previous history for trending
-          curl -L -o history.zip https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-report/history.zip || true
-          mkdir -p allure-results/history
-          [ -f history.zip ] && unzip -q -o history.zip -d allure-results/history || true
-          # Generate report with history
+          # Generate report with history (downloads from previous run)
           allure generate allure-results -o allure-report
           echo "✅ Allure report generated with history"
           ls -la allure-report/ | head -10
+
+      # -------------------------------------------------------------------------
+      # STEP 8: Upload history for next run
+      # -------------------------------------------------------------------------
+      - name: 💾 Save History for Next Run
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-history
+          path: allure-report/history/
+          retention-days: 90
 
       # -------------------------------------------------------------------------
       # STEP 7: Setup Pages
