@@ -768,7 +768,6 @@ jobs:
               }
             }
             console.log('No previous history found (first run)');
-        shell: bash
 
       - name: 🔍 Verify History Download
         run: |
