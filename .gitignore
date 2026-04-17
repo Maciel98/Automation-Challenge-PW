@@ -6,6 +6,10 @@ test-results/
 playwright-report/
 playwright/.cache/
 
+# Allure Reporting
+allure-results/
+allure-report/
+
 # Environment variables
 .env
 .env.local
